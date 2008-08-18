@@ -1,0 +1,45 @@
+SHELL = /bin/sh
+                                                                                          
+LIBNAME = vcbwithgl
+RM = /bin/rm
+AR = ar cq
+                                                                                          
+TOP = ..
+C++ = g++ -DMACOSX
+CC  = gcc -DMACOSX
+
+
+ifeq ($(BUILD),debug)
+CCFLAGS := -g
+else
+CCFLAGS := -O3
+endif
+
+INCLUDE = -I. -I../include -I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -I/System/Library/Frameworks/GLUT.framework/Versions/A/Headers
+
+LIB_PATH = -L/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries -L/System/Library/Frameworks/GLUT.framework/Versions/A/Libraries -L../lib 
+
+LIBS = -lGLU -lGL -lglut -lm
+
+OBJS = ArcBall.o Lic.o jval.o jrb.o dmem.o exhash.o fields.o glew.o hilbert.o intersect.o kernel.o nr.o nrcomplex.o nrutil.o raycasting.o slic.o slic_aux.o splatting.o vcbbtree.o vcbcluster.o vcbcolor.o vcbdebug.o vcbfitting.o vcbglutils.o vcbhist.o vcbimage.o vcblic.o vcblinalg.o vcbmath.o vcbmcube.o vcbmntree.o vcbops.o vcbrange.o vcbspcurve.o vcbtrimesh.o vcbutils.o vcbvolren.o zcurve.o vbutrcast.o
+
+.SUFFIXES: .cc .c .cpp
+                                                                                          
+.cc.o:
+	$(C++) $(CCFLAGS) $(INCLUDE) -c $<
+                                                                                          
+.cpp.o:
+	$(C++) $(CCFLAGS) $(INCLUDE) -c $<
+                                                                                          
+.c.o:
+	$(CC) $(CCFLAGS) $(INCLUDE) -c $<
+                                                                                          
+all: lib$(LIBNAME).a
+                                                                                          
+lib$(LIBNAME).a : $(OBJS)
+	$(RM) -f $@
+#	$(AR) $@ $(OBJS)
+	libtool -static -o $@ $(OBJS)
+                                                                                          
+clean:
+	rm -f *.o *.a
