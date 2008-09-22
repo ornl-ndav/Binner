@@ -2,7 +2,7 @@
 
 
 cd ../bin
-rm  compvol rebin seeall bslicer rot3d clip3d gencell scale3d tran3d
+rm  compvol rebin seeall bslicer rot3d clip3d gencell scale3d tran3d collector getfrom giveto netrebin sorter
 rm *.d
 
 cd ../src

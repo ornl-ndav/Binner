@@ -19,11 +19,11 @@ INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include
 
 LIB_PATH = -L$(TOP)/vcb/lib  -L/sw/lib
 
-LIBS = -lvcb -lm
+LIBS =  -lpthread -lvcb  -lm
 
-OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o  compvol.o gencell.o geometry.o rebin.o rot3d.o scale3d.o tran3d.o volume.o voxelize.o
+OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o collector.o compvol.o gencell.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o socketfun.o sorter.o tran3d.o volume.o voxelize.o
 
-EXES = bslicer clip3d  compvol gencell rebin rot3d scale3d tran3d
+EXES = bslicer clip3d  compvol gencell rebin rot3d scale3d tran3d collector getfrom giveto netrebin sorter
 
 .SUFFIXES: .cc .c .cpp
 
@@ -37,6 +37,21 @@ EXES = bslicer clip3d  compvol gencell rebin rot3d scale3d tran3d
 	$(CC) $(CCFLAGS) $(INCLUDE) -c $<
 
 all: $(EXES)
+
+sorter: sorter.o socketfun.o binnerio.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+netrebin: netrebin.o socketfun.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+getfrom: getfrom.o socketfun.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+giveto: giveto.o socketfun.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+collector: collector.o socketfun.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 gencell: gencell.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)

@@ -92,7 +92,7 @@ void flood_wvol(unsigned int * wvol, int * xyzsize)
 	  if (vol[i] == 0) k ++;
 	}
 	
-	printf("nvoxel %d, out/in/sur: %d/%d/%d\n", xyz, j, k, xyz-j-k);
+	fprintf(stderr,"nvoxel %d, out/in/sur: %d/%d/%d\n", xyz, j, k, xyz-j-k);
 }
 
 double count_volume(double * vol, int * xyzsize)
@@ -307,8 +307,8 @@ time4 = clock();
 	free(face_starts);
 	//printf("volsz: %d %d %d. ", xyzsize[0], xyzsize[1], xyzsize[2]);
 	
-	printf("volume(total:in:surf) = %lf:%lf:%lf.\n", total_volume, inside_vol, surface_vol);
-	printf("time(voxelize:flood:rebin) = %.3f:%.3f:%.3f sec\n",
+	fprintf(stderr,"volume(total:in:surf) = %lf:%lf:%lf.\n", total_volume, inside_vol, surface_vol);
+	fprintf(stderr,"time(voxelize:flood:rebin) = %.3f:%.3f:%.3f sec\n",
 			(float)(time2-time1)/CLOCKS_PER_SEC,
 			(float)(time3-time2)/CLOCKS_PER_SEC,
 			(float)(time4-time3)/CLOCKS_PER_SEC);
