@@ -20,7 +20,7 @@ INCLUDE = -I. -I../include -I../Task -I/usr/include/GL
                                                                                           
 LIBS = -lm
 
-OBJS = jval.o jrb.o dmem.o exhash.o fields.o hilbert.o intersect.o kernel.o nr.o nrcomplex.o nrutil.o raycasting.o vcbdebug.o vcbfitting.o vcbimage.o vcblinalg.o vcbmath.o vcbmcube.o vcbops.o vcbspcurve.o vcbtrimesh.o vcbutils.o vcbvolren.o zcurve.o vcbcolor.o vbutrcast.o vcblic.o Lic.o slic.o slic_aux.o
+OBJS = dllist.o jval.o jrb.o dmem.o exhash.o fields.o hilbert.o intersect.o kernel.o nr.o nrcomplex.o nrutil.o raycasting.o vcbdebug.o vcbfitting.o vcbimage.o vcblinalg.o vcbmath.o vcbmcube.o vcbops.o vcbspcurve.o vcbtrimesh.o vcbutils.o vcbvolren.o zcurve.o vcbcolor.o vbutrcast.o vcblic.o Lic.o slic.o slic_aux.o
 
 .SUFFIXES: .cc .c .cpp
                                                                                           
@@ -38,8 +38,8 @@ dynamic: lib$(LIBNAME).so
                                                                                           
 lib$(LIBNAME).a : $(OBJS)
 	$(RM) -f $@
-#	libtool -static -o $@ $(OBJS)
-	$(AR) $@ $(OBJS)
+	libtool -static -o $@ $(OBJS)
+#	$(AR) $@ $(OBJS)
 	mv $@ ../lib
 
 lib$(LIBNAME).so : $(OBJS)

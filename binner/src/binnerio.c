@@ -61,7 +61,7 @@ int get_polygonf(float * v)
 {
 	int i, n;
 	
-	scanf("%d", &n); 
+	if (scanf("%d", &n) <= 0) return -1; 
 
 	/* assume a quad in 3d space. 4 vertices, x-y-z coord each */	
 	for (i = 0; i < n; v += 3, i ++)

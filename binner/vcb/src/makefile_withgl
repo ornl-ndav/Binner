@@ -21,7 +21,7 @@ LIB_PATH = -L/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries -L
 
 LIBS = -lGLU -lGL -lglut -lm
 
-OBJS = ArcBall.o Lic.o jval.o jrb.o dmem.o exhash.o fields.o glew.o hilbert.o intersect.o kernel.o nr.o nrcomplex.o nrutil.o raycasting.o slic.o slic_aux.o splatting.o vcbbtree.o vcbcluster.o vcbcolor.o vcbdebug.o vcbfitting.o vcbglutils.o vcbhist.o vcbimage.o vcblic.o vcblinalg.o vcbmath.o vcbmcube.o vcbmntree.o vcbops.o vcbrange.o vcbspcurve.o vcbtrimesh.o vcbutils.o vcbvolren.o zcurve.o vbutrcast.o
+OBJS = ArcBall.o Lic.o dllist.o jval.o jrb.o dmem.o exhash.o fields.o glew.o hilbert.o intersect.o kernel.o nr.o nrcomplex.o nrutil.o raycasting.o slic.o slic_aux.o splatting.o vcbbtree.o vcbcluster.o vcbcolor.o vcbdebug.o vcbfitting.o vcbglutils.o vcbhist.o vcbimage.o vcblic.o vcblinalg.o vcbmath.o vcbmcube.o vcbmntree.o vcbops.o vcbrange.o vcbspcurve.o vcbtrimesh.o vcbutils.o vcbvolren.o zcurve.o vbutrcast.o
 
 .SUFFIXES: .cc .c .cpp
                                                                                           
@@ -40,6 +40,7 @@ lib$(LIBNAME).a : $(OBJS)
 	$(RM) -f $@
 #	$(AR) $@ $(OBJS)
 	libtool -static -o $@ $(OBJS)
+	mv $@ ../lib
                                                                                           
 clean:
 	rm -f *.o *.a
