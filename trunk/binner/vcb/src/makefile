@@ -38,8 +38,8 @@ dynamic: lib$(LIBNAME).so
                                                                                           
 lib$(LIBNAME).a : $(OBJS)
 	$(RM) -f $@
-#	libtool -static -o $@ $(OBJS)
-	$(AR) $@ $(OBJS)
+	libtool -static -o $@ $(OBJS)
+#	$(AR) $@ $(OBJS)
 	mv $@ ../lib
 
 lib$(LIBNAME).so : $(OBJS)
