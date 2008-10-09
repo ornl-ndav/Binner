@@ -40,8 +40,8 @@ all: lib$(LIBNAME).a
                                                                                           
 lib$(LIBNAME).a : $(OBJS)
 	$(RM) -f $@
-#	$(AR) $@ $(OBJS)
-	libtool -static -o $@ $(OBJS)
+	$(AR) $@ $(OBJS)
+#	libtool -static -o $@ $(OBJS)
 	mv $@ ../lib
                                                                                           
 clean:
