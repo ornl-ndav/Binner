@@ -5,8 +5,8 @@ RM = /bin/rm
 AR = ar cq
                                                                                           
 TOP = ..
-C++ = g++ -DMACOSX
-CC  = gcc -DMACOSX
+C++ = g++ 
+CC  = gcc
 
 
 ifeq ($(BUILD),debug)
