@@ -5,8 +5,13 @@ RM = /bin/rm
 AR = ar cq
                                                                                           
 TOP = ..
+<<<<<<< .mine
+C++ = g++
+CC  = gcc
+=======
 C++ = g++ 
 CC  = gcc
+>>>>>>> .r14
 
 
 ifeq ($(BUILD),debug)
