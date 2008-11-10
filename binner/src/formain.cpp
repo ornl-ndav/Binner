@@ -57,8 +57,8 @@ void initApp (void)
 
 	proj.aspect = 1.0;
 	proj.fov = 10.;
-	proj.hither = 1.0;
-	proj.yon = 1e6;
+	proj.hither = mradius*5.f;
+	proj.yon = mradius*15.f;
 	proj.xmin = mradius*(-1.);
 	proj.xmax = mradius*1.;
 	proj.ymin = mradius*(-1.);
