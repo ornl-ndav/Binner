@@ -14,16 +14,15 @@ CCFLAGS := -O3
 #CCFLAGS := -pg
 endif
 
-#INCLUDE = -I. -I../include -I/usr/include/GL
 INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include  
 
 LIB_PATH = -L$(TOP)/vcb/lib  -L/sw/lib
 
 LIBS =  -lpthread -lvcb  -lm
 
-OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o collector.o compvol.o gencell.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o socketfun.o sorter.o tran3d.o volume.o voxelize.o
+OBJS = binner.o binnerio.o bslicer.o cell.o clip.o clip3d.o collector.o compvol.o gencell.o pix2mesh.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o socketfun.o sorter.o tran3d.o volume.o voxelize.o
 
-EXES = bslicer clip3d  compvol gencell rebin rot3d scale3d tran3d collector getfrom giveto netrebin sorter
+EXES = bslicer clip3d  compvol gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto netrebin sorter
 
 .SUFFIXES: .cc .c .cpp
 
@@ -53,6 +52,9 @@ giveto: giveto.o socketfun.o
 collector: collector.o socketfun.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
+pix2mesh: pix2mesh.o binnerio.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+	
 gencell: gencell.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
