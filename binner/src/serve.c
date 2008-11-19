@@ -8,21 +8,21 @@ char s[fullsz];
 
 int inout(int in, int out)
 {
-  int i, l, last;
+  int i, l;
 
   i = 0;
-  last = 0;
   l = 0;
   while(read(in, s+i, 1) != 0) {
     if (s[i] == '\n') {
-      write(out, s+last, i+1 - last);
-	  last = i+1;
-	  l ++;
+      write(out, s, i+1);
+      l ++;
+      i = 0;
     }
-    i++;
+    else
+      i++;
   }
   
-  write(out, s+last, i - last);
+  write(out, s, i);
   return l;
 }
 
