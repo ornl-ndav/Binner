@@ -49,6 +49,9 @@ getfrom: getfrom.o socketfun.o
 giveto: giveto.o socketfun.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
+serve: serve.o socketfun.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
 collector: collector.o socketfun.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
