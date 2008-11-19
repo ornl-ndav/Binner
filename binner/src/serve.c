@@ -21,6 +21,8 @@ int inout(int in, int out)
     }
     i++;
   }
+  
+  write(out, s+last, i - last);
   return l;
 }
 
