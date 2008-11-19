@@ -155,7 +155,8 @@ void keys(unsigned char c, int x, int y)
 {
 	float fzin = 0.95;
 	float fzout = 1.05;
-	unsigned char * pixels;
+	unsigned char * pixels, *bmpbuf;
+	int i;
 
 	switch(c) {
       case 'i':
@@ -176,8 +177,16 @@ void keys(unsigned char c, int x, int y)
 		  break;
 	  case 's': /* save framebuffer */
 		  pixels = (unsigned char *) malloc(iwinWidth*iwinHeight*4*sizeof(unsigned char));
+		  bmpbuf = (unsigned char *) malloc(iwinWidth*iwinHeight*3*sizeof(unsigned char));
 		  glReadPixels(0,0,iwinWidth,iwinHeight,GL_RGBA,GL_UNSIGNED_BYTE,pixels);
-		  vcbImgWriteBMP("screencap.bmp",pixels,4, iwinWidth, iwinHeight);
+		  for (i = 0; i < iwinWidth*iwinHeight; i ++)
+		  {
+			bmpbuf[i*3+0] = pixels[i*4+0];
+			bmpbuf[i*3+1] = pixels[i*4+1];
+			bmpbuf[i*3+2] = pixels[i*4+2];
+		  }
+		  vcbImgWriteBMP("screencap.bmp",bmpbuf,3, iwinWidth, iwinHeight);
+		  free(bmpbuf);
 		  free(pixels);
 		  break;
 	  case 'q':
