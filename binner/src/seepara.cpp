@@ -74,16 +74,18 @@ void display (void)
 	glPopMatrix();
 
  	sprintf(echofps,"fps: %4.2f %6.2f mil tri/sec",fps, fps*npara*12/1e6);
-
+/*
 	glActiveTexture(GL_TEXTURE0);
 	glDisable(GL_TEXTURE_1D);
 	glActiveTexture(GL_TEXTURE1);
 	glDisable(GL_TEXTURE_2D);
+*/
 	vcbOGLprint(0.01f,0.01f, 1.f, 1.f, 0.f, echofps);
+/*
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glEnable(GL_TEXTURE_1D);
-
+*/
 	nframes ++;
 	glutSwapBuffers();
 }

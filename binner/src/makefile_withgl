@@ -14,8 +14,8 @@ CCFLAGS := -O3
 #CCFLAGS := -pg
 endif
 
-#INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include -I/usr/include/GL
-INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include -I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -I/System/Library/Frameworks/GLUT.framework/Versions/A/Headers 
+INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include -I/usr/include/GL
+#INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include -I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -I/System/Library/Frameworks/GLUT.framework/Versions/A/Headers 
 
 LIB_PATH = -L$(TOP)/vcb/lib -L/usr/lib64
 #LIB_PATH = -L$(TOP)/vcb/lib -L/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries -L/sw/lib
