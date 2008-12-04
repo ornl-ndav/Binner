@@ -13,6 +13,7 @@ void	binnerout3d(int nfacets, float *v);
 
 int		get_polygonf(float * v);
 int		get_polygond(double * v);
+int     get_pixelf(int * id, float * cnt, float * err, float (* v)[4]);
 
 int		binnerin_phcf(int nfacets, int * nverts, float * v);
 int		binnerin_phcd(int nfacets, int * nverts, double * v);

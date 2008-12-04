@@ -7,6 +7,8 @@ extern "C" {
 
 int basicCubef(float * v);
 int basicCubed(double * v);
+int realCubef(float (* corners)[4], float * v);
+int correctCornersf3d(float (* vertices)[4]);
 void parallelipedByInputd(double * v);
 void parallelipedByInputf(float * v);
 void facetsRot3f(int nfacets, float * v, float * axis, float angle);
