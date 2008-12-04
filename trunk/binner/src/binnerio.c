@@ -73,6 +73,31 @@ int get_polygonf(float * v)
 	return i;
 }
 
+int get_pixelf(int * id, float * cnt, float * err, float (* v)[4])
+/* 
+ * always read in 8 vertices and 3 preceding values: sliceID, cnt, err
+ * return value: num_vertices actually read in successfully
+ */
+{
+	int i, n;
+	
+	if (scanf("%d", id) <= 0) return -1; 
+	if (scanf("%f", cnt) <= 0) return -1; 
+	if (scanf("%f", err) <= 0) return -1; 
+
+	/* assume a 8 vertices, x-y-z coord each */	
+	for (i = 0; i < 8; v ++, i ++)
+	{
+		if (3 > scanf("%f %f %f", &v[0][0], &v[0][1], &v[0][2]))
+			break;
+		v[0][3] = 0.f;
+	}
+			
+	scanf("\n");
+
+	return i;
+}
+
 int binnerin_phcf(int nfacets, int * nverts, float * v)
 {
 	int i, total;

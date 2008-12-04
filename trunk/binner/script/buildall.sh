@@ -15,8 +15,7 @@ make clean
 cd ../../src
 make all
 make install
-make -f makefile_withgl seeall
-mv seeall ../bin
+make -f makefile_withgl install
 make clean
 
 exit 0

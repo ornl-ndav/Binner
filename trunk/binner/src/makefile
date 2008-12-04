@@ -55,10 +55,10 @@ serve: serve.o socketfun.o
 collector: collector.o socketfun.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
-pix2mesh: pix2mesh.o binnerio.o
+pix2mesh: pix2mesh.o cell.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 	
-gencell: gencell.o binnerio.o
+gencell: gencell.o cell.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 rot3d: rot3d.o binnerio.o

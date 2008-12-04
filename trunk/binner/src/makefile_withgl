@@ -17,14 +17,14 @@ endif
 #INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include -I/usr/include/GL
 INCLUDE = -I. -I$(TOP)/include -I$(TOP)/vcb/include -I/System/Library/Frameworks/OpenGL.framework/Versions/A/Headers -I/System/Library/Frameworks/GLUT.framework/Versions/A/Headers 
 
-#LIB_PATH = -L$(TOP)/vcb/lib -L/usr/lib64
-LIB_PATH = -L$(TOP)/vcb/lib -L/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries -L/sw/lib
+LIB_PATH = -L$(TOP)/vcb/lib -L/usr/lib64
+#LIB_PATH = -L$(TOP)/vcb/lib -L/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries -L/sw/lib
 
 LIBS = -lvcbwithgl -lGLU -lGL -lglut -lm
 
-OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o  compvol.o gencell.o pix2mesh.o geometry.o rebin.o rot3d.o scale3d.o tran3d.o volume.o voxelize.o formain.o seeall.o
+OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o  compvol.o gencell.o pix2mesh.o geometry.o rebin.o rot3d.o scale3d.o tran3d.o volume.o voxelize.o formain.o seeall.o seepara.o
 
-EXES = bslicer clip3d  compvol gencell pix2mesh rebin rot3d scale3d tran3d seeall
+EXES = seeall seepara
 
 .SUFFIXES: .cc .c .cpp
 
@@ -39,35 +39,11 @@ EXES = bslicer clip3d  compvol gencell pix2mesh rebin rot3d scale3d tran3d seeal
 
 all: $(EXES)
 
-pix2mesh: pix2mesh.o binnerio.o
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
-gencell: gencell.o binnerio.o
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
 seeall: seeall.o formain.o binnerio.o
 	$(C++) -o $@ $^ $(LIB_PATH) $(LIBS)
 
-rot3d: rot3d.o binnerio.o
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-	
-tran3d: tran3d.o binnerio.o
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
-scale3d: scale3d.o binnerio.o
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
-clip3d: clip3d.o clip.o geometry.o binnerio.o 
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
-compvol: compvol.o volume.o clip.o cell.o geometry.o binnerio.o 
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
-rebin: rebin.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
-
-bslicer: bslicer.o 
-	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+seepara: seepara.o formain.o cell.o binnerio.o
+	$(C++) -o $@ $^ $(LIB_PATH) $(LIBS)
 	
 install: all
 	mv $(EXES) $(TOP)/bin

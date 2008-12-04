@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <math.h>
+#include <sys/time.h>
 
 #include "glew.h"
 #include <glut.h>
@@ -100,6 +101,31 @@ void initGLsettings(void)
 	glDepthMask(1);
 	glClearDepth(1.);
 
+}
+
+float fps;
+int nframes = 0;
+void idle(void)
+{
+	static double lastime, newtime;
+	struct timeval current_time;
+	/* assume global variable: float  fps;*/
+	/* assume global variable: nframes */
+
+	gettimeofday(&current_time, 0);
+	newtime = current_time.tv_sec + current_time.tv_usec/1000000.0;
+	/*
+	 *printf("idle: nframes = %d, newtime = %lf, lastime = %lf\n", nframes, newtime, lastime);
+	 */
+
+	if (nframes > 10)
+	{
+		fps     = (float)(nframes/(newtime - lastime));
+		lastime = newtime;
+		nframes = 0;
+	}
+
+	display();
 }
 
 void reshape(int width,int height)
@@ -220,8 +246,8 @@ int initGLUT(int argc, char **argv)
 {
 	int winid; 
 
-	iwinWidth = 512;
-	iwinHeight = 512;
+	iwinWidth = 1000;
+	iwinHeight = 1000;
 
 	glutInit( &argc, argv);
 	glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
@@ -232,7 +258,7 @@ int initGLUT(int argc, char **argv)
 	glutSetWindowTitle("SEECON - see convex cells");
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
-    glutIdleFunc(display);
+    glutIdleFunc(idle);
     glutMouseFunc(mouse_handler);
 	glutMotionFunc(trackMotion);
 	glutKeyboardFunc(keys);
