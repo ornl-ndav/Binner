@@ -46,10 +46,70 @@ int list_id;
 extern int nframes;
 extern float fps;
 
+/* texture to hold grid info */
+#define gridtexsz 32
+static float gridtex[gridtexsz*gridtexsz];
+static int gtex;
+float xmin, xmax, ymin, ymax;
+
+extern int ncuts;
+
+void makeGrid(void)
+{
+	int i, j, k;
+
+	for (k = 0; k < gridtexsz/2; k ++)
+		for (i = k; i < gridtexsz-k; i ++)
+			for (j = k; j < gridtexsz-k; j ++)
+			{
+				gridtex[i*gridtexsz+j] = (gridtexsz/2.f - k)/(gridtexsz/2.f)*0.3;
+			}
+
+	xmin = view.center[0]+5*proj.xmin;
+	ymin = view.center[1]+5*proj.ymin;
+	xmax = view.center[0]+5*proj.xmax;
+	ymax = view.center[1]+5*proj.ymax;
+
+}
+
+
+extern float mradius;
+void drawGrid(void)
+{
+	float divfac = ncuts/mradius;
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_CULL_FACE);
+	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_TEXTURE_2D);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glBegin(GL_QUADS);
+	glColor3f(0.774597, 0.774597, 0.774597);
+	glTexCoord2f(xmin*divfac, ymin*divfac); //0.f, 0.f);
+	glVertex2f(xmin, ymin);
+	glTexCoord2f(xmin*divfac, ymax*divfac); //0.f, 1.f);
+	glVertex2f(xmin, ymax);
+	glTexCoord2f(xmax*divfac, ymax*divfac); //1.f, 1.f);
+	glVertex2f(xmax, ymax);
+	glTexCoord2f(xmax*divfac, ymin*divfac); //1.f, 0.f);
+	glVertex2f(xmax, ymin);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+
+}
+
+
 void display (void)
 {
 	char echofps[80];
 	int i;
+
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	drawGrid();
+
+	glClear(GL_DEPTH_BUFFER_BIT);
 
 	spaceball.Update();
 	glMatrixMode(GL_MODELVIEW);
@@ -59,21 +119,18 @@ void display (void)
 	glTranslated(-view.center[0],-view.center[1],-view.center[2]);
 
 	/* if want wireframe mode, then use the following */
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glPolygonMode(GL_FRONT, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glFrontFace(GL_CCW);
-	glEnable(GL_CULL_FACE);
-
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glDisable(GL_CULL_FACE);
 
 	glCallList(list_id);
 
+	glColor3f(0.f, 0.f, 1.f);
     vcbDrawAxis(spaceball.GetMatrix(), 100);
 
 	glPopMatrix();
 
- 	sprintf(echofps,"fps: %4.2f %6.2f mil tri/sec",fps, fps*npara*12/1e6);
+ 	sprintf(echofps,"fps: %4.2f %6.2f mil tri/sec: division factor: %d",fps, fps*npara*12/1e6, ncuts);
 /*
 	glActiveTexture(GL_TEXTURE0);
 	glDisable(GL_TEXTURE_1D);
@@ -157,6 +214,10 @@ int main(int argc, char ** argv)
 
   initApp(); /* initialize the application */
   initGLsettings();
+
+  makeGrid();
+  gtex = vcbBindOGLTexture2D(GL_TEXTURE0, GL_NEAREST, GL_LUMINANCE, GL_LUMINANCE, GL_FLOAT, 
+							gridtexsz, gridtexsz, gridtex, GL_MODULATE, NULL);
 
   atexit(cleanup);
 
