@@ -30,9 +30,10 @@ extern int iwinWidth;
 extern int iwinHeight;
 extern bbox abbox;
 
+float mradius = 0.f;
 void initApp (void)
 {
-	float mradius = 0.f;
+	/*float mradius = 0.f;*/
 
 	spaceball.SetWidth(iwinWidth);
 	spaceball.SetHeight(iwinHeight);
@@ -45,7 +46,7 @@ void initApp (void)
 	if ((abbox.high[1]-abbox.low[1]) > mradius) mradius = abbox.high[1]-abbox.low[1];
 	if ((abbox.high[2]-abbox.low[2]) > mradius) mradius = abbox.high[2]-abbox.low[2];
 
-	printf("view.center = (%f %f %f)\n",view.center[0],view.center[1],view.center[2]);
+	/*printf("view.center = (%f %f %f)\n",view.center[0],view.center[1],view.center[2]);*/
 
 	view.eye[0] = view.center[0];
 	view.eye[1] = view.center[1];
@@ -130,6 +131,13 @@ void idle(void)
 
 void reshape(int width,int height)
 {
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glLoadIdentity();
+	gluLookAt(view.eye[0],view.eye[1],view.eye[2],
+			  view.center[0],view.center[1],view.center[2],
+			  view.up[0],view.up[1],view.up[2]);
+
 	if (width <= 0 || height <= 0)
 		return;
 
@@ -177,29 +185,36 @@ void reshape(int width,int height)
 	display();
 }
 
+int ncuts  = 100;
 void keys(unsigned char c, int x, int y)
 {
-	float fzin = 0.95;
-	float fzout = 1.05;
+	float fzin = 0.05;
+	float fzout = 0.05;
+	float dist;
 	unsigned char * pixels, *bmpbuf;
 	int i;
 
 	switch(c) {
       case 'i':
-		  proj.xmin *= fzin;
-		  proj.xmax *= fzin;
-		  proj.ymin *= fzin;
-		  proj.ymax *= fzin;
+	 	  dist = proj.xmax - proj.xmin;
+		  proj.xmin += fzin*dist;
+		  proj.xmax -= fzin*dist;
+	 	  dist = proj.ymax - proj.ymin;
+		  proj.ymin += fzin*dist;
+		  proj.ymax -= fzin*dist;
 		  proj.fov  *= fzin;
 		  reshape(iwinWidth,iwinHeight);
 		  break;
 	  case 'o':
-		  proj.xmin *= fzout;
-		  proj.xmax *= fzout;
-		  proj.ymin *= fzout;
-		  proj.ymax *= fzout;
+	 	  dist = proj.xmax - proj.xmin;
+		  proj.xmin -= fzout*dist;
+		  proj.xmax += fzout*dist;
+	 	  dist = proj.ymax - proj.ymin;
+		  proj.ymin -= fzout*dist;
+		  proj.ymax += fzout*dist;
 		  proj.fov  *= fzout;
 		  reshape(iwinWidth,iwinHeight);
+
 		  break;
 	  case 's': /* save framebuffer */
 		  pixels = (unsigned char *) malloc(iwinWidth*iwinHeight*4*sizeof(unsigned char));
@@ -215,9 +230,44 @@ void keys(unsigned char c, int x, int y)
 		  free(bmpbuf);
 		  free(pixels);
 		  break;
+	  case 'f': 
+	      ncuts += 100; 
+		  break;
+	  case 'c': 
+		  if (ncuts > 100) 
+		      ncuts -= 100; 
+		  break;
 	  case 'q':
 		  exit(0);
 		  break;
+	  case 'h':
+	      initApp();
+		  initGLsettings();
+		  break;
+	  case 'l':
+		  fzin = proj.xmax - proj.xmin;
+		  proj.xmin += fzin/100;
+		  proj.xmax += fzin/100;
+		  reshape(iwinWidth,iwinHeight);
+		  break;
+	  case 'r':
+		  fzin = proj.xmax - proj.xmin;
+		  proj.xmin -= fzin/100;
+		  proj.xmax -= fzin/100;
+		  reshape(iwinWidth,iwinHeight);
+		  break;
+	  case 'u':
+		  fzin = proj.ymax - proj.ymin;
+		  proj.ymin += fzin/100;
+		  proj.ymax += fzin/100;
+		  reshape(iwinWidth,iwinHeight);
+		  break;
+	  case 'd':
+		  fzin = proj.ymax - proj.ymin;
+		  proj.ymin -= fzin/100;
+		  proj.ymax -= fzin/100;
+		  reshape(iwinWidth,iwinHeight);
+		  break;                 
 	  default:
 		  break;
   }
@@ -246,8 +296,8 @@ int initGLUT(int argc, char **argv)
 {
 	int winid; 
 
-	iwinWidth = 1000;
-	iwinHeight = 1000;
+	iwinWidth = 500;
+	iwinHeight = 500;
 
 	glutInit( &argc, argv);
 	glutInitDisplayMode(GLUT_RGBA|GLUT_DOUBLE|GLUT_DEPTH);
