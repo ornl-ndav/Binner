@@ -395,3 +395,55 @@ time2 = clock();
 
 	return total_volume;
 }
+
+void output_with_compression(char * fname,
+							int * sz,
+							double * vol)
+{
+	int i, j, k, nvox;
+	double         * dvol;
+	unsigned int   * hash;
+	unsigned short * xyz;
+	int    ori[3], size[3];
+
+	nvox = 0;
+	for (i = 0; i < sz[0]; i ++)
+		for (j = 0; j <sz[1]; j ++)
+			for (k = 0; k <sz[2]; k ++) {
+
+				if (vol[(i * sz[1] + j)*sz[2] + k] > 1e-16)
+				    nvox ++;
+			}
+	
+	dvol = malloc(nvox * sizeof(double));
+	hash = malloc(sz[0]*sz[1]*sizeof(int));
+	xyz  = malloc(nvox * 3 * sizeof(unsigned short));
+
+	nvox = 0;
+	for (i = 0; i < sz[0]; i ++)
+		for (j = 0; j <sz[1]; j ++)
+		{
+			hash[i * sz[1] + j] = nvox;
+			for (k = 0; k <sz[2]; k ++) {
+
+				if (vol[(i * sz[1] + j)*sz[2] + k] > 1e-16)
+				{
+					dvol[nvox] = vol[(i * sz[1] + j)*sz[2] + k];
+					xyz[nvox*3+0] = (unsigned short)i;
+					xyz[nvox*3+1] = (unsigned short)j;
+					xyz[nvox*3+2] = (unsigned short)k;
+				    nvox ++;
+				}
+			}
+		}
+
+	ori[0] = ori[1] = ori[2] = 0;
+	size[0] = nvox;
+	vcbGenBinm("512.bin", VCB_DOUBLE, 1, ori, size, 1, dvol);
+	vcbGenBinm("513.bin", VCB_UNSIGNEDINT, 2, ori, sz, 1, hash);
+	vcbGenBinm("514.bin", VCB_UNSIGNEDSHORT, 1, ori, size, 3, xyz);
+
+	free(dvol);
+	free(hash);
+	free(xyz);
+}
