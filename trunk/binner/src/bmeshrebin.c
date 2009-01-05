@@ -20,14 +20,6 @@ int main(int argc, char ** argv)
 	float  hitcnt, hiterr, corners[8][4], vbuf[1024];
 	char   md5string[100], fname[100];
 
-	res = atoi(argv[1]);
-	f = atoi(argv[2]);
- 
-	vdata = malloc(f * 6 * 4 * 3 * sizeof(double));
-	nverts = malloc(f * 6 * sizeof(int));
-	hcnt   = malloc(f * sizeof(double));
-	herr   = malloc(f * sizeof(double));
-
 /*
 	for (nfacets = 0, v = vdata; (n = get_polygond(v)) > 0; nfacets ++) {
 
@@ -46,6 +38,18 @@ int main(int argc, char ** argv)
 	}
 	else
 	   sprintf(fname, "500.bin");
+
+	res = atoi(argv[1]);
+	
+	/* f = atoi(argv[2]); */
+	scanf("%d", &f);
+	fgets(md5string, 100, stdin); /* get whatever that is left on this line */
+ 
+	vdata = malloc(f * 6 * 4 * 3 * sizeof(double));
+	nverts = malloc(f * 6 * sizeof(int));
+	hcnt   = malloc(f * sizeof(double));
+	herr   = malloc(f * sizeof(double));
+
 	
     for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; npara ++) 
 	{
