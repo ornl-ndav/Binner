@@ -15,7 +15,7 @@ int main(int argc, char ** argv)
 	int i, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
 	double * vdata, * hcnt, * herr;
 	int    * nverts;
-	double totalvolume, cellsize, bounds[6]; 
+	double totalvolume, cellsize, tmp, bounds[6]; 
 	double * voxels;
 	float  hitcnt, hiterr, corners[8][4], vbuf[1024];
 	char   md5string[100], fname[100];
@@ -74,12 +74,13 @@ int main(int argc, char ** argv)
 time1 = clock();
 
 	bounding_box(npara*6*4, bounds, vdata);	
-	cellsize = (bounds[1] - bounds[0])/res;
-	if (bounds[3] - bounds[2] > bounds[1] - bounds[0])
-		cellsize = (bounds[3] - bounds[2])/res;
-	if (bounds[5] - bounds[4] > bounds[3] - bounds[2])
-		cellsize = (bounds[5] - bounds[4])/res;
 
+	cellsize = (bounds[1] - bounds[0])/res;
+	tmp = (bounds[3] - bounds[2])/res;
+	if (tmp > cellsize) cellsize = tmp;
+	tmp = (bounds[5] - bounds[4])/res;
+	if (tmp > cellsize) cellsize = tmp;
+		
 	orig[0] = (int)floor(bounds[0]/cellsize);
 	orig[1] = (int)floor(bounds[2]/cellsize);
 	orig[2] = (int)floor(bounds[4]/cellsize);
@@ -105,8 +106,8 @@ time1 = clock();
 time2 = clock();
 	printf("%d parallelipeds in %.3f sec, total count %e\n", f, (float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
   
-	//printf("rebin completed. totalvolume = %lf \n", totalvolume);
 	vcbGenBinm(fname, VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
+	output_with_compression(fname, xyzsize, voxels);
 
 	free(herr);
 	free(hcnt);
