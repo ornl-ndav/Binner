@@ -73,6 +73,9 @@ double bin_smallpara3d_150(	int		nfacets,
 						double  ccs, /* cubic cell size, assume uniform cell size */ 
 						double *voxels);
 
+void output_with_compression(char * fname,
+							int * sz,
+							double * vol);
 #ifdef __cplusplus
 }  /* extern C */
 #endif
