@@ -45,31 +45,33 @@ time1 = clock();
 	bounding_box((v-vdata)/3, bounds, vdata);	
 	cellsize = (bounds[1] - bounds[0])/res;
 
-	orig[0] = (int)(bounds[0]/cellsize);
-	orig[1] = (int)(bounds[2]/cellsize);
-	orig[2] = (int)(bounds[4]/cellsize);
-	xyzsize[0] = (int)(bounds[1]/cellsize) - orig[0] + 1;
-	xyzsize[1] = (int)(bounds[3]/cellsize) - orig[1] + 1;
-	xyzsize[2] = (int)(bounds[5]/cellsize) - orig[2] + 1;
-	//printf("orig: %d %d %d, volume size: %d %d %d\n", orig[0], orig[1], orig[2], xyzsize[0], xyzsize[1], xyzsize[2]);
+	orig[0] = (int)floor(bounds[0]/cellsize);
+	orig[1] = (int)floor(bounds[2]/cellsize);
+	orig[2] = (int)floor(bounds[4]/cellsize);
+	xyzsize[0] = (int)ceil(bounds[1]/cellsize) - orig[0] + 1;
+	xyzsize[1] = (int)ceil(bounds[3]/cellsize) - orig[1] + 1;
+	xyzsize[2] = (int)ceil(bounds[5]/cellsize) - orig[2] + 1;
+	printf("orig: %d %d %d, volume size: %d %d %d\n", orig[0], orig[1], orig[2], xyzsize[0], xyzsize[1], xyzsize[2]);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double));
 	for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-	totalvolume = bin_para3d_150(nfacets, 
+	totalvolume = bin_smallpara3d_150(nfacets, 
 							nverts,
 							vdata, /* the vertices */
+							NULL,  /* no hit counter */
+							NULL,  /* no hit error */
 							orig, 
 							xyzsize,
 							cellsize, 
 							voxels);
 
 time2 = clock();
-	printf("total time: %.3f sec\n",(float)(time2-time1)/CLOCKS_PER_SEC);
+	printf("total time: %.3f sec, total volume: %lf\n",(float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
   
 	//printf("rebin completed. totalvolume = %lf \n", totalvolume);
-	vcbGenBinm("300.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
+	vcbGenBinm("400.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
 
 	free(voxels);
 	free(nverts);

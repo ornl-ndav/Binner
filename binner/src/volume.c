@@ -160,7 +160,7 @@ double partialvoxel_volume(	int nwf, /* number of working facets - clipping plan
 	int	     nfacets;
 	int    * nverts;
 	double * cubev; /*[6*4*3];*/
-	double   plane_eq[4*3], *p;
+	double * plane_eq, *p;
 	double * w, volume;
 
 	int i, j;
@@ -171,6 +171,7 @@ double partialvoxel_volume(	int nwf, /* number of working facets - clipping plan
 	for (i = 0; i < nfacets; nverts[i] = 4, i ++);
 	cubev = malloc(6*4*3*sizeof(double));
 	basicCubed(cubev);
+	plane_eq = malloc(nwf * 4 *sizeof(double));
 
 	/*printf("%lf ", ccs);*/
 	
@@ -190,15 +191,21 @@ double partialvoxel_volume(	int nwf, /* number of working facets - clipping plan
 	/*printf("%e %e %e on %d faces ", cubev[3], cubev[4], cubev[5], nfacets);*/
 
 	/* start clipping by each clipping plane */
-	for (i = 0, nfacets = 6, p = plane_eq; i < nwf; p+= 4, i ++)
+	for (i = 0, nfacets = 6, p = plane_eq; ((nfacets > 0) && (i < nwf)); p+= 4, i ++)
+	{
+		//printf("clipping polyheral, clip plane %d of %d, still %d faces left in cube\n", i, nwf, nfacets);
 		nfacets = clip_polyhedral(nfacets, &nverts, &cubev, p);
+	}
 
-	
 	/* now we have a polyhedral cell. compute its volume */
-	volume = polyhedral_volume(nfacets, nverts, cubev);
+	if (nfacets > 0)
+		volume = polyhedral_volume(nfacets, nverts, cubev);
+	else
+		volume = 0;
 
 	//printf("partialvolume = %lf, nfacets = %d\n", volume, nfacets);
 
+	free(plane_eq);
 	free(nverts);
 	free(cubev);
 
