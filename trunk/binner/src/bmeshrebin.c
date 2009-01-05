@@ -103,7 +103,7 @@ time1 = clock();
 							voxels);
 
 time2 = clock();
-	printf("total time: %.3f sec, total count %e\n",(float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
+	printf("%d parallelipeds in %.3f sec, total count %e\n", f, (float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
   
 	//printf("rebin completed. totalvolume = %lf \n", totalvolume);
 	vcbGenBinm(fname, VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
