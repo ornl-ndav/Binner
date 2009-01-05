@@ -305,7 +305,7 @@ int initGLUT(int argc, char **argv)
     glutInitWindowSize(iwinWidth,iwinHeight);
 	glutInitWindowPosition(50,50);
 	winid = glutCreateWindow(argv[0]);
-	glutSetWindowTitle("SEECON - see convex cells");
+	glutSetWindowTitle(argv[0]);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutIdleFunc(idle);

@@ -62,6 +62,17 @@ double bin_para3d_150(	int		nfacets,
 						int *	xyzsize,
 						double  ccs, /* cubic cell size */ 
 						double *voxels);
+
+double bin_smallpara3d_150(	int		nfacets, 
+						int   * nverts,
+						double *v, /* the vertices */
+						double *hitcnt,
+						double *hiterr,
+						int *	orig, 
+						int *	xyzsize,
+						double  ccs, /* cubic cell size, assume uniform cell size */ 
+						double *voxels);
+
 #ifdef __cplusplus
 }  /* extern C */
 #endif

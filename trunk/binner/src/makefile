@@ -20,9 +20,9 @@ LIB_PATH = -L$(TOP)/vcb/lib  -L/sw/lib
 
 LIBS =  -lpthread -lvcb  -lm
 
-OBJS = binner.o binnerio.o bslicer.o cell.o clip.o clip3d.o collector.o compvol.o gencell.o pix2mesh.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o serve.o socketfun.o sorter.o tran3d.o volume.o voxelize.o
+OBJS = binner.o binnerio.o bmeshrebin.o bslicer.o cell.o clip.o clip3d.o collector.o compvol.o gencell.o pix2mesh.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o serve.o socketfun.o sorter.o tran3d.o volume.o voxelize.o
 
-EXES = bslicer clip3d  compvol gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto serve netrebin sorter
+EXES = bmeshrebin bslicer clip3d  compvol gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto serve netrebin sorter
 
 .SUFFIXES: .cc .c .cpp
 
@@ -77,6 +77,9 @@ compvol: compvol.o volume.o clip.o cell.o geometry.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 rebin: rebin.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+bmeshrebin: bmeshrebin.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 bslicer: bslicer.o 

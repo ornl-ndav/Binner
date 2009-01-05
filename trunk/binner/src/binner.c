@@ -95,6 +95,35 @@ void flood_wvol(unsigned int * wvol, int * xyzsize)
 	fprintf(stderr,"nvoxel %d, out/in/sur: %d/%d/%d\n", xyz, j, k, xyz-j-k);
 }
 
+void pad_bounds3d(double * bounds, double decr_lb, double incr_ub)
+{ 
+	/* now let's pad 2 cells on each end of the 3 dimensions */
+	bounds[0] -= decr_lb;
+	bounds[1] += incr_ub;
+	bounds[2] -= decr_lb;
+	bounds[3] += incr_ub;
+	bounds[4] -= decr_lb;
+	bounds[5] += incr_ub;
+}
+
+void roundup_bounds(double * bounds, int * lb, int * ub, double ccs)
+{
+	/* make sure bounds end on integar intervals of ccs */
+	lb[0]     = (int)floor(bounds[0]/ccs);
+	bounds[0] = lb[0] * ccs;
+	lb[1]     = (int)floor(bounds[2]/ccs);
+	bounds[2] = lb[1] * ccs;
+	lb[2]     = (int)floor(bounds[4]/ccs);
+	bounds[4] = lb[2] * ccs;
+
+	ub[0]     = (int)ceil(bounds[1]/ccs);
+	bounds[1] = ub[0] * ccs;
+	ub[1]     = (int)ceil(bounds[3]/ccs);
+	bounds[3] = ub[1] * ccs;	
+	ub[2]     = (int)ceil(bounds[5]/ccs);
+	bounds[5] = ub[2] * ccs;			
+}
+
 double count_volume(double * vol, int * xyzsize)
 {
 	int i; 
@@ -146,34 +175,12 @@ time1 = clock();
 	for (i = 0, totalverts = 0; i < nfacets; totalverts += nverts[i], i ++)
 		face_starts[i] = totalverts;
 
+	/* assume uniform cell size: ccs, cubic cell size; cs: half of cell size */
+	cs = ccs/2;
+
 	bounding_box(totalverts, bounds, v);
-
-	/* ccs: cubic cell size */
-	/* assume uniform cell size */
-	cs = ccs/2;  /*half of cell size */
-
-	/* now let's pad 2 cells on each end of the 3 dimensions */
-	bounds[0] -= ccs*2;
-	bounds[1] += ccs*3;
-	bounds[2] -= ccs*2;
-	bounds[3] += ccs*3;
-	bounds[4] -= ccs*2;
-	bounds[5] += ccs*3;
-	
-	/* make sure bounds end on integar intervals of ccs */
-	lb[0]     = (int)floor(bounds[0]/ccs);
-	bounds[0] = lb[0] * ccs;
-	lb[1]     = (int)floor(bounds[2]/ccs);
-	bounds[2] = lb[1] * ccs;
-	lb[2]     = (int)floor(bounds[4]/ccs);
-	bounds[4] = lb[2] * ccs;
-
-	ub[0]     = (int)ceil(bounds[1]/ccs);
-	bounds[1] = ub[0] * ccs;
-	ub[1]     = (int)ceil(bounds[3]/ccs);
-	bounds[3] = ub[1] * ccs;	
-	ub[2]     = (int)ceil(bounds[5]/ccs);
-	bounds[5] = ub[2] * ccs;			
+	pad_bounds3d(bounds, ccs*2, ccs*3); /* pad on each end of the 3 dimensions */
+	roundup_bounds(bounds, lb, ub, ccs); 	/* make sure bounds end on integar intervals of ccs */
 
 	/* knowing the proper bounds, wvol should be of wsize */
 	wsize[0] = ub[0] - lb[0];
@@ -312,6 +319,79 @@ time4 = clock();
 			(float)(time2-time1)/CLOCKS_PER_SEC,
 			(float)(time3-time2)/CLOCKS_PER_SEC,
 			(float)(time4-time3)/CLOCKS_PER_SEC);
+
+	return total_volume;
+}
+
+
+double bin_smallpara3d_150(	int		nfacets, 
+						int   * nverts,
+						double *v, /* the vertices */
+						double *hitcnt,
+						double *hiterr,
+						int *	orig, 
+						int *	xyzsize,
+						double  ccs, /* cubic cell size, assume uniform cell size */ 
+						double *voxels) 
+{
+	clock_t time1, time2;
+
+	/* return value: is the total volume in the subdivided grid */
+	double voxel_volume, total_volume, factor;
+	double * vp;
+	double smallbounds[6];
+	int    wnfacets, wnverts[6];
+	int    *face_starts;
+
+	int i, j, k, l, id;
+	int smalllb[3], smallub[3], coord[3], totalverts; 
+
+time1 = clock();
+
+	face_starts = malloc(nfacets * sizeof(int));
+	for (i = 0, totalverts = 0; i < nfacets; totalverts += nverts[i], i ++)
+		face_starts[i] = totalverts;
+
+	wnfacets = 6;
+	for (i = 0, vp= v; i < nfacets; vp = v + face_starts[i]*3, i += 6) 
+	{
+		/*clip this paralleliped to within this cell */
+		
+		if ((hitcnt != NULL) && (hiterr != NULL))
+			factor = hitcnt[i/6]/polyhedral_volume(wnfacets, &nverts[i], vp);// * hiterr[i/6];
+		else
+			factor = 1.0;
+
+		bounding_box(6*4, smallbounds, vp);
+		roundup_bounds(smallbounds, smalllb, smallub, ccs); 
+/*
+		printf("processing paralleliped %d: lb %d %d %d, ub %d %d %d: hit %e \n", 
+				i/6, 
+		        smalllb[0], smalllb[1], smalllb[2],
+				smallub[0], smallub[1], smallub[2], 
+				hitcnt[i/6]);
+*/
+		//if (hitcnt[i/6] < 1e-12) continue;
+
+		for (j = smalllb[0]; j <= smallub[0]; j ++)
+			for (k = smalllb[1]; k <= smallub[1]; k ++)
+				for (l = smalllb[2]; l <= smallub[2]; l ++)
+				{
+					coord[0] = j; 
+					coord[1] = k;
+					coord[2] = l;
+					//printf("coord: %d %d %d\n", j, k, l);
+
+					id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
+					voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
+					voxels[id] += voxel_volume * factor;
+					total_volume += voxel_volume * factor;
+				}
+	}
+
+time2 = clock();
+
+	free(face_starts);
 
 	return total_volume;
 }

@@ -190,9 +190,9 @@ int clean_polyhedron(int nfacets, int ** nverts, double **v)
 	 * 
 	 * this function produces a cleaned polyhedron
 	 */
-	int nv[10];
-	double vbuf[10*3];   /* each facet has fewer than 10 vertices */
-	double pbuf[10*3*20]; /* each polyhedron has fewer han 20 facets */
+	int nv[100];
+	double vbuf[100*3];   /* each facet has fewer than 10 vertices */
+	double pbuf[100*3*20]; /* each polyhedron has fewer han 20 facets */
 	double * vp, *vpbuf;
 
 	int i, j, n, nf;
@@ -253,12 +253,12 @@ int clip_polyhedral(int nfaces, int ** nverts, double ** verts, double * cplane)
 	 *  i.e. no mesh type of topology is stored, although such information
 	 *       can be computed from the available data
 	 */
-	double vbuf[10 * 3], *vp;
-	int nv, onbuf[10];
+	double vbuf[100 * 3], *vp;
+	int nv, onbuf[100];
 	int noutfaces, * noutverts, totalvertices;
 	double * outverts, *op;
 	
-	double cbuf[20*3], *cp; /* vertex buffer for polygon on clipping plane */
+	double cbuf[200*3], *cp; /* vertex buffer for polygon on clipping plane */
 	int    nc;         /* number of polygon vertices on clipping plane */
 	int    ne;         /* number of polygon edges on clipping plane */
 
@@ -270,8 +270,8 @@ int clip_polyhedral(int nfaces, int ** nverts, double ** verts, double * cplane)
 	 * 3 cooridnates (xyz) on each vertex
 	 * everything in double precision
 	 */ 
-	outverts = malloc((nfaces+1)*10*3*sizeof(double));
-	noutverts = malloc((nfaces+1)*sizeof(int));
+	outverts = malloc((nfaces*3)*100*3*sizeof(double));
+	noutverts = malloc((nfaces*3)*sizeof(int));
 
 	noutfaces = 0;
 	op = outverts;
