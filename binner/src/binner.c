@@ -2,6 +2,7 @@
 #include <string.h>
 #include <assert.h>
 #include <time.h>
+#include <math.h>
 #include "binner.h"
 #include "vcbutils.h"
 #include "vcblinalg.h"
@@ -405,6 +406,7 @@ void output_with_compression(char * fname,
 	unsigned int   * hash;
 	unsigned short * xyz;
 	int    ori[3], size[3];
+	char fullname[100];
 
 	nvox = 0;
 	for (i = 0; i < sz[0]; i ++)
@@ -439,11 +441,53 @@ void output_with_compression(char * fname,
 
 	ori[0] = ori[1] = ori[2] = 0;
 	size[0] = nvox;
-	vcbGenBinm("512.bin", VCB_DOUBLE, 1, ori, size, 1, dvol);
-	vcbGenBinm("513.bin", VCB_UNSIGNEDINT, 2, ori, sz, 1, hash);
-	vcbGenBinm("514.bin", VCB_UNSIGNEDSHORT, 1, ori, size, 3, xyz);
+	sprintf(fullname, "%s512.bin", fname);
+	vcbGenBinm(fullname, VCB_DOUBLE, 1, ori, size, 1, dvol);
+	sprintf(fullname, "%s513.bin", fname);
+	vcbGenBinm(fullname, VCB_UNSIGNEDINT, 2, ori, sz, 1, hash);
+	sprintf(fullname, "%s514.bin", fname);
+	vcbGenBinm(fullname, VCB_UNSIGNEDSHORT, 1, ori, size, 3, xyz);
 
 	free(dvol);
 	free(hash);
 	free(xyz);
+}
+
+void export_VTK_volume(char * fname, int * orig, int * sz, double * vol)
+{
+	FILE * fp;
+	char fullname[100];
+	int i, j, k;
+	double val;
+	unsigned char * cvol;
+	
+	sprintf(fullname, "%s515.vtk", fname);
+	fp = fopen(fullname, "w");
+	
+	fprintf(fp, "# vtk DataFile Version 1.0\n");
+	fprintf(fp, "rebinned Qxyz histogram %s\n", fname);
+	fprintf(fp, "BINARY\n");
+	fprintf(fp, "DATASET STRUCTURED_POINTS\n");
+	fprintf(fp, "DIMENSIONS %d %d %d\n", sz[0], sz[1], sz[2]);
+	fprintf(fp, "ASPECT_RATIO 1.0 1.0 1.0\n");
+	fprintf(fp, "ORIGIN %d %d %d\n", orig[0], orig[1], orig[2]);
+	fprintf(fp, "POINT_DATA %d\n", sz[0]*sz[1]*sz[2]);
+	fprintf(fp, "SCALARS scalars unsigned_char\n");
+	fprintf(fp, "LOOKUP_TABLE default\n");
+	
+	cvol = malloc(sz[0]*sz[1]*sz[2]);
+	for (i = 0; i < sz[0]; i ++)
+		for (j = 0; j <sz[1]; j ++)
+			for (k = 0; k <sz[2]; k ++) {
+
+				val = log10(vol[(i * sz[1] + j) * sz[2] +k]);
+				val += 16;
+				val *= 16;
+				if (val < 0) val = 0;
+				cvol[(k * sz[1] + j) * sz[0] +i] = (unsigned char)val;
+			}
+
+	fwrite(cvol, sizeof(unsigned char), sz[0]*sz[1]*sz[2], fp);
+	free(cvol); 
+	fclose(fp);
 }
