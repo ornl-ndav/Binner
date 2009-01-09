@@ -31,13 +31,22 @@ int main(int argc, char ** argv)
 	i = getchar();
 	ungetc(i, stdin);
 	if (i == 'M')
-	{
+	{  
+	   /*
+	    * if an md5string is provided
+		* all results will be saved to a MR-JH directory 
+		*/
 	   scanf("%s", md5string);
+	   /*
 	   sprintf(fname, "%s.bin", md5string);
-	   fgets(md5string, 100, stdin); /* get whatever that is left on this line */
+	   fgets(md5string, 100, stdin); /* get whatever that is left on this line 
+	   */
+	   sprintf(fname, "mkdir %s\n", md5string);
+	   system(fname);
+	   sprintf(fname, "%s/",md5string);
 	}
 	else
-	   sprintf(fname, "500.bin");
+		sprintf(fname, "");
 
 	res = atoi(argv[1]);
 	
@@ -106,8 +115,10 @@ time1 = clock();
 time2 = clock();
 	printf("%d parallelipeds in %.3f sec, total count %e\n", f, (float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
   
-	vcbGenBinm(fname, VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
+	//vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
+	
 	output_with_compression(fname, xyzsize, voxels);
+	export_VTK_volume(fname, orig, xyzsize, voxels);
 
 	free(herr);
 	free(hcnt);
