@@ -115,7 +115,7 @@ time1 = clock();
 time2 = clock();
 	printf("%d parallelipeds in %.3f sec, total count %e\n", f, (float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
   
-	//vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
+	vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
 	
 	output_with_compression(fname, xyzsize, voxels);
 	export_VTK_volume(fname, orig, xyzsize, voxels);
