@@ -398,6 +398,7 @@ time2 = clock();
 }
 
 void output_with_compression(char * fname,
+							int * orig,
 							int * sz,
 							double * vol)
 {
@@ -419,7 +420,7 @@ void output_with_compression(char * fname,
 	
 	dvol = malloc(nvox * sizeof(double));
 	hash = malloc(sz[0]*sz[1]*sizeof(int));
-	xyz  = malloc(nvox * 3 * sizeof(unsigned short));
+	xyz  = malloc(nvox * 3 * sizeof(short));
 
 	nvox = 0;
 	for (i = 0; i < sz[0]; i ++)
@@ -431,9 +432,9 @@ void output_with_compression(char * fname,
 				if (vol[(i * sz[1] + j)*sz[2] + k] > 1e-16)
 				{
 					dvol[nvox] = vol[(i * sz[1] + j)*sz[2] + k];
-					xyz[nvox*3+0] = (unsigned short)i;
-					xyz[nvox*3+1] = (unsigned short)j;
-					xyz[nvox*3+2] = (unsigned short)k;
+					xyz[nvox*3+0] = (short)(i+orig[0]);
+					xyz[nvox*3+1] = (short)(j+orig[1]);
+					xyz[nvox*3+2] = (short)(k+orig[2]);
 				    nvox ++;
 				}
 			}
@@ -441,11 +442,11 @@ void output_with_compression(char * fname,
 
 	ori[0] = ori[1] = ori[2] = 0;
 	size[0] = nvox;
-	sprintf(fullname, "%s512.bin", fname);
+	sprintf(fullname, "%s.bin", fname);
 	vcbGenBinm(fullname, VCB_DOUBLE, 1, ori, size, 1, dvol);
-	sprintf(fullname, "%s513.bin", fname);
+	sprintf(fullname, "%s.bin", fname);
 	vcbGenBinm(fullname, VCB_UNSIGNEDINT, 2, ori, sz, 1, hash);
-	sprintf(fullname, "%s514.bin", fname);
+	sprintf(fullname, "%s.bin", fname);
 	vcbGenBinm(fullname, VCB_UNSIGNEDSHORT, 1, ori, size, 3, xyz);
 
 	free(dvol);
@@ -461,7 +462,7 @@ void export_VTK_volume(char * fname, int * orig, int * sz, double cellsize, doub
 	double val;
 	float * cvol;
 	
-	sprintf(fullname, "%s515.vtk", fname);
+	sprintf(fullname, "%s.vtk", fname);
 	fp = fopen(fullname, "w");
 	
 	fprintf(fp, "# vtk DataFile Version 1.0\n");
