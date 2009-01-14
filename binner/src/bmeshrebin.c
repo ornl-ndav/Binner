@@ -16,7 +16,7 @@ int main(int argc, char ** argv)
 	clock_t time1, time2;
 
 	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
-	double * vdata, * hcnt, * herr;
+	double * vdata, * hcnt, * herr, spacing[3];
 	int    * nverts, * sid;
 	double totalvolume, cellsize, tmp, bounds[6]; 
 	double * voxels;
@@ -117,6 +117,9 @@ int main(int argc, char ** argv)
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double));
 
+	spacing[0] = spacing[1] = spacing[2] = cellsize;
+	export_VTKhdr(fname, orig, xyzsize, spacing);
+
 	for (n = 0, j = 0; n < f; n += j)
 	{
 		time1 = clock();
@@ -145,13 +148,12 @@ int main(int argc, char ** argv)
 
 		rebintime += (float)(time2-time1)/CLOCKS_PER_SEC;
 	  
-		sprintf(fullname, "%s/%d", fname, sid[n]);
+		sprintf(fullname, "%s/%0.4d", fname, sid[n]);
 		printf("slice %d has %d parallelipeds\n", sid[n], j);
 
 		/* vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels); */
 		
-		output_with_compression(fullname, orig, xyzsize, voxels);
-		export_VTK_volume(fullname, orig, xyzsize, cellsize, voxels);
+		output_with_compression(fullname, xyzsize, voxels);
 	}
 	
 	printf("%d parallelipeds in %.3f sec (%.2f per sec), total count %e\n", f, rebintime, f/rebintime, totalvolume);

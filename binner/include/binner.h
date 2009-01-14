@@ -73,13 +73,6 @@ double bin_smallpara3d_150(	int		nfacets,
 						double  ccs, /* cubic cell size, assume uniform cell size */ 
 						double *voxels);
 
-void output_with_compression(char * fname,
-							int * orig,
-							int * sz,
-							double * vol);
-
-void export_VTK_volume(char * fname, int * orig, int * sz, double cellsize, double * vol);
-
 #ifdef __cplusplus
 }  /* extern C */
 #endif
