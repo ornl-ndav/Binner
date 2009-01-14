@@ -74,6 +74,7 @@ double bin_smallpara3d_150(	int		nfacets,
 						double *voxels);
 
 void output_with_compression(char * fname,
+							int * orig,
 							int * sz,
 							double * vol);
 
