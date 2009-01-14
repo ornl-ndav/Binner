@@ -118,7 +118,7 @@ time2 = clock();
 	vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels);
 	
 	output_with_compression(fname, xyzsize, voxels);
-	export_VTK_volume(fname, orig, xyzsize, voxels);
+	export_VTK_volume(fname, orig, xyzsize, cellsize, voxels);
 
 	free(herr);
 	free(hcnt);

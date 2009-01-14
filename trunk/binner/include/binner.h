@@ -76,6 +76,9 @@ double bin_smallpara3d_150(	int		nfacets,
 void output_with_compression(char * fname,
 							int * sz,
 							double * vol);
+
+void export_VTK_volume(char * fname, int * orig, int * sz, double cellsize, double * vol);
+
 #ifdef __cplusplus
 }  /* extern C */
 #endif

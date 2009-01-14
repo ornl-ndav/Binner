@@ -453,13 +453,13 @@ void output_with_compression(char * fname,
 	free(xyz);
 }
 
-void export_VTK_volume(char * fname, int * orig, int * sz, double * vol)
+void export_VTK_volume(char * fname, int * orig, int * sz, double cellsize, double * vol)
 {
 	FILE * fp;
 	char fullname[100];
 	int i, j, k;
 	double val;
-	unsigned char * cvol;
+	float * cvol;
 	
 	sprintf(fullname, "%s515.vtk", fname);
 	fp = fopen(fullname, "w");
@@ -470,24 +470,32 @@ void export_VTK_volume(char * fname, int * orig, int * sz, double * vol)
 	fprintf(fp, "DATASET STRUCTURED_POINTS\n");
 	fprintf(fp, "DIMENSIONS %d %d %d\n", sz[0], sz[1], sz[2]);
 	fprintf(fp, "ASPECT_RATIO 1.0 1.0 1.0\n");
-	fprintf(fp, "ORIGIN %d %d %d\n", orig[0], orig[1], orig[2]);
+	fprintf(fp, "ORIGIN %e %e %e\n",orig[0]*cellsize, 
+									orig[1]*cellsize, 
+									orig[2]*cellsize);
+	fprintf(fp, "SPACING %e %e %e\n", cellsize, cellsize, cellsize);	
 	fprintf(fp, "POINT_DATA %d\n", sz[0]*sz[1]*sz[2]);
-	fprintf(fp, "SCALARS scalars unsigned_char\n");
+	fprintf(fp, "SCALARS scalars float\n");
 	fprintf(fp, "LOOKUP_TABLE default\n");
 	
-	cvol = malloc(sz[0]*sz[1]*sz[2]);
+	cvol = malloc(sizeof(float)*sz[0]*sz[1]*sz[2]);
 	for (i = 0; i < sz[0]; i ++)
 		for (j = 0; j <sz[1]; j ++)
 			for (k = 0; k <sz[2]; k ++) {
-
+/*
 				val = log10(vol[(i * sz[1] + j) * sz[2] +k]);
 				val += 16;
 				val *= 16;
 				if (val < 0) val = 0;
-				cvol[(k * sz[1] + j) * sz[0] +i] = (unsigned char)val;
+*/
+				val = vol[(i * sz[1] + j) * sz[2] +k];
+				cvol[(k * sz[1] + j) * sz[0] +i] = (float)val;
 			}
 
-	fwrite(cvol, sizeof(unsigned char), sz[0]*sz[1]*sz[2], fp);
+	for (i = 0; i < sz[0]*sz[1]*sz[2]; i ++)
+		vcbToggleEndian(cvol+i, sizeof(float));
+
+	fwrite(cvol, sizeof(float), sz[0]*sz[1]*sz[2], fp);
 	free(cvol); 
 	fclose(fp);
 }
