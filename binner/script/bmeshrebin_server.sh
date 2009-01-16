@@ -5,9 +5,10 @@
 TOP=..
 serveproc="${TOP}/bin/serve"
 rebinproc="${TOP}/bin/bmeshrebin"
+logfile="${TOP}/log/bmeshrebin_server.log"
+$serveproc $1 $2 2>>$logfile | $rebinproc $3 2>>$logfile
 
-$serveproc $1 $2 | $rebinproc $3
-
+echo >> $logfile
 exit 0
 
 
