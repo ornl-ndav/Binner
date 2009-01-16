@@ -73,7 +73,7 @@ main(int argc, char **argv)
 
   sock = serve_socket(hn, port);
 
-  fprintf(stderr, "server up running on: %s\n", hn); 
+  fprintf(stderr, "server running on   : %s\n", hn); 
   fprintf(stderr, "port number         : %d\n", port);
 
   fd = accept_connection(sock);
