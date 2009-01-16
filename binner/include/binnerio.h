@@ -21,11 +21,11 @@ int		binnerin_phcd(int nfacets, int * nverts, double * v);
 void	binnerout_phcf(int nfacets, int * nverts, float *v);
 void	binnerout_phcd(int nfacets, int * nverts, double *v);
 
-void output_with_compression(char * fname,
+int output_with_compression(char * fname,
 							int * sz,
 							double * vol);
 
-void export_VTKhdr(char * fname, int * orig, int * sz, double * cellsize);
+void export_VTKhdr(char * fname, int * orig, int * sz, double * cellsize, int nonempty);
 void export_VTKvol(char * fname, double * orig, int * sz, double * cellsize, double * vol);
 
 

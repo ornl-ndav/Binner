@@ -15,7 +15,7 @@ int main(int argc, char ** argv)
 {
 	clock_t time1, time2;
 
-	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
+	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3], nonempty;
 	double * vdata, * hcnt, * herr, spacing[3];
 	int    * nverts, * sid;
 	double totalvolume, cellsize, tmp, bounds[6]; 
@@ -109,18 +109,20 @@ int main(int argc, char ** argv)
 	xyzsize[0] = (int)ceil(bounds[1]/cellsize) - orig[0] + 1;
 	xyzsize[1] = (int)ceil(bounds[3]/cellsize) - orig[1] + 1;
 	xyzsize[2] = (int)ceil(bounds[5]/cellsize) - orig[2] + 1;
-	printf("orig: %d %d %d, volume size: %d %d %d, cellsize %e\n", 
-		   orig[0], orig[1], orig[2], 
-		   xyzsize[0], xyzsize[1], xyzsize[2],
-		   cellsize);
+ 
+ 	fprintf(stderr, "rebin data name     : %s\n", fname);
+	fprintf(stderr, "rebin volume origin : %d %d %d\n", orig[0], orig[1], orig[2]);
+	fprintf(stderr, "rebin volume size   : %d %d %d\n", xyzsize[0], xyzsize[1], xyzsize[2]);
+	fprintf(stderr, "rebin cellsize      : %e %e %e\n", cellsize, cellsize, cellsize);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double));
 
 	spacing[0] = spacing[1] = spacing[2] = cellsize;
-	export_VTKhdr(fname, orig, xyzsize, spacing);
 
-	for (n = 0, j = 0; n < f; n += j)
+	totalvolume = 0;
+	
+	for (n = 0, j = 0, nonempty = 0; n < f; n += j)
 	{
 		time1 = clock();
 		
@@ -134,7 +136,7 @@ int main(int argc, char ** argv)
 
 		for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-		totalvolume = bin_smallpara3d_150(j * 6, /* npara*6 */ 
+		totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
 								nverts + n*6,
 								vdata + n*6*4*3, /* the vertices */
 								hcnt + n,        /* hit counter */
@@ -149,14 +151,21 @@ int main(int argc, char ** argv)
 		rebintime += (float)(time2-time1)/CLOCKS_PER_SEC;
 	  
 		sprintf(fullname, "%s/%0.4d", fname, sid[n]);
-		printf("slice %d has %d parallelipeds\n", sid[n], j);
+		fprintf(stderr, "slice %0.4d has      : %d parallelipeds\n", sid[n], j);
 
 		/* vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels); */
 		
-		output_with_compression(fullname, xyzsize, voxels);
+		nonempty += output_with_compression(fullname, xyzsize, voxels);
 	}
-	
-	printf("%d parallelipeds in %.3f sec (%.2f per sec), total count %e\n", f, rebintime, f/rebintime, totalvolume);
+
+	export_VTKhdr(fname, orig, xyzsize, spacing, nonempty);
+ 
+	fprintf(stderr, "rebin time          : %.3f sec\n", rebintime);
+	fprintf(stderr, "rebin throughput    : %.2f per second\n", f/rebintime);
+	fprintf(stderr, "recorded count sum  : %e\n", totalvolume);
+	fprintf(stderr, "nonempty bins       : %d\n", nonempty);
+	fprintf(stderr, "all bins            : %d\n", nvoxel);
+	fprintf(stderr, "nonempty percentage : %.2f%%\n", (float)nonempty/nvoxel*100);
 
 	free(sid);
 	free(herr);

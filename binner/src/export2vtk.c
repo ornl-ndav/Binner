@@ -30,10 +30,6 @@ int main(int argc, char ** argv)
 	fscanf(hdr, "SPACING %lf %lf %lf\n", &spacing[0], &spacing[1], &spacing[2]);	
 	fclose(hdr);
 
-	printf("%d %d %d\n", sz[0], sz[1], sz[2]);
-	printf("%e %e %e\n", orig[0], orig[1], orig[2]);
-	printf("%e %e %e\n", spacing[0], spacing[1], spacing[2]);
-
 	vol = malloc(sz[0]*sz[1]*sz[2]*sizeof(double));
 	for (i = 0; i < sz[0]*sz[1]*sz[2]; vol[i] = 0.0, i ++);
 	
@@ -65,10 +61,19 @@ int main(int argc, char ** argv)
 		free(coord);
 	}
 
+	for (i = 0, j = 0; i < sz[0]*sz[1]*sz[2]; i ++)
+		if (vol[i] > 1e-16) j ++;
+
 	sprintf(fullname, "%s/combined", argv[1]);	
 	export_VTKvol(fullname, orig, sz, spacing, vol);
 	
-	printf("\nVTK volume saved to %s.vtk\n", fullname);
+	printf("\n\nVolume saved to      %s.vtk\n", fullname);
+	printf("Domain size          %d %d %d\n", sz[0], sz[1], sz[2]);
+	printf("Domain origin        %e %e %e\n", orig[0], orig[1], orig[2]);
+	printf("Domain spacing       %e %e %e\n", spacing[0], spacing[1], spacing[2]);
+	printf("Num non-empty voxels %d\n", j);
+	printf("Num of all voxels    %d\n", i);
+	printf("Non-empty percentage %.2f%%\n", (float)j/i*100);
 
 	return 0;
 }
