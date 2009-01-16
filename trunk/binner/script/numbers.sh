@@ -1,8 +1,9 @@
 #!/bin/bash
 
-#numbers.sh 10 100, i.e. print all numbers between 10 and 100
+# use: numbers.sh 10 100 2
+#      this generate all numbers between 10 and 100 use an incremental of 2
 
-for (( i = $1; i <= $2; i++))
+for (( i = $1; i <= $2; i = $i + $3))
 do
 	if [ $i -lt 10 ]; then
        echo -n 000$i " "
