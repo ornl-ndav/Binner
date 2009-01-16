@@ -1,10 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "socketfun.h"
 
 #define fullsz 4*1024*1024 
 char s[fullsz];
+
+int fastinout(int in, int out)
+{
+  int i, l, c;
+
+  i = 0;
+  l = 0;
+  c = 0;
+
+  while((l = read(in, s+i, fullsz))!= 0) {
+	i += l;
+    if (i > 1024*1024) 
+	{
+      write(out, s, i);
+	  c += i;
+      i = 0;
+    }
+  }
+
+  write(out, s, i);
+  c += i;
+  return c;
+}
 
 int inout(int in, int out)
 {
@@ -31,6 +55,8 @@ main(int argc, char **argv)
   char *hn, *un;
   int port, sock, fd;
   int i;
+  clock_t time1, time2;
+  float t;
 
   if (argc != 3) {
     fprintf(stderr, "usage: %s hostname port\n",argv[0]);
@@ -47,11 +73,19 @@ main(int argc, char **argv)
 
   sock = serve_socket(hn, port);
 
-  fprintf(stderr,"%s up running on %s at port %d until killed ...\n", argv[0], hn, port);
+  fprintf(stderr, "server up running on: %s\n", hn); 
+  fprintf(stderr, "port number         : %d\n", port);
 
   fd = accept_connection(sock);
-  
-  fprintf(stderr,"done reading %d lines\n",inout(fd, 1));
-  
+
+  time1 = clock();
+  i = fastinout(fd, 1);
+  time2 = clock();
+
+  t  = (float)(time2-time1)/CLOCKS_PER_SEC;
+  fprintf(stderr, "number of bytes read: %d\n", i);   
+  fprintf(stderr, "time spent          : %.2f seconds\n", t);
+  fprintf(stderr, "input bandwidth     : %8.4f MB/second\n", (float)i/t/1e6f);
+
   return 0;
 }
