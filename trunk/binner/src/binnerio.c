@@ -179,7 +179,7 @@ void binnerout_phcd(int nfacets, int * nverts, double *v)
 	}
 }
 
-void output_with_compression(char * fname,
+int output_with_compression(char * fname,
 							int * sz,
 							double * vol)
 {
@@ -235,6 +235,8 @@ void output_with_compression(char * fname,
 	free(dvol);
 	free(hash);
 	free(xyz);
+	
+	return nvox;
 }
 
 void export_VTKvol(char * fname, double * orig, int * sz, double * cellsize, double * vol)
@@ -284,7 +286,7 @@ void export_VTKvol(char * fname, double * orig, int * sz, double * cellsize, dou
 	fclose(fp);
 }
 
-void export_VTKhdr(char * fname, int * orig, int * sz, double * cellsize)
+void export_VTKhdr(char * fname, int * orig, int * sz, double * cellsize, int nonempty)
 {
 	FILE * fp;
 	char fullname[256];
@@ -298,7 +300,8 @@ void export_VTKhdr(char * fname, int * orig, int * sz, double * cellsize)
 									orig[1]*cellsize[1], 
 									orig[2]*cellsize[2]);
 	fprintf(fp, "SPACING %e %e %e\n", cellsize[0], cellsize[1], cellsize[2]);	
-	fprintf(fp, "Total NUMBER OF BINS %d\n", sz[0]*sz[1]*sz[2]);
+	fprintf(fp, "NUMBER OF BINS %d\n", sz[0]*sz[1]*sz[2]);
+	fprintf(fp, "Total NUMBER OF NONEMPTY BINS IN ALL SLICES %d\n", nonempty);
 	fprintf(fp, "BINARY FLOAT VOLUME REQUIRES %d byes\n", sz[0]*sz[1]*sz[2]*sizeof(float));
 	
 	fclose(fp);
