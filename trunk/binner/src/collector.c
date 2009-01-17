@@ -106,7 +106,7 @@ time2 = clock();
 int main(int argc, char ** argv)
 {
 	int sock2, i;
-	int nvoxel, ntasks;
+	int nvoxel;
 	task_t *t;
 	int port;
 	FILE * portnum_file;

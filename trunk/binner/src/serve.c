@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
 #include "socketfun.h"
 
 #define fullsz 4*1024*1024 
@@ -50,9 +53,9 @@ int inout(int in, int out)
   return l;
 }
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
-  char *hn, *un;
+  char *hn;
   int port, sock, fd;
   int i;
   clock_t time1, time2;

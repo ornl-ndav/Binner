@@ -10,7 +10,7 @@ int main(int argc, char ** argv)
 	FILE * hdr;
 	char fullname[256], dataname[256], idstring[10];
 	double orig[3], spacing[3];
-	int i, j, k, n, sz[3], first;
+	int i, j, k, n, sz[3];
 	
 	double * dvol, * vol;
 	unsigned short * coord;
