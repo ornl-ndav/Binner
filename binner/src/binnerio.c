@@ -80,7 +80,7 @@ int get_pixelf(int * id, float * cnt, float * err, float (* v)[4])
  * return value: num_vertices actually read in successfully
  */
 {
-	int i, n;
+	int i;
 	
 	if (scanf("%d", id) <= 0) return -1; 
 	if (scanf("%f", cnt) <= 0) return -1; 
@@ -250,15 +250,15 @@ void export_VTKvol(char * fname, double * orig, int * sz, double * cellsize, dou
 	sprintf(fullname, "%s.vtk", fname);
 	fp = fopen(fullname, "w");
 	
-	fprintf(fp, "# vtk DataFile Version 1.0\n");
+	fprintf(fp, "# vtk DataFile Version 2.0\n");
 	fprintf(fp, "rebinned Qxyz histogram %s\n", fname);
 	fprintf(fp, "BINARY\n");
 	fprintf(fp, "DATASET STRUCTURED_POINTS\n");
 	fprintf(fp, "DIMENSIONS %d %d %d\n", sz[0], sz[1], sz[2]);
-	fprintf(fp, "ASPECT_RATIO 1.0 1.0 1.0\n");
-	fprintf(fp, "ORIGIN %e %e %e\n",orig[0]*cellsize[0], 
-									orig[1]*cellsize[1], 
-									orig[2]*cellsize[2]);
+	/*fprintf(fp, "ASPECT_RATIO 1.0 1.0 1.0\n");*/
+	fprintf(fp, "ORIGIN %e %e %e\n",orig[0], //*cellsize[0], 
+									orig[1], //*cellsize[1], 
+									orig[2]); //*cellsize[2]);
 	fprintf(fp, "SPACING %e %e %e\n", cellsize[0], cellsize[1], cellsize[2]);	
 	fprintf(fp, "POINT_DATA %d\n", sz[0]*sz[1]*sz[2]);
 	fprintf(fp, "SCALARS scalars float\n");
@@ -302,7 +302,8 @@ void export_VTKhdr(char * fname, int * orig, int * sz, double * cellsize, int no
 	fprintf(fp, "SPACING %e %e %e\n", cellsize[0], cellsize[1], cellsize[2]);	
 	fprintf(fp, "NUMBER OF BINS %d\n", sz[0]*sz[1]*sz[2]);
 	fprintf(fp, "Total NUMBER OF NONEMPTY BINS IN ALL SLICES %d\n", nonempty);
-	fprintf(fp, "BINARY FLOAT VOLUME REQUIRES %d byes\n", sz[0]*sz[1]*sz[2]*sizeof(float));
+	fprintf(fp, "BINARY FLOAT VOLUME REQUIRES %d byes\n",
+			(int)(sz[0]*sz[1]*sz[2]*sizeof(float)));
 	
 	fclose(fp);
 }

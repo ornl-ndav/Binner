@@ -338,10 +338,10 @@ double bin_smallpara3d_150(	int		nfacets,
 	clock_t time1, time2;
 
 	/* return value: is the total volume in the subdivided grid */
-	double voxel_volume, total_volume, factor;
+	double voxel_volume, total_volume, factor, para_volume;
 	double * vp;
 	double smallbounds[6];
-	int    wnfacets, wnverts[6];
+	int    wnfacets; //wnverts[6];
 	int    *face_starts;
 
 	int i, j, k, l, id;
@@ -356,12 +356,6 @@ time1 = clock();
 	wnfacets = 6;
 	for (i = 0, vp= v; i < nfacets; vp = v + face_starts[i]*3, i += 6) 
 	{
-		/*clip this paralleliped to within this cell */
-		
-		if ((hitcnt != NULL) && (hiterr != NULL))
-			factor = hitcnt[i/6]/polyhedral_volume(wnfacets, &nverts[i], vp);// * hiterr[i/6];
-		else
-			factor = 1.0;
 
 		bounding_box(6*4, smallbounds, vp);
 		roundup_bounds(smallbounds, smalllb, smallub, ccs); 
@@ -371,23 +365,62 @@ time1 = clock();
 		        smalllb[0], smalllb[1], smalllb[2],
 				smallub[0], smallub[1], smallub[2], 
 				hitcnt[i/6]);
-*/
-		//if (hitcnt[i/6] < 1e-12) continue;
+*/		
+		if (   (smalllb[0] == smallub[0]) 
+			&& (smalllb[1] == smallub[1])
+			&& (smalllb[2] == smallub[2]))
+		{
+			if (smalllb[0] < orig[0]) continue;
+			if (smalllb[1] < orig[1]) continue;
+			if (smalllb[2] < orig[2]) continue;
+			if (smallub[0] >= orig[0]+xyzsize[0]) continue;
+			if (smallub[1] >= orig[1]+xyzsize[1]) continue;
+			if (smallub[2] >= orig[2]+xyzsize[2]) continue;
+			
+			id =  ((smalllb[0] - orig[0])*xyzsize[1] + smalllb[1] - orig[1])
+				  * xyzsize[2] 
+				  + smalllb[2] - orig[2];
 
-		for (j = smalllb[0]; j <= smallub[0]; j ++)
-			for (k = smalllb[1]; k <= smallub[1]; k ++)
-				for (l = smalllb[2]; l <= smallub[2]; l ++)
-				{
-					coord[0] = j; 
-					coord[1] = k;
-					coord[2] = l;
-					//printf("coord: %d %d %d\n", j, k, l);
+			if ((hitcnt != NULL) && (hiterr != NULL))
+				factor = hitcnt[i/6];
+			else
+				factor = 1.0;
+			voxels[id] += factor;
+			total_volume += factor;
+		}
+		else
+		{
+			/*clip this paralleliped to within this cell */
+			if (smalllb[0] < orig[0]) smalllb[0] = orig[0];
+			if (smalllb[1] < orig[1]) smalllb[1] = orig[1];
+			if (smalllb[2] < orig[2]) smalllb[2] = orig[2];
+			if (smallub[0] >= orig[0]+xyzsize[0]) smallub[0] = orig[0]+xyzsize[0]-1;
+			if (smallub[1] >= orig[1]+xyzsize[1]) smallub[1] = orig[1]+xyzsize[1]-1;
+			if (smallub[2] >= orig[2]+xyzsize[2]) smallub[2] = orig[2]+xyzsize[2]-1;
+			
+			para_volume = polyhedral_volume(wnfacets, &nverts[i], vp);
+			
+			if ((hitcnt != NULL) && (hiterr != NULL))
+				factor = hitcnt[i/6]/para_volume;// * hiterr[i/6];
+			else
+				factor = 1.0;
 
-					id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
-					voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
-					voxels[id] += voxel_volume * factor;
-					total_volume += voxel_volume * factor;
-				}
+
+			for (j = smalllb[0]; j <= smallub[0]; j ++)
+				for (k = smalllb[1]; k <= smallub[1]; k ++)
+					for (l = smalllb[2]; l <= smallub[2]; l ++)
+					{
+						coord[0] = j; 
+						coord[1] = k;
+						coord[2] = l;
+						//printf("coord: %d %d %d\n", j, k, l);
+
+						id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
+						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
+						voxels[id] += voxel_volume * factor;
+						total_volume += voxel_volume * factor;
+					}
+		}
 	}
 
 time2 = clock();
