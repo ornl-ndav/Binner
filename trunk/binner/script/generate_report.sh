@@ -13,7 +13,7 @@ grep percentage $logfile | cut -f2 -d":" | cut -f2 -d" " | cut -f1 -d"%" > t4
 echo "res     num_p/s sec     %non_empty"
 paste t1 t2 t3 t4
 
-#rm t1 t2 t3
+rm t1 t2 t3 t4
 
 exit 0
 
