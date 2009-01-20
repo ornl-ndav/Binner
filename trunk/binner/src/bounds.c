@@ -46,6 +46,14 @@ int main(int argc, char ** argv)
 		abbox.low [2] = VCB_MINVAL(abbox.low [2],vdata[i*4+2]);
 		abbox.high[2] = VCB_MAXVAL(abbox.high[2],vdata[i*4+2]);
     }
+	
+	if (npara % 50000 == 0)
+	{
+	  printf("number of parallelipeds = %d\n",npara);
+	  printf("bounding box: (%f %f %f) (%f %f %f)\n",
+			abbox.low[0], abbox.low[1], abbox.low[2], 
+			abbox.high[0],abbox.high[1],abbox.high[2]);
+	}
   }
 
   printf("number of parallelipeds = %d\n",npara);
