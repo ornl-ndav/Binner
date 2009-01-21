@@ -143,11 +143,14 @@ int main(int argc, char ** argv)
 	{
 		if (npara >= f) break; /* read at most f faces, i.e. f/6 parallelipeds */
 
-		correctCornersf3d(corners);
+		if (hitcnt >= 1e-16)
+		{
+			/* only ones with real hitcnt should be fixed */
+			/* otherwise, just keep the space filled would be fine */
+			correctCornersf3d(corners);
+		}
+
 		realCubef(corners, vbuf);
-		hcnt[npara] = hitcnt;
-		herr[npara] = hiterr;
-		sid[npara] = sliceid;
 
 		for (i = 0; i < 6*4; i ++)
 		{
@@ -158,6 +161,10 @@ int main(int argc, char ** argv)
 		
 		for (i = 0; i < 6; i ++)
 			nverts[npara*6+i] = 4;
+
+		hcnt[npara] = hitcnt;
+		herr[npara] = hiterr;
+		sid[npara] = sliceid;
 		
 	}
 
@@ -220,7 +227,7 @@ int main(int argc, char ** argv)
 	voxels = malloc(nvoxel * sizeof(double));
 
 	totalvolume = 0;
-	
+
 	for (n = 0, j = 0, nonempty = 0; n < f; n += j)
 	{
 		time1 = clock();

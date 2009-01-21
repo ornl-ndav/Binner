@@ -356,6 +356,9 @@ time1 = clock();
 	wnfacets = 6;
 	for (i = 0, vp= v; i < nfacets; vp = v + face_starts[i]*3, i += 6) 
 	{
+		if ((hitcnt != NULL) && (hiterr != NULL))
+			if (hitcnt[i/6] < 1e-16)
+				continue; /* consider this empty. no rebinning needed */
 
 		bounding_box(6*4, smallbounds, vp);
 		roundup_bounds(smallbounds, smalllb, smallub, ccs); 
@@ -399,6 +402,7 @@ time1 = clock();
 			if (smallub[2] >= orig[2]+xyzsize[2]) smallub[2] = orig[2]+xyzsize[2]-1;
 			
 			para_volume = polyhedral_volume(wnfacets, &nverts[i], vp);
+			if (para_volume < 1e-16) continue; /*don't do anything */
 			
 			if ((hitcnt != NULL) && (hiterr != NULL))
 				factor = hitcnt[i/6]/para_volume;// * hiterr[i/6];
