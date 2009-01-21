@@ -35,6 +35,11 @@ int main(int argc, char ** argv)
   for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; npara ++) {
 	totalhitcnt += hitcnt;
 	totalhiterr += hiterr;
+	if (npara % 50000 == 0)
+	{
+	   printf("number of parallelipeds = %d\n",npara);
+	   printf("totalhitcnt = %f, totalhiterr = %f\n", totalhitcnt, totalhiterr);
+	}	
   }
 
   printf("number of parallelipeds = %d\n",npara);
