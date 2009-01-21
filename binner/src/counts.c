@@ -27,23 +27,29 @@ int main(int argc, char ** argv)
   int   sliceid;
   float hitcnt, hiterr, corners[8][4];
   float totalhitcnt, totalhiterr;
+  float maxcnt, maxerr;
   double red;
 
   totalhitcnt = 0;
   totalhiterr = 0;
+  maxcnt = 0;
+  maxerr = 0;
   
   for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; npara ++) {
 	totalhitcnt += hitcnt;
 	totalhiterr += hiterr;
+	if (maxcnt < hitcnt) maxcnt = hitcnt;
+	if (maxerr < hiterr) maxerr = hiterr;
+
 	if (npara % 50000 == 0)
 	{
 	   printf("number of parallelipeds = %d\n",npara);
-	   printf("totalhitcnt = %f, totalhiterr = %f\n", totalhitcnt, totalhiterr);
+	   printf("tc: %e mc: %e te: %e me: %e\n", totalhitcnt, maxcnt, totalhiterr, maxerr);
 	}	
   }
 
   printf("number of parallelipeds = %d\n",npara);
-  printf("totalhitcnt = %f, totalhiterr = %f\n", totalhitcnt, totalhiterr);
-  
+  printf("tc: %e mc: %e te: %e me: %e\n", totalhitcnt, maxcnt, totalhiterr, maxerr);
+
   return 0;
 }
