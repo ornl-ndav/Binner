@@ -272,7 +272,7 @@ int main(int argc, char ** argv)
  
 	fprintf(stderr, "rebin time          : %.3f sec\n", rebintime);
 	fprintf(stderr, "rebin throughput    : %.2f per second\n", f/rebintime);
-	fprintf(stderr, "recorded count sum  : %e\n", totalvolume);
+	fprintf(stderr, "recorded count sum  : %le\n", totalvolume);
 	fprintf(stderr, "nonempty bins       : %d\n", nonempty);
 	fprintf(stderr, "all bins            : %d\n", nvoxel);
 	fprintf(stderr, "nonempty percentage : %.2f%%\n", (float)nonempty/nvoxel*100);

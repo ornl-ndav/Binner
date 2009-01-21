@@ -10,9 +10,10 @@
 #define fullsz 4*1024*1024 
 char s[fullsz];
 
-int fastinout(int in, int out)
+float fastinout(int in, int out)
 {
-  int i, l, c;
+  int i, l;
+  float c;
 
   i = 0;
   l = 0;
@@ -57,7 +58,7 @@ int main(int argc, char **argv)
 {
   char *hn;
   int port, sock, fd;
-  long long i;
+  float i;
   clock_t time1, time2;
   float t;
 
@@ -86,7 +87,7 @@ int main(int argc, char **argv)
   time2 = clock();
 
   t  = (float)(time2-time1)/CLOCKS_PER_SEC;
-  fprintf(stderr, "number of bytes read: %d\n", i);   
+  fprintf(stderr, "number of bytes read: %.0f\n", i);   
   fprintf(stderr, "time spent          : %.2f seconds\n", t);
   fprintf(stderr, "input bandwidth     : %8.4f MB/second\n", (float)i/t/1e6f);
 
