@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 {
   char *hn;
   int port, sock, fd;
-  int i;
+  long long i;
   clock_t time1, time2;
   float t;
 
