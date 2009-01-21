@@ -222,6 +222,7 @@ int main(int argc, char ** argv)
  	fprintf(stderr, "rebin volume origin : %d %d %d\n", orig[0], orig[1], orig[2]);
 	fprintf(stderr, "rebin volume size   : %d %d %d\n", xyzsize[0], xyzsize[1], xyzsize[2]);
 	fprintf(stderr, "rebin bin size      : %e %e %e\n", cellsize, cellsize, cellsize);
+	fprintf(stderr, "voxel scaled by     : %e\n", volumescale);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double));
