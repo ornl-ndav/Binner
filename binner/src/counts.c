@@ -23,33 +23,49 @@ float xmin, xmax, ymin, ymax;
 
 int main(int argc, char ** argv)
 {
-  int   i, j, n, ndims, orig, nvals, dummy;
+  int   i, j, n, ndims, orig, nvals, dummy, nzero;
   int   sliceid;
   float hitcnt, hiterr, corners[8][4];
   float totalhitcnt, totalhiterr;
-  float maxcnt, maxerr;
+  float maxcnt, maxerr, mincnt, minerr;
   double red;
 
+  nzero = 0;
   totalhitcnt = 0;
   totalhiterr = 0;
   maxcnt = 0;
   maxerr = 0;
+  mincnt = 1e6;
+  minerr = 1e6;
   
-  for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; npara ++) {
-	totalhitcnt += hitcnt;
-	totalhiterr += hiterr;
-	if (maxcnt < hitcnt) maxcnt = hitcnt;
-	if (maxerr < hiterr) maxerr = hiterr;
-
-	if (npara % 50000 == 0)
+  for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; ) {
+	if (hitcnt > 1e-16) 
 	{
-	   printf("number of parallelipeds = %d\n",npara);
-	   printf("tc: %e mc: %e te: %e me: %e\n", totalhitcnt, maxcnt, totalhiterr, maxerr);
-	}	
+		nzero ++;
+
+		totalhitcnt += hitcnt;
+		totalhiterr += hiterr;
+		if (maxcnt < hitcnt) maxcnt = hitcnt;
+		if (maxerr < hiterr) maxerr = hiterr;
+		if (mincnt > hitcnt) mincnt = hitcnt;
+		if (minerr > hiterr) minerr = hiterr;
+
+	}
+
+	npara ++;
+
+	if (argc > 1)
+		if (npara % 50000 == 0)
+		{
+			   printf("number of parallelipeds = %d, nonempty = %d\n",npara, nzero);
+			   printf("tc: %e c: [%e, %e]\nte: %e e: [%e, %e]\n", 
+					  totalhitcnt, mincnt, maxcnt, totalhiterr, minerr, maxerr);
+		}
   }
 
-  printf("number of parallelipeds = %d\n",npara);
-  printf("tc: %e mc: %e te: %e me: %e\n", totalhitcnt, maxcnt, totalhiterr, maxerr);
+  printf("number of parallelipeds = %d, nonempty = %d\n",npara, nzero);
+  printf("tc: %e c: [%e, %e]\nte: %e e: [%e, %e]\n", 
+         totalhitcnt, mincnt, maxcnt, totalhiterr, minerr, maxerr);
 
   return 0;
 }

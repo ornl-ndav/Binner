@@ -57,32 +57,36 @@ int load_vox(char * dataname)
 	return 0;
 */
 	FILE * hdr;
-	char fullname[256];
-	double spacing[3];
+	char fullname[256], data[256];
+	double ori[3], spacing[3];
 	int i, j, k, n;
-	
-	int dims[3], ori[3], dsize[3];
+	int dims[3], dsize[3];
 
-	sprintf(fullname, "%s/run.hdr", argv[1]);	
+	sprintf(fullname, "%s/run.hdr", dataname);	
+	fprintf(stderr,"trying %s\n", fullname);
 	
 	hdr = fopen(fullname, "r");
 	
-	fscanf(hdr, "REBINNED Qxyz HISTOGRAM\n%s\n", dataname);
+	fscanf(hdr, "REBINNED Qxyz HISTOGRAM\n%s\n", data);
 	fscanf(hdr, "DIMENSIONS %d %d %d\n", &sz[0], &sz[1], &sz[2]);
-	fscanf(hdr, "ORIGIN %lf %lf %lf\n", &orig[0], &orig[1], &orig[2]);
+	fscanf(hdr, "ORIGIN %lf %lf %lf\n", &ori[0], &ori[1], &ori[2]);
 	fscanf(hdr, "SPACING %lf %lf %lf\n", &spacing[0], &spacing[1], &spacing[2]);	
 	fclose(hdr);
 
-	sprintf(fullname, "%s/combined.bin.d", argv[1]);
-	dvol = vcbReadBinm(fullname, &rawdatatype, dims, ori, dsize, &nattribs);
+	fprintf(stderr,"vol size %d %d %d\n", sz[0],sz[1],sz[2]);
+	fprintf(stderr,"vol orig %lf %lf %lf\n", ori[0],ori[1],ori[2]);
+
+	sprintf(fullname, "%s/combined.bin.d", dataname);
+	dvol = (double*)vcbReadBinm(fullname, &rawdatatype, dims, orig, dsize, &nattribs);
 	if (dvol == NULL)
 		return -1;
 
-	sprintf(fullname, "%s/combined.bin.us", argv[1]);
-	coord = vcbReadBinm(fullname, &rawdatatype, dims, ori, dsize, &nattribs);
+	sprintf(fullname, "%s/combined.bin.us", dataname);
+	coord = (unsigned short *)vcbReadBinm(fullname, &rawdatatype, dims, orig, dsize, &nattribs);
 	if (coord == NULL)
 		return -1;
 	
+	fprintf(stderr,"done reading %s, %d voxels\n", fullname, dsize[0]);
 	return dsize[0];
 }
 
@@ -134,54 +138,39 @@ void load_data(char * dataname)
 	}
 	
 	load_classify();
-
-	nvox = 0;
-	for (i = 0; i < sz[0]; i ++)
-		for (j = 0; j <sz[1]; j ++)
-			for (k = 0; k <sz[2]; k ++) {
-
-				if (binvol[vcbid3(i,j,k,sz,0,1)] > 1e-16)
-				    nvox ++;
-			}
+	fprintf(stderr, "loaded %d voxels\n", nvox);
 
 	fvox = (unsigned char *) malloc(nvox*10*sizeof(unsigned char));
 
-	nvox = 0;
-	for (i = 0; i < sz[0]; i ++)
-		for (j = 0; j <sz[1]; j ++)
-			for (k = 0; k <sz[2]; k ++) {
+	for (i = 0; i < nvox; i ++)
+	{
+		val = dvol[i];
+		total += val;
 
-				val = binvol[vcbid3(i,j,k,sz,0,1)];
-				total += val;
+		if (minval > val) minval = val;
+		if (maxval < val) maxval = val;
+		
+		val = log10(val+1e-16) + 8;
+		t = (int)(val*40+0.5);
+		if (t < 0) t = 0;
+		//t = t * 32;
+		if (t > 255) t = 255;
 
-				if (val > 1e-16)
-				{
-					if (minval > val) minval = val;
-					if (maxval < val) maxval = val;
-					
-					val = log10(val+1e-16) + 16;
-					t = (int)(val+0.5);
-					if (t < 0) t = 0;
-					t = t * 16;
-					if (t > 255) t = 255;
-
-					cvox = (unsigned short*)&fvox[nvox*10+4];
-					fvox[nvox*10+0] = (unsigned char)t; //voxels[i*4+0];	
-					fvox[nvox*10+1] = 0;  //voxels[i*4+1];
-					fvox[nvox*10+2] = 0;  //voxels[i*4+2];
-					fvox[nvox*10+3] = (unsigned char)((char)(127)); //voxels[i*4+3];
-					cvox[0] = (unsigned short)i;	
-					cvox[1] = (unsigned short)j;
-					cvox[2] = (unsigned short)k;
-
-					nvox ++;
-				}
-			}	
+		cvox = (unsigned short*)&fvox[i*10+4];
+		fvox[i*10+0] = (unsigned char)t; //voxels[i*4+0];	
+		fvox[i*10+1] = 0;  //voxels[i*4+1];
+		fvox[i*10+2] = 0;  //voxels[i*4+2];
+		fvox[i*10+3] = (unsigned char)((char)(127)); //voxels[i*4+3];
+		cvox[0] = coord[i*3+0];	
+		cvox[1] = coord[i*3+1];
+		cvox[2] = coord[i*3+2];
+	}	
 
 	printf("domain sz: %d %d %d\n", sz[0], sz[1], sz[2]);
 	printf("total sum: %e; range: [%e %e]\n",total, minval, maxval);
 
-	free(binvol);
+	free(dvol);
+	free(coord);
 	voxels = fvox;
 
 	abbox.low[0] = abbox.low[1] = abbox.low[2] = 0.f;

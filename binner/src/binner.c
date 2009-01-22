@@ -116,13 +116,21 @@ void roundup_bounds(double * bounds, int * lb, int * ub, double ccs)
 	bounds[2] = lb[1] * ccs;
 	lb[2]     = (int)floor(bounds[4]/ccs);
 	bounds[4] = lb[2] * ccs;
-
+/*
 	ub[0]     = (int)ceil(bounds[1]/ccs);
 	bounds[1] = ub[0] * ccs;
 	ub[1]     = (int)ceil(bounds[3]/ccs);
 	bounds[3] = ub[1] * ccs;	
 	ub[2]     = (int)ceil(bounds[5]/ccs);
 	bounds[5] = ub[2] * ccs;			
+*/
+	ub[0]     = (int)floor(bounds[1]/ccs);
+	bounds[1] = ub[0] * ccs;
+	ub[1]     = (int)floor(bounds[3]/ccs);
+	bounds[3] = ub[1] * ccs;	
+	ub[2]     = (int)floor(bounds[5]/ccs);
+	bounds[5] = ub[2] * ccs;			
+
 }
 
 double count_volume(double * vol, int * xyzsize)
@@ -354,7 +362,7 @@ time1 = clock();
 		face_starts[i] = totalverts;
 
 	wnfacets = 6;
-	for (i = 0, vp= v; i < nfacets; vp = v + face_starts[i]*3, i += 6) 
+	for (i = 0, vp= v; i < nfacets; i += 6, vp += 6*4*3) 
 	{
 		if ((hitcnt != NULL) && (hiterr != NULL))
 			if (hitcnt[i/6] < 1e-16)
@@ -369,17 +377,19 @@ time1 = clock();
 				smallub[0], smallub[1], smallub[2], 
 				hitcnt[i/6]);
 */		
+
 		if (   (smalllb[0] == smallub[0]) 
 			&& (smalllb[1] == smallub[1])
 			&& (smalllb[2] == smallub[2]))
 		{
+		
 			if (smalllb[0] < orig[0]) continue;
 			if (smalllb[1] < orig[1]) continue;
 			if (smalllb[2] < orig[2]) continue;
 			if (smallub[0] >= orig[0]+xyzsize[0]) continue;
 			if (smallub[1] >= orig[1]+xyzsize[1]) continue;
 			if (smallub[2] >= orig[2]+xyzsize[2]) continue;
-			
+
 			id =  ((smalllb[0] - orig[0])*xyzsize[1] + smalllb[1] - orig[1])
 				  * xyzsize[2] 
 				  + smalllb[2] - orig[2];
@@ -389,26 +399,29 @@ time1 = clock();
 			else
 				factor = 1.0;
 			voxels[id] += factor;
-			total_volume += factor;
+			//total_volume += factor;
 		}
 		else
 		{
 			/*clip this paralleliped to within this cell */
+			/*
 			if (smalllb[0] < orig[0]) smalllb[0] = orig[0];
 			if (smalllb[1] < orig[1]) smalllb[1] = orig[1];
 			if (smalllb[2] < orig[2]) smalllb[2] = orig[2];
 			if (smallub[0] >= orig[0]+xyzsize[0]) smallub[0] = orig[0]+xyzsize[0]-1;
 			if (smallub[1] >= orig[1]+xyzsize[1]) smallub[1] = orig[1]+xyzsize[1]-1;
 			if (smallub[2] >= orig[2]+xyzsize[2]) smallub[2] = orig[2]+xyzsize[2]-1;
-			
+			*/
 			para_volume = polyhedral_volume(wnfacets, &nverts[i], vp);
+			para_volume = (smallub[0]-smalllb[0]+1)*(smallub[1]-smalllb[1]+1)*(smallub[2]-smalllb[2]+1);
+			//assert(para_volume >= 0);
+			 
 			if (para_volume < 1e-16) continue; /*don't do anything */
 			
 			if ((hitcnt != NULL) && (hiterr != NULL))
 				factor = hitcnt[i/6]/para_volume;// * hiterr[i/6];
 			else
 				factor = 1.0;
-
 
 			for (j = smalllb[0]; j <= smallub[0]; j ++)
 				for (k = smalllb[1]; k <= smallub[1]; k ++)
@@ -421,8 +434,10 @@ time1 = clock();
 
 						id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
 						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
-						voxels[id] += voxel_volume * factor;
-						total_volume += voxel_volume * factor;
+						//assert(voxel_volume >= 0);
+						
+						voxels[id] += factor;//voxel_volume * factor;
+						//total_volume += factor; //voxel_volume * factor;
 					}
 		}
 	}
@@ -430,6 +445,8 @@ time1 = clock();
 time2 = clock();
 
 	free(face_starts);
+	
+	total_volume = count_volume(voxels, xyzsize);
 
 	return total_volume;
 }

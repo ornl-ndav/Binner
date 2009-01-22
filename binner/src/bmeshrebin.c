@@ -240,6 +240,8 @@ int main(int argc, char ** argv)
 		j = i - n; /* now we know this many para are on the same slice */
 
 		/* printf("n = %d, slice %d has %d paras\n", n, sid[n], j);*/
+		
+		//printf("n = %d, f = %d, j = %d\n", n, f, j);
 
 		for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
@@ -273,7 +275,7 @@ int main(int argc, char ** argv)
  
 	fprintf(stderr, "rebin time          : %.3f sec\n", rebintime);
 	fprintf(stderr, "rebin throughput    : %.2f per second\n", f/rebintime);
-	fprintf(stderr, "recorded count sum  : %e\n", totalvolume);
+	fprintf(stderr, "recorded count sum  : %le\n", totalvolume);
 	fprintf(stderr, "nonempty bins       : %d\n", nonempty);
 	fprintf(stderr, "all bins            : %d\n", nvoxel);
 	fprintf(stderr, "nonempty percentage : %.2f%%\n", (float)nonempty/nvoxel*100);

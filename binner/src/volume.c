@@ -206,8 +206,8 @@ double partialvoxel_volume(	int nwf, /* number of working facets - clipping plan
 	//printf("partialvolume = %lf, nfacets = %d\n", volume, nfacets);
 
 	free(plane_eq);
-	free(nverts);
-	free(cubev);
+	if (nverts != NULL) free(nverts);
+	if (cubev != NULL) free(cubev);
 
 	return volume;
 }
