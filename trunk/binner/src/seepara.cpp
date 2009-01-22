@@ -19,6 +19,7 @@
 #include "binnerio.h"
 
 #include "atypes.h"
+#include "vcbcolor.h"
 
 char projmode = 'O'; /* P for perspective, O for orthogonal */
 projStruct proj;
@@ -30,6 +31,7 @@ int iwinWidth;
 int iwinHeight;
 
 int     mainwin, sidewin;
+extern int     wireframe;
 
 /* application specific data starts here */
 int     nverts, npara;
@@ -119,7 +121,12 @@ void display (void)
 	glTranslated(-view.center[0],-view.center[1],-view.center[2]);
 
 	/* if want wireframe mode, then use the following */
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	if (wireframe > 0)
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	else
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	
 	glFrontFace(GL_CCW);
 	glDisable(GL_CULL_FACE);
 
@@ -154,6 +161,8 @@ void cleanup (void)
 	fflush(stdout);
 }
 
+float           tlut[256*4];
+
 int main(int argc, char ** argv)
 {
   vcbdatatype dtype;
@@ -162,7 +171,13 @@ int main(int argc, char ** argv)
   float hitcnt, hiterr, corners[8][4];
   double red;
 
+  vcbCustomizeColorTableColdHot(tlut, 0, 255);
+
+  for (i = 0; i < 256; i ++)
+	tlut[i * 4+3] = 1.f;
+
   mainwin = initGLUT(argc,argv);
+
   GLenum err = glewInit();
   if (GLEW_OK != err) {
     fprintf(stderr,"glew error, initialization failed\n");
@@ -198,8 +213,11 @@ int main(int argc, char ** argv)
 		abbox.high[2] = VCB_MAXVAL(abbox.high[2],vdata[i*4+2]);
     }
 
-	red = 8+log10(hitcnt/1.20+0.00000001);
-	glColor3f(0.5f+(float)red/16.f, 0.5f, 0.5f);
+	red = (16+log10(hitcnt+1e-16));
+	if (red < 0) red = 0;
+	if (red > 16) red = 16;
+	glColor3fv(&tlut[((int)(red+0.5))*16*4]);
+
 	for (i = 0; i < 6; i ++)
 	  for (j = 0; j < 4; j ++)
 		glVertex3fv(&vdata[(i*4+j)*4]);
@@ -212,6 +230,7 @@ int main(int argc, char ** argv)
   printf("bounding box: (%f %f %f) (%f %f %f)\n",abbox.low[0], abbox.low[1],
 	 abbox.low[2], abbox.high[0],abbox.high[1],abbox.high[2]);
 
+  wireframe = 1;
   initApp(); /* initialize the application */
   initGLsettings();
 
@@ -221,7 +240,7 @@ int main(int argc, char ** argv)
 
   atexit(cleanup);
 
-  glutKeyboardFunc(keys);
+  //glutKeyboardFunc(keys);
   
   //glColor4f(0.7038f, 0.27048f, 0.0828f, 1.0f);
   glColor4f(1.f, 1.f, 1.f, 1.0f);
