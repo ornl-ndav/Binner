@@ -239,6 +239,8 @@ int correctCornersf3d(float (* vertices)[4]) /* vertices: input/output */
 			swapVec4(vertices[d], vertices[k+4]);
 		}
 	}
+	
+	return 0;
 }
 
 void parallelipedByInputd(double * v)

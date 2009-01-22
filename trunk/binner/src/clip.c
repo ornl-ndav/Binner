@@ -325,20 +325,29 @@ int clip_polyhedral(int nfaces, int ** nverts, double ** verts, double * cplane)
 			totalvertices += nc;
 		}
 	}
-	
+
 	free(*nverts);
 	free(*verts);
-
-	(*nverts) = malloc(noutfaces * sizeof(int));
-	memcpy((*nverts), noutverts, noutfaces * sizeof(int));
 	
-	(*verts)  = malloc(totalvertices * 3 * sizeof(double));
-	memcpy((*verts), outverts, totalvertices * 3 * sizeof(double));
+	if (noutfaces > 0)
+	{
+		(*nverts) = malloc(noutfaces * sizeof(int));
+		memcpy((*nverts), noutverts, noutfaces * sizeof(int));
+		
+		(*verts)  = malloc(totalvertices * 3 * sizeof(double));
+		memcpy((*verts), outverts, totalvertices * 3 * sizeof(double));
+
+		noutfaces = clean_polyhedron(noutfaces, nverts, verts);
+	}
+	else
+	{
+		noutfaces = 0;
+		*nverts = NULL;
+		*verts = NULL;
+	}
 
 	free(outverts);
 	free(noutverts);
-
-	noutfaces = clean_polyhedron(noutfaces, nverts, verts);
 	
 	return noutfaces;
 }

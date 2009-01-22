@@ -33,7 +33,7 @@ int main(int argc, char ** argv)
   abbox.low[0] = abbox.low[1] = abbox.low[2] = 1e6;
   abbox.high[0] = abbox.high[1] = abbox.high[2] = -1e6;
 
-  for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; npara ++) {
+  for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; ) {
 
 	correctCornersf3d(corners);
 	realCubef(corners, vdata);
@@ -46,14 +46,17 @@ int main(int argc, char ** argv)
 		abbox.low [2] = VCB_MINVAL(abbox.low [2],vdata[i*4+2]);
 		abbox.high[2] = VCB_MAXVAL(abbox.high[2],vdata[i*4+2]);
     }
-	
-	if (npara % 50000 == 0)
-	{
-	  printf("number of parallelipeds = %d\n",npara);
-	  printf("bounding box: (%f %f %f) (%f %f %f)\n",
-			abbox.low[0], abbox.low[1], abbox.low[2], 
-			abbox.high[0],abbox.high[1],abbox.high[2]);
-	}
+
+	npara ++;
+
+	if (argc > 1)
+		if (npara % 50000 == 0)
+		{
+		  printf("number of parallelipeds = %d\n",npara);
+		  printf("bounding box: (%f %f %f) (%f %f %f)\n",
+				abbox.low[0], abbox.low[1], abbox.low[2], 
+				abbox.high[0],abbox.high[1],abbox.high[2]);
+		}
   }
 
   printf("number of parallelipeds = %d\n",npara);
