@@ -31,6 +31,8 @@ extern int iwinHeight;
 extern bbox abbox;
 
 float mradius = 0.f;
+int  wireframe = 0;
+
 void initApp (void)
 {
 	/*float mradius = 0.f;*/
@@ -194,6 +196,8 @@ void keys(unsigned char c, int x, int y)
 	unsigned char * pixels, *bmpbuf;
 	int i;
 
+	/*printf("this keys func\n");*/
+	
 	switch(c) {
       case 'i':
 	 	  dist = proj.xmax - proj.xmin;
@@ -268,6 +272,9 @@ void keys(unsigned char c, int x, int y)
 		  proj.ymax -= fzin/100;
 		  reshape(iwinWidth,iwinHeight);
 		  break;                 
+	  case 'w':
+		  wireframe = 1 - wireframe;
+		  break;
 	  default:
 		  break;
   }
