@@ -18,7 +18,7 @@
 #include "vcblinalg.h"
 #include "vcbcolor.h"
 
-char projmode = 'O'; /* P for perspective, O for orthogonal */
+char projmode = 'O'; /* P for perspective, O for orthogonal: a toggle field*/
 projStruct proj;
 viewStruct view;
 lightStruct light0;
@@ -40,50 +40,19 @@ float           tlut[256*4];
 
 #define FTB 1
 
-double * dvol;
-unsigned short * coord;
+double			*binvol;
 int             sz[3], orig[3];
 int             ndims,nattribs;
 vcbdatatype     rawdatatype;
 
 int load_vox(char * dataname)
 {
-/*
 	if ((binvol = (double*) vcbReadBinm(dataname, &rawdatatype, &ndims, orig, sz, &nattribs)) 
 	    == NULL) {
 		fprintf(stderr, "load_data: error loading datafile\n");
 		return -1;
 	}
 	return 0;
-*/
-	FILE * hdr;
-	char fullname[256];
-	double spacing[3];
-	int i, j, k, n;
-	
-	int dims[3], ori[3], dsize[3];
-
-	sprintf(fullname, "%s/run.hdr", argv[1]);	
-	
-	hdr = fopen(fullname, "r");
-	
-	fscanf(hdr, "REBINNED Qxyz HISTOGRAM\n%s\n", dataname);
-	fscanf(hdr, "DIMENSIONS %d %d %d\n", &sz[0], &sz[1], &sz[2]);
-	fscanf(hdr, "ORIGIN %lf %lf %lf\n", &orig[0], &orig[1], &orig[2]);
-	fscanf(hdr, "SPACING %lf %lf %lf\n", &spacing[0], &spacing[1], &spacing[2]);	
-	fclose(hdr);
-
-	sprintf(fullname, "%s/combined.bin.d", argv[1]);
-	dvol = vcbReadBinm(fullname, &rawdatatype, dims, ori, dsize, &nattribs);
-	if (dvol == NULL)
-		return -1;
-
-	sprintf(fullname, "%s/combined.bin.us", argv[1]);
-	coord = vcbReadBinm(fullname, &rawdatatype, dims, ori, dsize, &nattribs);
-	if (coord == NULL)
-		return -1;
-	
-	return dsize[0];
 }
 
 void load_classify(void)
@@ -93,15 +62,11 @@ void load_classify(void)
  */
 {
 	int i;
-	float a;
 	 
 	vcbCustomizeColorTableColdHot(tlut, 0, 255);
 
 	for (i = 0; i < 256; i ++)
-	{
-		a = (float)i/255;
-		tlut[i * 4+3] = 1.f;// a*a;
-	}
+		tlut[i * 4+3] = 1.f;
 
 }
 
@@ -119,16 +84,10 @@ void load_data(char * dataname)
 {
 	unsigned char * fvox;
 	unsigned short * cvox;
-	int i, j, k, numvox, t;
+	int i, j, k, numvox;
 	double val;
-	double minval, maxval, total;
 	
-	minval = 1e6;
-	maxval = -1e6;
-	total = 0;
-	
-	nvox = load_vox(dataname);
-	if (nvox < 0) {
+	if (load_vox(dataname) < 0) {
 		fprintf(stderr, "load_data: error loading datafile\n");
 		exit(-1);
 	}
@@ -151,35 +110,22 @@ void load_data(char * dataname)
 		for (j = 0; j <sz[1]; j ++)
 			for (k = 0; k <sz[2]; k ++) {
 
-				val = binvol[vcbid3(i,j,k,sz,0,1)];
-				total += val;
+				val = log10(binvol[vcbid3(i,j,k,sz,0,1)]);
+				val += 16;
+				val *= 16;
+				if (val < 0) continue;
+				
+				cvox = (unsigned short*)&fvox[nvox*10+4];
+				fvox[nvox*10+0] = val; //voxels[i*4+0];	
+				fvox[nvox*10+1] = 0;  //voxels[i*4+1];
+				fvox[nvox*10+2] = 0;  //voxels[i*4+2];
+				fvox[nvox*10+3] = (unsigned char)((char)(127)); //voxels[i*4+3];
+				cvox[0] = (unsigned short)i;	
+				cvox[1] = (unsigned short)j;
+				cvox[2] = (unsigned short)k;
 
-				if (val > 1e-16)
-				{
-					if (minval > val) minval = val;
-					if (maxval < val) maxval = val;
-					
-					val = log10(val+1e-16) + 16;
-					t = (int)(val+0.5);
-					if (t < 0) t = 0;
-					t = t * 16;
-					if (t > 255) t = 255;
-
-					cvox = (unsigned short*)&fvox[nvox*10+4];
-					fvox[nvox*10+0] = (unsigned char)t; //voxels[i*4+0];	
-					fvox[nvox*10+1] = 0;  //voxels[i*4+1];
-					fvox[nvox*10+2] = 0;  //voxels[i*4+2];
-					fvox[nvox*10+3] = (unsigned char)((char)(127)); //voxels[i*4+3];
-					cvox[0] = (unsigned short)i;	
-					cvox[1] = (unsigned short)j;
-					cvox[2] = (unsigned short)k;
-
-					nvox ++;
-				}
+				nvox ++;
 			}	
-
-	printf("domain sz: %d %d %d\n", sz[0], sz[1], sz[2]);
-	printf("total sum: %e; range: [%e %e]\n",total, minval, maxval);
 
 	free(binvol);
 	voxels = fvox;
@@ -283,7 +229,7 @@ int main(int argc, char ** argv)
 
 	load_data(argv[1]);
 
-	printf("%d non-empty voxels\nbounding box: (%f %f %f) (%f %f %f)\n", nvox, abbox.low[0], abbox.low[1],
+	printf("%d voxels in a bounding box of: (%f %f %f) (%f %f %f)\n", nvox, abbox.low[0], abbox.low[1],
 		abbox.low[2], abbox.high[0],abbox.high[1],abbox.high[2]);
 
 	initApp(); /* initialize the application */
