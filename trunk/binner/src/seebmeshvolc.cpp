@@ -124,7 +124,7 @@ void load_data(char * dataname)
 	unsigned char * fvox;
 	unsigned short * cvox;
 	int i, j, k, numvox, t;
-	double val;
+	double val, range;
 	double minval, maxval, total;
 	
 	minval = 1e6;
@@ -149,9 +149,17 @@ void load_data(char * dataname)
 
 		if (minval > val) minval = val;
 		if (maxval < val) maxval = val;
+	}
+	
+	range = log10(maxval) - log10(minval);
+	range = 255/range;
+
+	for (i = 0; i < nvox; i ++)
+	{
+		val = dvol[i];
 		
-		val = log10(val+1e-16) + 8;
-		t = (int)(val*40+0.5);
+		val = log10(val + 1e-16) - log10(minval + 1e-16);
+		t = (int)(val*range+0.5);
 		if (t < 0) t = 0;
 		//t = t * 32;
 		if (t > 255) t = 255;
