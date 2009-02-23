@@ -104,7 +104,7 @@ void load_classify(void)
 	for (i = 0; i < 256; i ++)
 	{
 		a = (float)i/255;
-		tlut[i * 4+3] = 1.f;// a*a;
+		tlut[i * 4+3] = i/255.;//1.f;// a*a;
 	}
 
 }
@@ -150,15 +150,28 @@ void load_data(char * dataname)
 		if (minval > val) minval = val;
 		if (maxval < val) maxval = val;
 	}
-	
+
+#define logon 0
+
+#if logon
 	range = log10(maxval) - log10(minval);
+#else
+	range = maxval - minval;
+#endif
+
 	range = 255/range;
 
 	for (i = 0; i < nvox; i ++)
 	{
 		val = dvol[i];
-		
+
+#if logon
 		val = log10(val + 1e-16) - log10(minval + 1e-16);
+#else
+		val = val - minval;
+#endif
+		
+		val = val - minval; //log10(val + 1e-16) - log10(minval + 1e-16);
 		t = (int)(val*range+0.5);
 		if (t < 0) t = 0;
 		//t = t * 32;
