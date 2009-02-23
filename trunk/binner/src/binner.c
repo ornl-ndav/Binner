@@ -412,8 +412,11 @@ time1 = clock();
 			if (smallub[1] >= orig[1]+xyzsize[1]) smallub[1] = orig[1]+xyzsize[1]-1;
 			if (smallub[2] >= orig[2]+xyzsize[2]) smallub[2] = orig[2]+xyzsize[2]-1;
 			*/
+#if 1
 			para_volume = polyhedral_volume(wnfacets, &nverts[i], vp);
+#else
 			para_volume = (smallub[0]-smalllb[0]+1)*(smallub[1]-smalllb[1]+1)*(smallub[2]-smalllb[2]+1);
+#endif
 			//assert(para_volume >= 0);
 			 
 			if (para_volume < 1e-16) continue; /*don't do anything */
@@ -436,7 +439,8 @@ time1 = clock();
 						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
 						//assert(voxel_volume >= 0);
 						
-						voxels[id] += factor;//voxel_volume * factor;
+						if (voxel_volume > 1e-16)
+							voxels[id] += hitcnt[i/6]*(voxel_volume/para_volume);// * factor;
 						//total_volume += factor; //voxel_volume * factor;
 					}
 		}
