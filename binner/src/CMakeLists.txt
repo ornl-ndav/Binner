@@ -86,7 +86,13 @@ add_executable(seepara seepara.cpp formain.cpp cell.c binnerio.c)
 add_executable(seebmeshvol seebmeshvol.cpp formain.cpp cell.c binnerio.c)
 add_executable(seebmeshvolc seebmeshvolc.cpp formain.cpp cell.c binnerio.c)
 
+if(NOT BINNER_INSTALL_DIR)
+  set(DEST ${TOP})
+else(NOT BINNER_INSTALL_DIR)
+  set(DEST ${BINNER_INSTALL_DIR})
+endif(NOT BINNER_INSTALL_DIR)
+
 install(TARGETS ${EXES}
-		RUNTIME DESTINATION ${TOP}/bin
-		LIBRARY DESTINATION ${TOP}/lib
-		ARCHIVE DESTINATION ${TOP}/lib)
+		RUNTIME DESTINATION ${DEST}/bin
+		LIBRARY DESTINATION ${DEST}/lib
+		ARCHIVE DESTINATION ${DEST}/lib)

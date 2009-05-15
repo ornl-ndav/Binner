@@ -38,6 +38,12 @@ include_directories(
 add_library(vcbgl STATIC ${GLSRCS})
 target_link_libraries(vcbgl ${OPENGL_glu_LIBRARY} ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARY})
 
+if(NOT BINNER_INSTALL_DIR)
+  set(DEST ${TOP})
+else(NOT BINNER_INSTALL_DIR)
+  set(DEST ${BINNER_INSTALL_DIR})
+endif(NOT BINNER_INSTALL_DIR)
+
 install(TARGETS vcbnogl vcbgl 
-		LIBRARY DESTINATION ${TOP}/lib
-		ARCHIVE DESTINATION ${TOP}/lib)
+		LIBRARY DESTINATION ${DEST}/lib
+		ARCHIVE DESTINATION ${DEST}/lib)
