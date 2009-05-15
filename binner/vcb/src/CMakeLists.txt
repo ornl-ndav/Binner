@@ -27,53 +27,16 @@ set(GLSRCS
 )
   
 #find_package(OPENGL REQUIRED)
-
-find_path(OPENGL_INCLUDE_DIR gl.h
-   /usr/local/include/GL
-   /usr/local/include
-   /usr/include/GL
-   /usr/include
-   )
-
-find_library(OPENGL_gl_LIBRARY NAMES GL
-             PATHS /usr/local/lib64 
-				   /usr/lib64 
-				   /usr/local/lib 
-				   /usr/lib 
-				   /usr/X11R6/lib) 
-
-find_library(OPENGL_glu_LIBRARY NAMES GLU
-             PATHS ${OPENGL_gl_LIBRARY} 
-				   /usr/local/lib64 
-				   /usr/lib64 
-				   /usr/local/lib 
-				   /usr/lib
-				   /usr/X11R6/lib) 
-
 #find_package(GLUT REQUIRED)
-find_path(GLUT_INCLUDE_DIR glut.h
-   /usr/local/include/GL
-   /usr/local/include
-   /usr/include/GL
-   /usr/include
-   )
-
-find_library(GLUT_LIBRARY NAMES GLUT
-             PATHS ${OPENGL_gl_LIBRARY} 
-				   /usr/local/lib64 
-				   /usr/lib64 
-				   /usr/local/lib 
-				   /usr/lib
-				   /usr/X11R6/lib) 
+include(${TOP}/CMakeModules/OpenGLConfig.cmake)
 				
 include_directories(
-#   ${OPENGL_INCLUDE_DIR}/Headers
    ${OPENGL_INCLUDE_DIR}
    ${GLUT_INCLUDE_DIR}
 )
 
 add_library(vcbgl STATIC ${GLSRCS})
-target_link_libraries(vcbgl ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+target_link_libraries(vcbgl ${OPENGL_glu_LIBRARY} ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARY})
 
 install(TARGETS vcbnogl vcbgl 
 		LIBRARY DESTINATION ${TOP}/lib
