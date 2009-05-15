@@ -183,14 +183,17 @@ unsigned int jval_ui(Jval j) {
 }
 
 int *jval_iarray(Jval j) {
-  return j.iarray;
+  int * ip = j.iarray;
+  return ip;
 }
 
 float *jval_farray(Jval j) {
-  return j.farray;
+  float * fp = j.farray;
+  return fp;
 }
 
 char *jval_carray(Jval j) {
-  return j.carray;
+  char * cp = j.carray;
+  return cp;
 }
 
