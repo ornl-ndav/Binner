@@ -36,4 +36,4 @@ find_library(GLUT_LIBRARY NAMES glut GLUT
 				   /usr/local/lib 
 				   /usr/lib
 				   /usr/X11R6/lib) 
-				
+
