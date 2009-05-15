@@ -63,8 +63,9 @@ add_executable(export2vtk export2vtk.c binnerio.c)
 add_executable(export2vcb export2vcb.c binnerio.c)
 add_executable(bslicer bslicer.c  binnerio.c)
 
-find_library(pthread REQUIRED)
+find_library(PTHREAD_LIBRARY NAMES pthread)
 add_executable(collector collector.c socketfun.c)
+target_link_libraries(collector ${PTHREAD_LIBRARY})
 
 #find_package(OPENGL REQUIRED)
 #find_package(GLUT REQUIRED)
