@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 #include "vcblinalg.h"
 #include "binner.h"
 #include "geometry.h"

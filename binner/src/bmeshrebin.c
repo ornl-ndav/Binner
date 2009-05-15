@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
+#include <math.h>
 #include "vcblinalg.h"
 #include "vcbutils.h"
 #include "binnerio.h"
