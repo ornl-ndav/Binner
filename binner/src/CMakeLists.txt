@@ -22,7 +22,7 @@ set(EXES
 	scale3d serve sorter tran3d
 	seeall seepara seebmeshvol seebmeshvolc)
 
-link_libraries(vcbnogl)
+link_libraries(vcbnogl m)
 add_executable(sorter sorter.c socketfun.c binnerio.c)
 add_executable(netrebin 
                netrebin.c socketfun.c binner.c voxelize.c 
