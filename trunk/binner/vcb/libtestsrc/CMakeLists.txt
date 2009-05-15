@@ -14,7 +14,13 @@ add_executable(vcbhead vcbhead.c)
 add_executable(vcbrange vcbrange.c)
 add_executable(vcbcut vcbcut.c)
 
+if(NOT BINNER_INSTALL_DIR)
+  set(DEST ${TOP})
+else(NOT BINNER_INSTALL_DIR)
+  set(DEST ${BINNER_INSTALL_DIR})
+endif(NOT BINNER_INSTALL_DIR)
+
 install(TARGETS vcbcomp vcbrcast vcbhead vcbrange vcbcut
-		RUNTIME DESTINATION ${TOP}/bin
-		LIBRARY DESTINATION ${TOP}/lib
-		ARCHIVE DESTINATION ${TOP}/lib)
+		RUNTIME DESTINATION ${DEST}/bin
+		LIBRARY DESTINATION ${DEST}/lib
+		ARCHIVE DESTINATION ${DEST}/lib)
