@@ -23,7 +23,6 @@ set(EXES
 	seeall seepara seebmeshvol seebmeshvolc)
 
 link_libraries(vcbnogl m)
-add_executable(sorter sorter.c socketfun.c binnerio.c)
 add_executable(netrebin 
                netrebin.c socketfun.c binner.c voxelize.c 
 			   volume.c clip.c cell.c geometry.c binnerio.c)
@@ -66,6 +65,8 @@ add_executable(bslicer bslicer.c  binnerio.c)
 find_library(PTHREAD_LIBRARY NAMES pthread)
 add_executable(collector collector.c socketfun.c)
 target_link_libraries(collector ${PTHREAD_LIBRARY})
+add_executable(sorter sorter.c socketfun.c binnerio.c)
+target_link_libraries(sorter ${PTHREAD_LIBRARY})
 
 #find_package(OPENGL REQUIRED)
 #find_package(GLUT REQUIRED)
