@@ -6,7 +6,7 @@ include_directories(
 
 add_definitions("-O3")
 
-link_libraries(vcbnogl)
+link_libraries(vcbnogl m)
 
 add_executable(vcbcomp vcbcomp.c)
 add_executable(vcbrcast vcbrcast.c)
