@@ -35,7 +35,7 @@ add_executable(pix2mesh pix2mesh.c cell.c binnerio.c)
 add_executable(gencell gencell.c cell.c binnerio.c)
 add_executable(rot3d rot3d.c binnerio.c)
 add_executable(tran3d tran3d.c binnerio.c)
-add_executable(scale3d scale3d.o binnerio.c)
+add_executable(scale3d scale3d.c binnerio.c)
 add_executable(clip3d clip3d.c clip.c geometry.c binnerio.c)
 
 add_executable(clipvoxel 
@@ -46,7 +46,7 @@ add_executable(compvol
 			   
 add_executable(rebin 
 			   rebin.c binner.c voxelize.c volume.c 
-			   clip.c cell.o geometry.c  binnerio.c)
+			   clip.c cell.c geometry.c  binnerio.c)
 
 add_executable(bounds bounds.c cell.c binnerio.c)
 add_executable(counts counts.c binnerio.c)
