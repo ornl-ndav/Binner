@@ -36,6 +36,7 @@ Fax: 865-974-4404
 */
 
 #include <stdio.h>    /* Basic includes and definitions */
+#include <stdlib.h>
 #include "dllist.h"
 
 /*---------------------------------------------------------------------*
