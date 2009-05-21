@@ -22,11 +22,14 @@ def run(opts, tempfile):
     flines = tfile.readlines()
     tfile.close()
 
+    # Parse and retrieve all template information
+
     instrument = get_value("INST", flines)
     runs = get_value("RUN", flines)
 
     import sns_inst_util
     runlist = sns_inst_util.generateList(runs)
+    num_runs = len(runlist)
 
     if opts.verbose:
         print "Instrument:", instrument
@@ -47,8 +50,35 @@ def run(opts, tempfile):
     import dircache
     filelist = [dfile for dfile in dircache.listdir(filedir) \
                 if "bmesh" in dfile and dfile.endswith(".in")]
+    
     if opts.verbose:
         print "Files:", filelist
+
+    import slurm
+    for ifile in filelist:
+        rebin_input = []
+        rebin_input.append(ifile)
+        if num_runs > 1:
+            for run in runlist[1:]:
+                rebin_input.append(ifile.replace(str(runlist[0]), str(run)))
+                                   
+        # Construct rebinner command
+        # TODO! CLI not defined
+
+        # Send out SLURM jobs
+        mesh_num = ifile.split('bmesh')[-1].split('.')[0]
+        base_name = []
+        base_name.append(instrument)
+        base_name.append(str(runlist[0]))
+        base_name.append("rebin"+mesh_num)
+
+        job_name = "_".join(base_name)
+        log_name = "_".join(base_name) + ".out"
+
+        if opts.verbose:
+            print "Job name:", job_name
+            print "Log name:", log_name
+    
 
 if __name__ == "__main__":
     import optparse
