@@ -3,6 +3,17 @@
 VERSION = "1.0"
 REBINNER_CMD = "test"
 
+def get_queue(inst):
+    if inst == "ARCS":
+        return "arcs"
+    elif inst == "CNCS":
+        return "cncsq"
+    elif inst == "SEQ" or inst == "SEQUOIA":
+        return "sequoiaq"
+    else:
+        raise RuntimeError("Do not have a SLURM queue for instrument %s" \
+                           % inst)
+
 def get_value(tag, lines):
     for line in lines:
         sline = line.strip()
@@ -73,11 +84,17 @@ def run(opts, tempfile):
         base_name.append("rebin"+mesh_num)
 
         job_name = "_".join(base_name)
-        log_name = "_".join(base_name) + ".out"
+        outlog_name = "_".join(base_name) + ".out"
+        errlog_name = "_".join(base_name) + ".err"
 
         if opts.verbose:
             print "Job name:", job_name
-            print "Log name:", log_name
+            print "Output Log name:", outlog_name
+
+        """
+        jid = slurm.run(cmd, get_queue(instrument), outlog_name, errlog_name,
+        verbose=opts.verbose, jobanme=job_name)
+        """
     
 
 if __name__ == "__main__":
