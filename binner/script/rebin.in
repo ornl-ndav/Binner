@@ -1,0 +1,16 @@
+# This template is for specifying the final axis parameters for the rebinning
+# system.
+# Specify the instrument and run number(s) to rebin. If multiple run numbers 
+# are requested, please list them in the following manners:
+#
+#
+INST:ARCS
+RUN:1005
+# Each axis should be specified in min, max, width
+QX:-7,2,0.1
+QY:-3,3,0.1
+QZ:-1,9,0.1
+# The following allows one to specify a threshold below which voxels in the 
+# rebinned space will not be written out. The system will default to 0. 
+# Remove the # to activate.
+#THRESH:1.0e-4
