@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+VERSION = "1.0"
+
+def run(opts, tempfile):
+
+    if opts.verbose > 1:
+        print "Opening", tempfile
+
+    tfile = open(tempfile, "r")
+    tfile.close()
+
+if __name__ == "__main__":
+    import optparse
+
+    description = []
+    description.append("This script launches rebinning jobs using a template")
+    description.append("file that contains the rebinning grid information.")
+
+    parser = optparse.OptionParser("usage: %prog [options] <template file>",
+                                   None, optparse.Option, VERSION, 'error',
+                                   " ".join(description))
+    
+    parser.add_option("-v", "--verbose", dest="verbose", action="count",
+                      help="Flag for turning on script verbosity")
+    
+    (options, args) = parser.parse_args()
+    
+    if len(args) < 1:
+        parser.error("Must specify the template file on the command-line")
+        
+    run(options, args[0])
