@@ -2,6 +2,7 @@
 
 VERSION = "1.0"
 REBINNER_CMD = "test"
+MAKE_VTK_ = "python /SNS/software/bin/convert_vtk_8.py"
 
 def get_queue(inst):
     if inst == "ARCS":
@@ -93,9 +94,19 @@ def run(opts, tempfile):
 
         """
         jid = slurm.run(cmd, get_queue(instrument), outlog_name, errlog_name,
-        verbose=opts.verbose, jobanme=job_name)
+        verbose=opts.verbose, jobname=job_name)
+
+        if opts.make_vtk:
+        vtkcmd = [MAKE_VTK_CMD]
+
+        vtk_name = []
+        vtk_name.append(instrument)
+        vtk_name.append(str(runlist[0]))
+        vtk_name.append("rvtk"+mesh_num)
+
+        vjid = slurm.run(" ".join(vtkcmd), get_queue(instrument),
+        verbose=opts.verbose, precursor=jid, jobname="_".join(vtk_name))
         """
-    
 
 if __name__ == "__main__":
     import optparse
@@ -113,7 +124,12 @@ if __name__ == "__main__":
     
     parser.add_option("-v", "--verbose", dest="verbose", action="count",
                       help="Flag for turning on script verbosity")
-    
+
+    parser.add_option("-k", "--make-vtk", dest="make_vtk", action="store_true",
+                      help="Flag to turn on creation of vtk files from "\
+                      +"rebining output.")
+    parser.set_defaults(make_vtk=False)
+                          
     (options, args) = parser.parse_args()
     
     if len(args) < 1:
