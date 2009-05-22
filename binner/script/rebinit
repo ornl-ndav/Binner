@@ -65,18 +65,21 @@ def run(opts, tempfile):
 
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
+
+    if opts.verbose:
+        print "Output File directory:", outputdir
     
     # Gather the base set of files
 
     filedir = os.path.join(basedir, str(runlist[0]), str(runlist[0])+"-mesh")
     if opts.verbose:
-        print "File directory:", filedir
+        print "Input File directory:", filedir
 
     import dircache
     filelist = [dfile for dfile in dircache.listdir(filedir) \
                 if "bmesh" in dfile and dfile.endswith(".in")]
     
-    if opts.verbose:
+    if opts.verbose > 1:
         print "Files:", filelist
 
     # Construct the jobs
@@ -103,7 +106,7 @@ def run(opts, tempfile):
         outlog_name = "_".join(base_name) + ".out"
         errlog_name = "_".join(base_name) + ".err"
 
-        if opts.verbose:
+        if opts.verbose > 1:
             print "Job name:", job_name
             print "Output Log name:", outlog_name
 
