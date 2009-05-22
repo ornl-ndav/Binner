@@ -53,9 +53,22 @@ def run(opts, tempfile):
 
     threshold = get_value("THRESH", flines)
 
-    import os.path
-    outputdir = os.path.join(os.path.expanduser("~/results"), instrument)
-    filedir = os.path.join(outputdir, str(runlist[0]), str(runlist[0])+"-mesh")
+    # Make a home for the output
+
+    import os
+
+    if opts.outputdir is None:
+        basedir = os.path.join(os.path.expanduser("~/results"), instrument)
+        outputdir = os.path.join(basedir, str(runlist[0])+"-rebin")
+    else:
+        outputdir = os.path.expanduser(opts.outputdir)
+
+    if not os.path.exists(outputdir):
+        os.makedirs(outputdir)
+    
+    # Gather the base set of files
+
+    filedir = os.path.join(basedir, str(runlist[0]), str(runlist[0])+"-mesh")
     if opts.verbose:
         print "File directory:", filedir
 
@@ -66,6 +79,8 @@ def run(opts, tempfile):
     if opts.verbose:
         print "Files:", filelist
 
+    # Construct the jobs
+    
     import slurm
     for ifile in filelist:
         rebin_input = []
@@ -124,6 +139,10 @@ if __name__ == "__main__":
     
     parser.add_option("-v", "--verbose", dest="verbose", action="count",
                       help="Flag for turning on script verbosity")
+
+    parser.add_option("-o", "--outputdir", dest="outputdir",
+                      help="Specify a directory to receive the rebinning "\
+                      +"output.")
 
     parser.add_option("-k", "--make-vtk", dest="make_vtk", action="store_true",
                       help="Flag to turn on creation of vtk files from "\
