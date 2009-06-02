@@ -166,6 +166,7 @@ int main(int argc, char ** argv)
 		hcnt[npara] = hitcnt;
 		herr[npara] = hiterr;
 		sid[npara] = sliceid;
+		printf("sid, hcnt, herr: %d %lf %lf\n", sid[npara], hcnt[npara], herr[npara]);
 		
 	}
 
@@ -179,9 +180,9 @@ int main(int argc, char ** argv)
 		orig[0] = (int)floor(askbounds[0]/spacing[0]);
 		orig[1] = (int)floor(askbounds[2]/spacing[1]);
 		orig[2] = (int)floor(askbounds[4]/spacing[2]);
-		xyzsize[0] = (int)ceil(askbounds[1]/spacing[0]) - orig[0]+1;
-		xyzsize[1] = (int)ceil(askbounds[3]/spacing[1]) - orig[1]+1;
-		xyzsize[2] = (int)ceil(askbounds[5]/spacing[2]) - orig[2]+1;
+		xyzsize[0] = (int)ceil(askbounds[1]/spacing[0]) - orig[0]; /* + 1 */
+		xyzsize[1] = (int)ceil(askbounds[3]/spacing[1]) - orig[1]; /* + 1 */
+		xyzsize[2] = (int)ceil(askbounds[5]/spacing[2]) - orig[2]; /* + 1 */
 
 		/* let's figure out the actual binning cell size */
 		cellsize = spacing[0];
@@ -226,7 +227,7 @@ int main(int argc, char ** argv)
 	fprintf(stderr, "voxel scaled by     : %e\n", volumescale);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
-	voxels = malloc(nvoxel * sizeof(double));
+	voxels = malloc(nvoxel * sizeof(double) * 2); /* rebin both counts and error */
 
 	totalvolume = 0;
 
@@ -244,7 +245,7 @@ int main(int argc, char ** argv)
 		
 		//printf("n = %d, f = %d, j = %d\n", n, f, j);
 
-		for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
+		for (i = 0; i < nvoxel*2; voxels[i] = 0.0, i ++);
 
 		totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
 								nverts + n*6,
@@ -263,10 +264,14 @@ int main(int argc, char ** argv)
 		sprintf(fullname, "%s/%04d", fname, sid[n]);
 		fprintf(stderr, "slice %04d has      : %d parallelipeds\n", sid[n], j);
 
-		/* vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 1, voxels); */
+		/* vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 2, voxels); */
 
-		for (i = 0; i < nvoxel; voxels[i] *= volumescale, i ++);
-		
+		for (i = 0; i < nvoxel; voxels[i*2] *= volumescale, i ++);   /* counts */
+		for (i = 0; i < nvoxel; voxels[i*2+1] *= volumescale, i ++); /* error */
+
+		for (i = 0; i < nvoxel; i ++)
+			printf("voxels[%d] = %lf error[%d] = %lf\n", i, voxels[i*2], i, voxels[i*2+1]);
+
 		nonempty += output_with_compression(fullname, xyzsize, voxels);
 	}
 	

@@ -195,11 +195,11 @@ int output_with_compression(char * fname,
 		for (j = 0; j <sz[1]; j ++)
 			for (k = 0; k <sz[2]; k ++) {
 
-				if (vol[(i * sz[1] + j)*sz[2] + k] > 1e-16)
+				if (vol[((i * sz[1] + j)*sz[2] + k)*2] > 1e-16)
 				    nvox ++;
 			}
 	
-	dvol = malloc(nvox * sizeof(double));
+	dvol = malloc(nvox * sizeof(double) * 2);
 	hash = malloc(sz[0]*sz[1]*sizeof(int));
 	xyz  = malloc(nvox * 3 * sizeof(unsigned short));
 
@@ -212,7 +212,9 @@ int output_with_compression(char * fname,
 
 				if (vol[(i * sz[1] + j)*sz[2] + k] > 1e-16)
 				{
-					dvol[nvox] = vol[(i * sz[1] + j)*sz[2] + k];
+					dvol[nvox*2]   = vol[((i * sz[1] + j)*sz[2] + k)*2];
+					dvol[nvox*2+1] = vol[((i * sz[1] + j)*sz[2] + k)*2 + 1];
+
 					xyz[nvox*3+0] = (unsigned short)(i);
 					xyz[nvox*3+1] = (unsigned short)(j);
 					xyz[nvox*3+2] = (unsigned short)(k);
@@ -224,7 +226,7 @@ int output_with_compression(char * fname,
 	ori[0] = ori[1] = ori[2] = 0;
 	size[0] = nvox;
 	sprintf(fullname, "%s.bin", fname);
-	vcbGenBinm(fullname, VCB_DOUBLE, 1, ori, size, 1, dvol);
+	vcbGenBinm(fullname, VCB_DOUBLE, 1, ori, size, 2, dvol);
 	/*
 	sprintf(fullname, "%s.bin", fname);
 	vcbGenBinm(fullname, VCB_UNSIGNEDINT, 2, ori, sz, 1, hash);

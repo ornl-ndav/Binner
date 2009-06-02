@@ -361,6 +361,9 @@ time1 = clock();
 	for (i = 0, totalverts = 0; i < nfacets; totalverts += nverts[i], i ++)
 		face_starts[i] = totalverts;
 
+	for (i = 0, vp= v; i < nfacets; i += 6, vp += 6*4*3) 
+		printf("hitcnt[%d] = %lf\n", i/6, hitcnt[i/6]);
+
 	wnfacets = 6;
 	for (i = 0, vp= v; i < nfacets; i += 6, vp += 6*4*3) 
 	{
@@ -395,11 +398,18 @@ time1 = clock();
 				  + smalllb[2] - orig[2];
 
 			if ((hitcnt != NULL) && (hiterr != NULL))
-				factor = hitcnt[i/6];
+			{
+				voxels[id*2]   += hitcnt[i/6];
+				voxels[id*2+1] += hiterr[i/6];
+			}
 			else
-				factor = 1.0;
-			voxels[id] += factor;
-			//total_volume += factor;
+			{
+				voxels[id*2]   += 1.0;
+				voxels[id*2+1] += 1.0;
+			}
+
+			/* voxels[id*2] += factor; */
+			/* total_volume += factor; */
 		}
 		else
 		{
@@ -433,14 +443,19 @@ time1 = clock();
 						coord[0] = j; 
 						coord[1] = k;
 						coord[2] = l;
-						//printf("coord: %d %d %d\n", j, k, l);
+						printf("coord: %d %d %d, hitcnt %lf, factor %lf, para_volume %f\n", 
+						        j, k, l, hitcnt[i/6], factor, para_volume);
 
 						id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
 						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
 						//assert(voxel_volume >= 0);
 						
 						if (voxel_volume > 1e-16)
-							voxels[id] += hitcnt[i/6]*(voxel_volume/para_volume);// * factor;
+						{
+							factor = voxel_volume/(para_volume*para_volume);
+							voxels[id*2]   += hitcnt[i/6]*factor;
+							voxels[id*2+1] += hiterr[i/6]*factor * factor;
+						}
 						//total_volume += factor; //voxel_volume * factor;
 					}
 		}

@@ -55,6 +55,7 @@ int main(int argc, char ** argv)
 			j = coord[n*3 + 1];
 			k = coord[n*3 + 2];
 			vol[(i * sz[1] + j) * sz[2] +k] = dvol[n];
+			printf("vol(%d,%d,%d) = %lf\n", i, j, k, dvol[n]);
 		}
 		
 		free(dvol);
