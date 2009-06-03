@@ -13,7 +13,7 @@ include_directories(
 #)
 
 set(EXES 
-	bmeshrebin largebmeshrebin bounds bslicer 
+	gmeshrebin bmeshrebin largebmeshrebin bounds bslicer 
 	clip3d clipvoxel compvol collector counts
 	export2vtk export2vcb 
 	gencell getfrom giveto 
@@ -51,8 +51,12 @@ add_executable(bounds bounds.c cell.c binnerio.c)
 add_executable(counts counts.c binnerio.c)
 
 add_executable(bmeshrebin 
-               bmeshrebin.c binner.c voxelize.c volume.c 
-			   clip.c cell.c geometry.c binnerio.c)
+               bmeshrebin.c rebinapp.c binner.c voxelize.c volume.c 
+               clip.c cell.c geometry.c binnerio.c)
+
+add_executable(gmeshrebin 
+               gmeshrebin.c rebinapp.c binner.c voxelize.c volume.c 
+               clip.c cell.c geometry.c binnerio.c)
 
 add_executable(largebmeshrebin 
                largebmeshrebin.c binner.c voxelize.c volume.c 

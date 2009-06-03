@@ -9,6 +9,7 @@
 #include "voxelize.h"
 #include "volume.h"
 
+#define REBINDEBUG 0
 
 void bounding_box(int n, double * bound, double * v)
 {
@@ -133,13 +134,18 @@ void roundup_bounds(double * bounds, int * lb, int * ub, double ccs)
 
 }
 
-double count_volume(double * vol, int * xyzsize)
+double count_volume(double * vol, int len, int step)
 {
 	int i; 
-	int xyz = xyzsize[0]*xyzsize[1]*xyzsize[2];
+	/* int xyz = xyzsize[0]*xyzsize[1]*xyzsize[2]; */
 	double volume;
 	
-	for (i = 0, volume = 0.0; i < xyz; volume += vol[i], i ++);
+	for (i = 0, volume = 0.0; i < len; volume += vol[i], i += step)
+#if REBINDEBUG
+	   printf("vol[%d] = %lf\n", i, vol[i]); 
+#else
+	   ;
+#endif
 	
 	return volume;
 }
@@ -361,8 +367,10 @@ time1 = clock();
 	for (i = 0, totalverts = 0; i < nfacets; totalverts += nverts[i], i ++)
 		face_starts[i] = totalverts;
 
+#if REBINDEBUG
 	for (i = 0, vp= v; i < nfacets; i += 6, vp += 6*4*3) 
 		printf("hitcnt[%d] = %lf\n", i/6, hitcnt[i/6]);
+#endif
 
 	wnfacets = 6;
 	for (i = 0, vp= v; i < nfacets; i += 6, vp += 6*4*3) 
@@ -440,11 +448,14 @@ time1 = clock();
 				for (k = smalllb[1]; k <= smallub[1]; k ++)
 					for (l = smalllb[2]; l <= smallub[2]; l ++)
 					{
+
 						coord[0] = j; 
 						coord[1] = k;
 						coord[2] = l;
+#if REBINDEBUG
 						printf("coord: %d %d %d, hitcnt %lf, factor %lf, para_volume %f\n", 
 						        j, k, l, hitcnt[i/6], factor, para_volume);
+#endif
 
 						id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
 						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
@@ -465,8 +476,11 @@ time2 = clock();
 
 	free(face_starts);
 	
-	total_volume = count_volume(voxels, xyzsize);
-
+	/* sum up only the hits: voxels[i*2]. errs are at voxels[2*i+1] */
+	total_volume = count_volume(voxels, xyzsize[0]*xyzsize[1]*xyzsize[2]*2, 2);
+#if REBINDEBUG
+	printf("bin_small recorded total_volume = %lf, before scaling\n", total_volume);
+#endif
 	return total_volume;
 }
 
