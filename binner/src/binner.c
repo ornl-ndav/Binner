@@ -422,14 +422,14 @@ time1 = clock();
 		else
 		{
 			/*clip this paralleliped to within this cell */
-			/*
+
 			if (smalllb[0] < orig[0]) smalllb[0] = orig[0];
 			if (smalllb[1] < orig[1]) smalllb[1] = orig[1];
 			if (smalllb[2] < orig[2]) smalllb[2] = orig[2];
 			if (smallub[0] >= orig[0]+xyzsize[0]) smallub[0] = orig[0]+xyzsize[0]-1;
 			if (smallub[1] >= orig[1]+xyzsize[1]) smallub[1] = orig[1]+xyzsize[1]-1;
 			if (smallub[2] >= orig[2]+xyzsize[2]) smallub[2] = orig[2]+xyzsize[2]-1;
-			*/
+
 #if 1
 			para_volume = polyhedral_volume(wnfacets, &nverts[i], vp);
 #else
