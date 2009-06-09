@@ -37,6 +37,15 @@ double rebin_gmesh(int npara,
 			double *voxels,
 			double emin, double emax);
 
+void rebin_gmesh_output(
+			int sliceid,
+			int *	orig, 
+			int *	xyzsize,
+			double  cellsize, /* assume uniform cell size, hence cubic cells */
+			double *spacing,
+			double *voxels,
+			double emin, double emax);
+
 void	output_askinginfo(double * askbounds, int * xyzsize, double * spacing);
 void	output_askinginfo_short(int * xyzsize);
 void	output_actualinfo(double * bounds);
