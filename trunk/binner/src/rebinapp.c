@@ -8,6 +8,13 @@
 
 #define REBINDEBUG 0
 
+static char * versionstring = "version 1.0.0";
+
+char * rebinner_versionstring()
+{
+	return versionstring;
+}
+
 void scale_vertices(int n, double * vdata,double xscale, double yscale, double zscale)
 {
 	int i;
