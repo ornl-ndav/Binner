@@ -39,6 +39,8 @@ int main(int argc, char ** argv)
 
 	if (argc != 1)
 		fprintf(stderr, "usage: %s < gmesh_input > rebin_output");
+
+	fprintf(stderr, "%s rebinner %s\n", argv[0], rebinner_versionstring());
 	
 	i = getchar();
 	if (i == 'F')

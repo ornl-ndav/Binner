@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+char * rebinner_versionstring();
+
 void	scale_vertices(int n, double * vdata,double xscale, double yscale, double zscale);
 double	fv_bounds(double * askbounds, double * spacing, int * orig, int * xyzsize);
 double	padded_bounds(double * bounds, int res, int * orig, int * xyzsize);
