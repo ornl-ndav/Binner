@@ -23,7 +23,7 @@ int main(int argc, char ** argv)
 	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
 	double * vdata, * hcnt, * herr, spacing[3];
 	int    * nverts, * sid;
-	double totalvolume, cellsize, bounds[6], askbounds[6]; 
+	double totalvolume = 0., cellsize, bounds[6], askbounds[6]; 
 	double * voxels;
 	float emin, emax;
 	float  hitcnt, hiterr, corners[8][4];
@@ -37,77 +37,40 @@ int main(int argc, char ** argv)
 	 *   IV: num_binx; num_biny; num_binz
 	 */
 
-	if (argc != 1)
-		fprintf(stderr, "usage: %s < gmesh_input > rebin_output");
+	if (argc != 10) 
+	{
+		fprintf(stderr, 
+				"usage: %s xmin xmax num_binx ymin ymax num_biny zmin zmax num_binz\n",
+				argv[0]);
+		exit(1);
+	}
 
 	fprintf(stderr, "rebinner version    : %s\n", rebinner_versionstring());
 	
-	i = getchar();
-	if (i == 'F')
-	{  
-		j = getchar();
-		if (j != 'V') 
-		{
-			output_gmesh_formaterr();
-			exit(1);
-		}
+	askbounds[0] = atof(argv[1]);
+	askbounds[1] = atof(argv[2]);
+	xyzsize[0]   = atoi(argv[3]);
+	askbounds[2] = atof(argv[4]);
+	askbounds[3] = atof(argv[5]);
+	xyzsize[1]   = atoi(argv[6]);
+	askbounds[4] = atof(argv[7]);
+	askbounds[5] = atof(argv[8]);
+	xyzsize[2]   = atoi(argv[9]);
+	
+	for (j = 0; j < 3; j++)
+		spacing[j] = (askbounds[j*2+1] - askbounds[j*2])/xyzsize[j];
 		
-		fgets(rbuf, 8192, stdin); /* get everything on that first line */
+	output_askinginfo(askbounds, xyzsize, spacing);
+	cellsize = fv_bounds(askbounds, spacing, orig, xyzsize);
 
-		nfields = sscanf(rbuf,
-						"%lf %lf %d; %lf %lf %d; %lf %lf %d",
-						&askbounds[0],  &askbounds[1],  &xyzsize[0],
-						&askbounds[2],  &askbounds[3],  &xyzsize[1],
-						&askbounds[4],  &askbounds[5],  &xyzsize[2]);
+	output_prerebininfo(orig, xyzsize, cellsize);
 
-		if (nfields != 9) 
-		{
-			output_gmesh_formaterr();
-			exit(1);
-		}
+	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
+	voxels = malloc(nvoxel * sizeof(double) * 2); /* rebin both counts and error */
+	for (i = 0; i < nvoxel*2; voxels[i] = 0.0, i ++);
 
-		for (j = 0; j < 3; j++)
-			spacing[j] = (askbounds[j*2+1] - askbounds[j*2])/xyzsize[j];
-		
-		output_askinginfo(askbounds, xyzsize, spacing);
-		inputformat = 1;
-
-	}
-	else if (i == 'I')
-	{
-		j = getchar();
-		if (j != 'V') 
-		{
-			output_gmesh_formaterr();
-			exit(2);
-		}
-		
-		fgets(rbuf, 8192, stdin); /* get everything on that first line */
-
-		sscanf(rbuf, "%d", &res);
-		
-		if (nfields != 1) 
-		{
-			output_gmesh_formaterr();
-			exit(3);
-		}
-
-		xyzsize[0] = xyzsize[1] = xyzsize[2] = res;
-
-		askbounds[0] = askbounds[2] = askbounds[4] = -1e16;
-		askbounds[1] = askbounds[3] = askbounds[5] = 1e16;
-
-		output_askinginfo_short(xyzsize);
-		inputformat = 2;
-	}
-	else 
-	{
-		output_gmesh_formaterr();
-		exit(4);
-	}
-
-	/* f: number of pixels. each pixel corresponds to one paralleliped */
-	scanf("%d", &f);
+	/* f: number of pixels to rebin together */
+	f = 1000; 
 
 	vdata  = malloc(f * 6 * 4 * 3 * sizeof(double));
 	nverts = malloc(f * 6 * sizeof(int));
@@ -115,64 +78,60 @@ int main(int argc, char ** argv)
 	herr   = malloc(f * sizeof(double));
 	sid    = malloc(f * sizeof(int));
 	
-    for (npara = 0; (n = get_pixel_energy(&sliceid,&emin,&emax,&hitcnt,&hiterr,corners)) > 0; npara ++) 
+	while (1)
 	{
-		if (npara >= f) break; /* read at most f faces, i.e. f/6 parallelipeds */
-
-		if (hitcnt >= 1e-16)
+		for (npara = 0; npara < f; npara ++) 
 		{
-			/* only ones with real hitcnt should be fixed */
-			/* otherwise, just keep the space filled would be fine */
-			correctCornersf3d(corners);
-		}
+			/* read at most f pixels */
+			n = get_pixel_energy(&sliceid,&emin,&emax,&hitcnt,&hiterr,corners);
+			if (n <= 0) break; /* did not read in one pixel */
+			
+			if (hitcnt >= 1e-16)
+			{
+				/* only ones with real hitcnt should be fixed */
+				/* otherwise, just keep the space filled would be fine */
+				correctCornersf3d(corners);
+			}
 
-		realCubef(corners, vbuf);
+			realCubef(corners, vbuf);
 
-		for (i = 0; i < 6*4; i ++)
-		{
-			vdata[(npara*6*4+i)*3+0] = vbuf[i*4+0];
-			vdata[(npara*6*4+i)*3+1] = vbuf[i*4+1];
-			vdata[(npara*6*4+i)*3+2] = vbuf[i*4+2];
-		}
+			for (i = 0; i < 6*4; i ++)
+			{
+				vdata[(npara*6*4+i)*3+0] = vbuf[i*4+0];
+				vdata[(npara*6*4+i)*3+1] = vbuf[i*4+1];
+				vdata[(npara*6*4+i)*3+2] = vbuf[i*4+2];
+			}
 		
-		for (i = 0; i < 6; i ++)
-			nverts[npara*6+i] = 4;
+			for (i = 0; i < 6; i ++)
+				nverts[npara*6+i] = 4;
 
-		hcnt[npara] = hitcnt;
-		herr[npara] = hiterr;
-		sid[npara] = sliceid;
+			hcnt[npara] = hitcnt;
+			herr[npara] = hiterr;
+			sid[npara] = sliceid;
 
 #if REBINDEBUG
-		fprintf(stderr,
+			fprintf(stderr,
 				"sid, emin, emax, hcnt, herr: %d %f %f %lf %lf\n", 
 				sid[npara], emin, emax, hcnt[npara], herr[npara]);
 #endif
-	}
+		}
 
-	bounding_box(npara*6*4, bounds, vdata);	
-	output_actualinfo(bounds);
+		if (npara <= 0) break; /* did not read in any pixels */
 
-	if (inputformat == 1) 
-	{
-		cellsize = fv_bounds(askbounds, spacing, orig, xyzsize);
+		bounding_box(npara*6*4, bounds, vdata);	
+#if REBINDEBUG		
+		output_actualinfo(bounds);
+#endif
 	
 		scale_vertices( npara * 6 * 4, 
 						vdata,
 						cellsize/spacing[0], 
 						cellsize/spacing[1],
 						cellsize/spacing[2]);
-	}
-	else
-		cellsize = padded_bounds(bounds, res, orig, xyzsize); 
 	
-	output_prerebininfo(orig, xyzsize, cellsize);
+		time1 = clock();
 
-	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
-	voxels = malloc(nvoxel * sizeof(double) * 2); /* rebin both counts and error */
-
-	time1 = clock();
-
-	totalvolume = rebin_gmesh(npara,
+		totalvolume += rebin_gmesh(npara,
 								nverts,
 								vdata, /* the vertices */
 								sid,
@@ -185,9 +144,13 @@ int main(int argc, char ** argv)
 								voxels,
 								emin, emax);
 	
-	time2 = clock();
-	rebintime += (float)(time2-time1)/CLOCKS_PER_SEC;
+		time2 = clock();
+		rebintime += (float)(time2-time1)/CLOCKS_PER_SEC;
 	
+	}
+
+	rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
+
 	output_postrebininfo(rebintime, npara, totalvolume, nvoxel);
 
 	free(sid);

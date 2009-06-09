@@ -178,7 +178,6 @@ double rebin_gmesh(int npara,
 {
 	int i, j, n, nonempty, nvoxel, x, y, z;
 	double totalvolume = 0.0, volumescale;
-	char fullname[200];
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	volumescale = 	(cellsize/spacing[0]) * (cellsize/spacing[1]) * (cellsize/spacing[2]);
@@ -186,7 +185,6 @@ double rebin_gmesh(int npara,
 	
 	for (n = 0, j = 0, nonempty = 0; n < npara; n += j)
 	{
-	
 		for (i = n; i < npara; i++) /* sliceid monotonically increase */
 			if (sliceid[i] != sliceid[n])
 				break;
@@ -197,8 +195,6 @@ double rebin_gmesh(int npara,
 		fprintf(stderr, "before rebin: n = %d, npara = %d, slice %d has %d paras\n", n, npara, sliceid[n], j);
 #endif
 
-		for (i = 0; i < nvoxel*2; voxels[i] = 0.0, i ++);
-
 		totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
 								nverts + n*6,
 								vdata + n*6*4*3, /* the vertices */
@@ -208,16 +204,35 @@ double rebin_gmesh(int npara,
 								xyzsize,
 								cellsize, 
 								voxels);
+	}
+	
+	return totalvolume;
+}
 
-		for (i = 0; i < nvoxel; voxels[i*2] *= volumescale, i ++);   /* counts */
-		for (i = 0; i < nvoxel; voxels[i*2+1] *= volumescale, i ++); /* error */
-		totalvolume *= volumescale;
+void rebin_gmesh_output(
+			int sliceid,
+			int *	orig, 
+			int *	xyzsize,
+			double  cellsize, /* assume uniform cell size, hence cubic cells */
+			double *spacing,
+			double *voxels,
+			double emin, double emax)
+{
+	int i, j, n, nonempty, nvoxel, x, y, z;
+	double totalvolume = 0.0, volumescale;
+
+	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
+	volumescale = 	(cellsize/spacing[0]) * (cellsize/spacing[1]) * (cellsize/spacing[2]);
+	volumescale =  1.0/volumescale;
+
+	for (i = 0; i < nvoxel; voxels[i*2] *= volumescale, i ++);   /* counts */
+	for (i = 0; i < nvoxel; voxels[i*2+1] *= volumescale, i ++); /* error */
 
 		for (i = 0, x = 0; x < xyzsize[0]; x ++)
 			for (y = 0; y < xyzsize[1]; y ++)
 				for (z = 0; z < xyzsize[2]; z ++)
 				{
-					printf("%d %f %f ", sliceid[n], emin, emax);
+					printf("%d %f %f ", sliceid, emin, emax);
 					printf("%le %le ", voxels[i*2], voxels[i*2+1]);
 					i ++;
 					printcorners(x, y, z, orig, spacing);
@@ -235,17 +250,15 @@ double rebin_gmesh(int npara,
 			if (voxels[i*2] > 1e-16) nonempty ++;
 		
 		fprintf(stderr, 
-		        "rebinned slice %04d : %.2f%% nonempty, %d parallelipeds\n", 
-				sliceid[n], (100.f*nonempty)/nvoxel, j);
+		        "rebinned input data : %.2f%% nonempty\n", 
+				(100.f*nonempty)/nvoxel);
 
 #if REBINDEBUG
 		printf("rebin_slice recorded totalvolume = %lf, before scaling\n", totalvolume);
 		for (i = 0; i < nvoxel; i ++)
 			printf("voxels[%d] = %lf error[%d] = %lf\n", i, voxels[i*2], i, voxels[i*2+1]);
 #endif
-	}
 
-	return totalvolume;
 }
 
 
