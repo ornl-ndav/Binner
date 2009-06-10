@@ -36,7 +36,7 @@ def make_cmdscript(cname, mnum, odir, ifiles, opt):
     fcscr = open(cscr, 'w')
     print >> fcscr, "#!/bin/bash"
     print >> fcscr, "cd", odir
-    print >> fcscr, "echo \"Start:\" date %s"
+    print >> fcscr, "echo \"Start:\" $(date +%s)"
 
     # Collect input files into one
     file_list = " ".join(ifiles)
@@ -48,7 +48,7 @@ def make_cmdscript(cname, mnum, odir, ifiles, opt):
     # Clean up
     print >> fcscr, "rm", tfile
     
-    print >> fcscr, "echo \"End:\" $(date %s)"
+    print >> fcscr, "echo \"End:\" $(date +%s)"
     fcscr.close()
     os.chmod(cscr, 0755)
     
