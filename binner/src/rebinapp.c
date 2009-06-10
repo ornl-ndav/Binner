@@ -176,7 +176,7 @@ double rebin_gmesh(int npara,
 			double *voxels,
 			double emin, double emax)
 {
-	int i, j, n, nonempty, nvoxel, x, y, z;
+	int i, j, n, nonempty, nvoxel;
 	double totalvolume = 0.0, volumescale;
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
@@ -209,7 +209,7 @@ double rebin_gmesh(int npara,
 	return totalvolume;
 }
 
-void rebin_gmesh_output(
+double rebin_gmesh_output(
 			int sliceid,
 			int *	orig, 
 			int *	xyzsize,
@@ -218,7 +218,7 @@ void rebin_gmesh_output(
 			double *voxels,
 			double emin, double emax)
 {
-	int i, j, n, nonempty, nvoxel, x, y, z;
+	int i, nonempty, nvoxel, x, y, z;
 	double totalvolume = 0.0, volumescale;
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
@@ -228,36 +228,42 @@ void rebin_gmesh_output(
 	for (i = 0; i < nvoxel; voxels[i*2] *= volumescale, i ++);   /* counts */
 	for (i = 0; i < nvoxel; voxels[i*2+1] *= volumescale, i ++); /* error */
 
-		for (i = 0, x = 0; x < xyzsize[0]; x ++)
-			for (y = 0; y < xyzsize[1]; y ++)
-				for (z = 0; z < xyzsize[2]; z ++)
-				{
-					printf("%d %f %f ", sliceid, emin, emax);
-					printf("%le %le ", voxels[i*2], voxels[i*2+1]);
-					i ++;
-					printcorners(x, y, z, orig, spacing);
-					printcorners(x+1, y, z, orig, spacing);
-					printcorners(x, y+1, z, orig, spacing);
-					printcorners(x+1, y+1, z, orig, spacing);
-					printcorners(x, y, z+1, orig, spacing);
-					printcorners(x+1, y, z+1, orig, spacing);
-					printcorners(x, y+1, z+1, orig, spacing);
-					printcorners(x+1, y+1, z+1, orig, spacing);
-					printf("\n");
-				}
+	for (i = 0, x = 0; x < xyzsize[0]; x ++)
+		for (y = 0; y < xyzsize[1]; y ++)
+			for (z = 0; z < xyzsize[2]; z ++)
+			{
+				printf("%d %f %f ", sliceid, emin, emax);
+				printf("%le %le ", voxels[i*2], voxels[i*2+1]);
+				i ++;
+				printcorners(x, y, z, orig, spacing);
+				printcorners(x+1, y, z, orig, spacing);
+				printcorners(x, y+1, z, orig, spacing);
+				printcorners(x+1, y+1, z, orig, spacing);
+				printcorners(x, y, z+1, orig, spacing);
+				printcorners(x+1, y, z+1, orig, spacing);
+				printcorners(x, y+1, z+1, orig, spacing);
+				printcorners(x+1, y+1, z+1, orig, spacing);
+				printf("\n");
+			}
 
-		for (i = 0, nonempty = 0; i < nvoxel; i ++)
-			if (voxels[i*2] > 1e-16) nonempty ++;
-		
-		fprintf(stderr, 
-		        "rebinned input data : %.2f%% nonempty\n", 
-				(100.f*nonempty)/nvoxel);
+	for (i = 0, nonempty = 0; i < nvoxel; i ++)
+		if (voxels[i*2] > 1e-16)
+		{
+			nonempty ++;
+			totalvolume += voxels[i*2];
+		}
+	
+	fprintf(stderr, 
+			"rebinned volume     : %.2f%% occupied\n", 
+			(100.f*nonempty)/nvoxel);
 
 #if REBINDEBUG
-		printf("rebin_slice recorded totalvolume = %lf, before scaling\n", totalvolume);
+		fprintf(stderr, "rebin_slice recorded totalvolume = %lf, after scaling\n", totalvolume);
 		for (i = 0; i < nvoxel; i ++)
-			printf("voxels[%d] = %lf error[%d] = %lf\n", i, voxels[i*2], i, voxels[i*2+1]);
+			fprintf(stderr, "voxels[%d] = %lf error[%d] = %lf\n", i, voxels[i*2], i, voxels[i*2+1]);
 #endif
+
+	return totalvolume;
 
 }
 
@@ -291,13 +297,13 @@ void output_prerebininfo(int * orig, int * xyzsize, double cellsize)
 {
  	fprintf(stderr, "rebin volume origin : %d %d %d\n", orig[0], orig[1], orig[2]);
 	fprintf(stderr, "rebin volume size   : %d %d %d\n", xyzsize[0], xyzsize[1], xyzsize[2]);
-	fprintf(stderr, "rebin bin size      : %e %e %e\n", cellsize, cellsize, cellsize);
+	fprintf(stderr, "rebin cell size     : %e\n", cellsize);
 }
 
 void output_postrebininfo(float rebintime, int npara, double totalvolume, int nvoxel)
 {
 	fprintf(stderr, "rebin time          : %.3f sec\n", rebintime);
-	fprintf(stderr, "rebin throughput    : %.2f per second\n", npara/rebintime);
+	fprintf(stderr, "rebin throughput    : %.2f per second, %d total\n", npara/rebintime, npara);
 	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume);
 	fprintf(stderr, "all bins            : %d\n", nvoxel);
 }
