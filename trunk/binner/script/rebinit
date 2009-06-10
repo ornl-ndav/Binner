@@ -29,7 +29,7 @@ def get_value(tag, lines):
                 return sline.split(':')[-1]
     return None
 
-def make_cmdscript(cname, mnum, odir, ifiles, opt):
+def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     cscr = os.path.join(odir, "_".join(cname) + ".sh")
 
     del cname[-1]
@@ -77,9 +77,14 @@ def run(opts, tempfile):
         print "Instrument:", instrument
         print "Runs:", runlist
 
-    qx = get_value("QX", flines)
-    qy = get_value("QY", flines)
-    qz = get_value("QZ", flines)
+    xaxis = get_value("XAXIS", flines).split(',')
+    yaxis = get_value("YAXIS", flines).split(',')
+    zaxis = get_value("ZAXIS", flines).split(',')
+
+    axis_pars = []
+    axis_pars.extend(xaxis)
+    axis_pars.extend(yaxis)
+    axis_pars.extend(zaxis)
 
     threshold = get_value("THRESH", flines)
 
@@ -139,7 +144,7 @@ def run(opts, tempfile):
             print "Output Log name:", outlog_name
 
         job_script = make_cmdscript(base_name, mesh_num, outputdir,
-                                    rebin_input, opts)
+                                    rebin_input, axis_pars, opts)
 
         if not opts.debug:        
             jid = slurm.run(job_script, get_queue(instrument), outlog_name,
