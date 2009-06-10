@@ -7,6 +7,8 @@ REBINNER_CMD = "test"
 MAKE_VTK_ = "python /SNS/software/bin/convert_vtk_8.py"
 
 def get_queue(inst):
+    return "geminiq"
+
     if inst == "ARCS":
         return "arcs"
     elif inst == "CNCS":
@@ -139,21 +141,22 @@ def run(opts, tempfile):
         job_script = make_cmdscript(base_name, mesh_num, outputdir,
                                     rebin_input, opts)
 
-        """
-        jid = slurm.run(job_script, get_queue(instrument), outlog_name,
-        errlog_name, verbose=opts.verbose, jobname=job_name)
+        if not opts.debug:        
+            jid = slurm.run(job_script, get_queue(instrument), outlog_name,
+                            errlog_name, verbose=opts.verbose,
+                            jobname=job_name)
 
-        if opts.make_vtk:
-        vtkcmd = [MAKE_VTK_CMD]
+            if opts.make_vtk:
+                vtkcmd = [MAKE_VTK_CMD]
 
-        vtk_name = []
-        vtk_name.append(instrument)
-        vtk_name.append(str(runlist[0]))
-        vtk_name.append("rvtk"+mesh_num)
+                vtk_name = []
+                vtk_name.append(instrument)
+                vtk_name.append(str(runlist[0]))
+                vtk_name.append("rvtk"+mesh_num)
 
-        vjid = slurm.run(" ".join(vtkcmd), get_queue(instrument),
-        verbose=opts.verbose, precursor=jid, jobname="_".join(vtk_name))
-        """
+                vjid = slurm.run(" ".join(vtkcmd), get_queue(instrument),
+                                 verbose=opts.verbose, precursor=jid,
+                                 jobname="_".join(vtk_name))
 
 if __name__ == "__main__":
     import optparse
@@ -171,6 +174,10 @@ if __name__ == "__main__":
     
     parser.add_option("-v", "--verbose", dest="verbose", action="count",
                       help="Flag for turning on script verbosity")
+
+    parser.add_option("-d", "--debug", dest="debug", action="store_true",
+                      help="Flag for turning off SLURM submission.")
+    parser.set_defaults(debug=False)
 
     parser.add_option("-o", "--outputdir", dest="outputdir",
                       help="Specify a directory to receive the rebinning "\
