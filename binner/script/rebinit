@@ -29,6 +29,12 @@ def get_value(tag, lines):
                 return sline.split(':')[-1]
     return None
 
+def make_axis(avals):
+    parts = avals.split(',')
+    nbins = int((parts[1] - parts[0]) / parts[2])
+    parts[2] = nbins
+    return avals
+
 def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     cscr = os.path.join(odir, "_".join(cname) + ".sh")
 
@@ -77,9 +83,9 @@ def run(opts, tempfile):
         print "Instrument:", instrument
         print "Runs:", runlist
 
-    xaxis = get_value("XAXIS", flines).split(',')
-    yaxis = get_value("YAXIS", flines).split(',')
-    zaxis = get_value("ZAXIS", flines).split(',')
+    xaxis = make_axis(get_value("XAXIS", flines))
+    yaxis = make_axis(get_value("YAXIS", flines))
+    zaxis = make_axis(get_value("ZAXIS", flines))
 
     axis_pars = []
     axis_pars.extend(xaxis)
