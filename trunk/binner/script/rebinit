@@ -25,6 +25,13 @@ def get_value(tag, lines):
                 return sline.split(':')[-1]
     return None
 
+def make_cmdscript(cname, opt):
+    cscr = cname + ".sh"
+    fcscr = open(cscr, 'w')
+
+    fcscr.close()
+    
+
 def run(opts, tempfile):
 
     if opts.verbose:
@@ -87,10 +94,11 @@ def run(opts, tempfile):
     import slurm
     for ifile in filelist:
         rebin_input = []
-        rebin_input.append(ifile)
+        pifile = os.path.join(filedir, ifile)
+        rebin_input.append(pifile)
         if num_runs > 1:
             for run in runlist[1:]:
-                rebin_input.append(ifile.replace(str(runlist[0]), str(run)))
+                rebin_input.append(pifile.replace(str(runlist[0]), str(run)))
             if opts.verbose:
                 print "Input files:", rebin_input
                                    
