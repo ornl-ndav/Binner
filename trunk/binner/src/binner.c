@@ -369,7 +369,7 @@ time1 = clock();
 
 #if REBINDEBUG
 	for (i = 0, vp= v; i < nfacets; i += 6, vp += 6*4*3) 
-		printf("hitcnt[%d] = %lf\n", i/6, hitcnt[i/6]);
+		fprintf(stderr, "hitcnt[%d] = %lf\n", i/6, hitcnt[i/6]);
 #endif
 
 	wnfacets = 6;
@@ -453,7 +453,7 @@ time1 = clock();
 						coord[1] = k;
 						coord[2] = l;
 #if REBINDEBUG
-						printf("coord: %d %d %d, hitcnt %lf, factor %lf, para_volume %f\n", 
+						fprintf(stderr, "coord: %d %d %d, hitcnt %lf, factor %lf, para_volume %f\n", 
 						        j, k, l, hitcnt[i/6], factor, para_volume);
 #endif
 
@@ -479,7 +479,7 @@ time2 = clock();
 	/* sum up only the hits: voxels[i*2]. errs are at voxels[2*i+1] */
 	total_volume = count_volume(voxels, xyzsize[0]*xyzsize[1]*xyzsize[2]*2, 2);
 #if REBINDEBUG
-	printf("bin_small recorded total_volume = %lf, before scaling\n", total_volume);
+	fprintf(stderr, "bin_small recorded total_volume = %lf, before scaling\n", total_volume);
 #endif
 	return total_volume;
 }

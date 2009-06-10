@@ -28,34 +28,46 @@ int main(int argc, char ** argv)
 	float emin, emax;
 	float  hitcnt, hiterr, corners[8][4];
 	float  rebintime = 0;
-	int   nfields, inputformat;
+	int   nfields, inputformat, pixelcnt = 0, c = 0;
 
-	/* read first line. 
-	 * must be in the following formats:
-	 *   FV: xmin xmax num_binx; ymin ymax num_biny; zmin zmax num_binz 
-	 * or
-	 *   IV: num_binx; num_biny; num_binz
-	 */
-
-	if (argc != 10) 
+	if ((argc != 10) && (argc != 12))
 	{
 		fprintf(stderr, 
-				"usage: %s xmin xmax num_binx ymin ymax num_biny zmin zmax num_binz\n",
+				"usage: %s [-b batchsize] xmin xmax num_binx ymin ymax num_biny zmin zmax num_binz\n",
 				argv[0]);
 		exit(1);
 	}
 
 	fprintf(stderr, "rebinner version    : %s\n", rebinner_versionstring());
+
+	/* f: number of pixels to rebin together, default to 10000 */
+	f = 10000;
+	if (argc == 12)
+	{
+		if (strcmp(argv[c+1],"-b") == 0)
+			f = atoi(argv[c+2]);
+		else
+		{
+			fprintf(stderr, 
+				"usage: %s [-b batchsize] xmin xmax num_binx ymin ymax num_biny zmin zmax num_binz\n",
+				argv[0]);
+			exit(1);
+		}
+		
+		c += 2;
+	}
+
+	fprintf(stderr, "rebinner batch size : %d pixels\n", f);
 	
-	askbounds[0] = atof(argv[1]);
-	askbounds[1] = atof(argv[2]);
-	xyzsize[0]   = atoi(argv[3]);
-	askbounds[2] = atof(argv[4]);
-	askbounds[3] = atof(argv[5]);
-	xyzsize[1]   = atoi(argv[6]);
-	askbounds[4] = atof(argv[7]);
-	askbounds[5] = atof(argv[8]);
-	xyzsize[2]   = atoi(argv[9]);
+	askbounds[0] = atof(argv[c+1]);
+	askbounds[1] = atof(argv[c+2]);
+	xyzsize[0]   = atoi(argv[c+3]);
+	askbounds[2] = atof(argv[c+4]);
+	askbounds[3] = atof(argv[c+5]);
+	xyzsize[1]   = atoi(argv[c+6]);
+	askbounds[4] = atof(argv[c+7]);
+	askbounds[5] = atof(argv[c+8]);
+	xyzsize[2]   = atoi(argv[c+9]);
 	
 	for (j = 0; j < 3; j++)
 		spacing[j] = (askbounds[j*2+1] - askbounds[j*2])/xyzsize[j];
@@ -68,9 +80,6 @@ int main(int argc, char ** argv)
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double) * 2); /* rebin both counts and error */
 	for (i = 0; i < nvoxel*2; voxels[i] = 0.0, i ++);
-
-	/* f: number of pixels to rebin together */
-	f = 1000; 
 
 	vdata  = malloc(f * 6 * 4 * 3 * sizeof(double));
 	nverts = malloc(f * 6 * sizeof(int));
@@ -128,30 +137,32 @@ int main(int argc, char ** argv)
 						cellsize/spacing[0], 
 						cellsize/spacing[1],
 						cellsize/spacing[2]);
-	
+
+		pixelcnt += npara;
+
 		time1 = clock();
 
-		totalvolume += rebin_gmesh(npara,
-								nverts,
-								vdata, /* the vertices */
-								sid,
-								hcnt,        /* hit counter */
-								herr,        /* hit counter error */
-								orig, 
-								xyzsize,
-								cellsize, 
-								spacing,
-								voxels,
-								emin, emax);
+		rebin_gmesh(npara,
+					nverts,
+					vdata, /* the vertices */
+					sid,
+					hcnt,        /* hit counter */
+					herr,        /* hit counter error */
+					orig, 
+					xyzsize,
+					cellsize, 
+					spacing,
+					voxels,
+					emin, emax);
 	
 		time2 = clock();
 		rebintime += (float)(time2-time1)/CLOCKS_PER_SEC;
 	
 	}
 
-	rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
+	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
 
-	output_postrebininfo(rebintime, npara, totalvolume, nvoxel);
+	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
 
 	free(sid);
 	free(herr);

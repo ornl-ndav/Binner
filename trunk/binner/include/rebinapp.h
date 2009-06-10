@@ -37,7 +37,7 @@ double rebin_gmesh(int npara,
 			double *voxels,
 			double emin, double emax);
 
-void rebin_gmesh_output(
+double rebin_gmesh_output(
 			int sliceid,
 			int *	orig, 
 			int *	xyzsize,
