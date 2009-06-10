@@ -7,9 +7,9 @@
 INST:CNCS
 RUN:800-860
 # Each axis should be specified in min, max, width
-XAXIS:-7,2,0.1
-YAXIS:-3,3,0.1
-ZAXIS:-1,9,0.1
+XAXIS:-1.5,-0.1,14
+YAXIS:-0.4,0.4,8
+ZAXIS:0.0,2.4,24
 # The following allows one to specify a threshold below which voxels in the 
 # rebinned space will not be written out. The system will default to 0. 
 # Remove the # to activate.
