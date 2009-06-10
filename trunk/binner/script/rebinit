@@ -3,8 +3,8 @@
 import os
 
 VERSION = "1.0"
-REBINNER_CMD = "test"
-MAKE_VTK_ = "python /SNS/software/bin/convert_vtk_8.py"
+REBINNER_CMD = "gmeshrebin"
+MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
 
 def get_queue(inst):
     return "geminiq"
@@ -55,14 +55,14 @@ def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     file_list = " ".join(ifiles)
 
     # Call rebinner command
-    print >> fcscr, "cat", file_list, "| gmeshrebin", " ".join(apar), \
+    print >> fcscr, "cat", file_list, "| " + REBINNER_CMD, " ".join(apar), \
           ">", ofile
     
     print >> fcscr, "echo \"End:\" $(date +%s)"
     fcscr.close()
     os.chmod(cscr, 0755)
     
-    return cscr
+    return (cscr, ofile)
 
 def run(opts, tempfile):
     if opts.verbose:
@@ -151,8 +151,8 @@ def run(opts, tempfile):
             print "Job name:", job_name
             print "Output Log name:", outlog_name
 
-        job_script = make_cmdscript(base_name, mesh_num, outputdir,
-                                    rebin_input, axis_pars, opts)
+        (job_script, out_file) = make_cmdscript(base_name, mesh_num, outputdir,
+                                                rebin_input, axis_pars, opts)
 
         if not opts.debug:        
             jid = slurm.run(job_script, get_queue(instrument), outlog_name,
@@ -161,11 +161,16 @@ def run(opts, tempfile):
 
             if opts.make_vtk:
                 vtkcmd = [MAKE_VTK_CMD]
+                vtkcmd.append(os.path.join(outputdir, out_file))
 
                 vtk_name = []
                 vtk_name.append(instrument)
                 vtk_name.append(str(runlist[0]))
                 vtk_name.append("rvtk"+mesh_num)
+
+                if opts.verbose:
+                    print "VTK Job name:", "_".join(vtk_name)
+                    print "VTK Input File:", vtkcmd[-1]
 
                 vjid = slurm.run(" ".join(vtkcmd), get_queue(instrument),
                                  verbose=opts.verbose, precursor=jid,
