@@ -91,6 +91,8 @@ def run(opts, tempfile):
         if num_runs > 1:
             for run in runlist[1:]:
                 rebin_input.append(ifile.replace(str(runlist[0]), str(run)))
+            if opts.verbose:
+                print "Input files:", rebin_input
                                    
         # Construct rebinner command
         # TODO! CLI not defined
