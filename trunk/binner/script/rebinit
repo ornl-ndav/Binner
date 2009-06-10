@@ -30,13 +30,18 @@ def get_value(tag, lines):
     return None
 
 def make_axis(avals):
-    parts = avals.split(',')
-    nbins = int((parts[1] - parts[0]) / parts[2])
-    parts[2] = nbins
+    avals = avals.split(',')
+    #parts = [float(value) for value in avals]
+    #print parts
+    #nbins = int((parts[1] - parts[0]) / parts[2])
+    #avals[2] = str(nbins)
+    #print avals
     return avals
 
 def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     cscr = os.path.join(odir, "_".join(cname) + ".sh")
+
+    ofile = "_".join(cname) + ".in"
 
     del cname[-1]
     cname.append("bmesh"+str(mnum))
@@ -48,13 +53,10 @@ def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
 
     # Collect input files into one
     file_list = " ".join(ifiles)
-    tfile = "_".join(cname) + "_temp.in"
-    print >> fcscr, "cat", file_list, ">", tfile
 
     # Call rebinner command
-
-    # Clean up
-    print >> fcscr, "rm", tfile
+    print >> fcscr, "cat", file_list, "| gmeshrebin", " ".join(apar), \
+          ">", ofile
     
     print >> fcscr, "echo \"End:\" $(date +%s)"
     fcscr.close()
