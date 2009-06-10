@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 VERSION = "1.0"
 REBINNER_CMD = "test"
 MAKE_VTK_ = "python /SNS/software/bin/convert_vtk_8.py"
@@ -25,15 +27,34 @@ def get_value(tag, lines):
                 return sline.split(':')[-1]
     return None
 
-def make_cmdscript(cname, opt):
-    cscr = cname + ".sh"
-    fcscr = open(cscr, 'w')
+def make_cmdscript(cname, mnum, odir, ifiles, opt):
+    cscr = os.path.join(odir, "_".join(cname) + ".sh")
 
-    fcscr.close()
+    del cname[-1]
+    cname.append("bmesh"+str(mnum))
+
+    fcscr = open(cscr, 'w')
+    print >> fcscr, "#!/bin/bash"
+    print >> fcscr, "cd", odir
+    print >> fcscr, "echo \"Start:\" date %s"
+
+    # Collect input files into one
+    file_list = " ".join(ifiles)
+    tfile = "_".join(cname) + "_temp.in"
+    print >> fcscr, "cat", file_list, ">", tfile
+
+    # Call rebinner command
+
+    # Clean up
+    print >> fcscr, "rm", tfile
     
+    print >> fcscr, "echo \"End:\" $(date %s)"
+    fcscr.close()
+    os.chmod(cscr, 0755)
+    
+    return cscr
 
 def run(opts, tempfile):
-
     if opts.verbose:
         print "Opening", tempfile
 
@@ -61,8 +82,6 @@ def run(opts, tempfile):
     threshold = get_value("THRESH", flines)
 
     # Make a home for the output
-
-    import os
 
     if opts.outputdir is None:
         basedir = os.path.join(os.path.expanduser("~/results"), instrument)
@@ -102,9 +121,6 @@ def run(opts, tempfile):
             if opts.verbose:
                 print "Input files:", rebin_input
                                    
-        # Construct rebinner command
-        # TODO! CLI not defined
-
         # Send out SLURM jobs
         mesh_num = ifile.split('bmesh')[-1].split('.')[0]
         base_name = []
@@ -120,9 +136,12 @@ def run(opts, tempfile):
             print "Job name:", job_name
             print "Output Log name:", outlog_name
 
+        job_script = make_cmdscript(base_name, mesh_num, outputdir,
+                                    rebin_input, opts)
+
         """
-        jid = slurm.run(cmd, get_queue(instrument), outlog_name, errlog_name,
-        verbose=opts.verbose, jobname=job_name)
+        jid = slurm.run(job_script, get_queue(instrument), outlog_name,
+        errlog_name, verbose=opts.verbose, jobname=job_name)
 
         if opts.make_vtk:
         vtkcmd = [MAKE_VTK_CMD]
