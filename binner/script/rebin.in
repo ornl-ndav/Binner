@@ -4,12 +4,12 @@
 # are requested, please list them in the following manners:
 #
 #
-INST:ARCS
-RUN:1005
+INST:CNCS
+RUN:800-860
 # Each axis should be specified in min, max, width
-QX:-7,2,0.1
-QY:-3,3,0.1
-QZ:-1,9,0.1
+XAXIS:-7,2,0.1
+YAXIS:-3,3,0.1
+ZAXIS:-1,9,0.1
 # The following allows one to specify a threshold below which voxels in the 
 # rebinned space will not be written out. The system will default to 0. 
 # Remove the # to activate.
