@@ -49,7 +49,8 @@ def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     fcscr = open(cscr, 'w')
     print >> fcscr, "#!/bin/bash"
     print >> fcscr, "cd", odir
-    print >> fcscr, "echo \"Start:\" $(date +%s)"
+    #print >> fcscr, "echo \"Start:\" $(date +%s)"
+    print >> fcscr, "start=$(date +%s)"
 
     # Collect input files into one
     file_list = " ".join(ifiles)
@@ -58,7 +59,10 @@ def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     print >> fcscr, "cat", file_list, "| " + REBINNER_CMD, " ".join(apar), \
           ">", ofile
     
-    print >> fcscr, "echo \"End:\" $(date +%s)"
+    #print >> fcscr, "echo \"End:\" $(date +%s)"
+    print >> fcscr, "end=$(date +%s)"
+    print >> fcscr, "let diff=${end}-${start}"
+    print >> fcscr, "echo \"Time: ${diff}\""
     fcscr.close()
     os.chmod(cscr, 0755)
     
