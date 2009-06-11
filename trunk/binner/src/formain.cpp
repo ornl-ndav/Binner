@@ -133,6 +133,7 @@ void idle(void)
 
 void reshape(int width,int height)
 {
+
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glLoadIdentity();
@@ -199,6 +200,22 @@ void keys(unsigned char c, int x, int y)
 	/*printf("this keys func\n");*/
 	
 	switch(c) {
+	  case 'h':
+		  fprintf(stderr,"\n     Key Help Page\n");
+		  fprintf(stderr,"---------------------------------------------------\n");
+		  fprintf(stderr,"     w: toggle Wireframe mode\n");
+		  fprintf(stderr,"     s: Save framebuffer\n");
+		  fprintf(stderr,"     f: Finer binning resolution\n");
+		  fprintf(stderr,"     c: Coarser binning resolution\n");
+		  fprintf(stderr,"     b: reset rendering to Beginning frustum setting\n");
+		  fprintf(stderr,"     i: zoom IN\n");
+		  fprintf(stderr,"     o: zoom OUT\n");
+		  fprintf(stderr,"     l: move Left\n");
+		  fprintf(stderr,"     r: move Right\n");
+		  fprintf(stderr,"     u: move Up\n");
+		  fprintf(stderr,"     d: move Down\n");
+		  fprintf(stderr,"---------------------------------------------------\n\n");
+		  break;
       case 'i':
 	 	  dist = proj.xmax - proj.xmin;
 		  proj.xmin += fzin*dist;
@@ -244,9 +261,10 @@ void keys(unsigned char c, int x, int y)
 	  case 'q':
 		  exit(0);
 		  break;
-	  case 'h':
+	  case 'b':
 	      initApp();
 		  initGLsettings();
+		  reshape(iwinWidth,iwinHeight);
 		  break;
 	  case 'l':
 		  fzin = proj.xmax - proj.xmin;
