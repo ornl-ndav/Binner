@@ -49,7 +49,7 @@ double rebin_gmesh_output(
 void	output_askinginfo(double * askbounds, int * xyzsize, double * spacing);
 void	output_askinginfo_short(int * xyzsize);
 void	output_actualinfo(double * bounds);
-void	output_prerebininfo(int * orig, int * xyzsize, double cellsize);
+void	output_prerebininfo(int * orig, int * xyzsize, double * spacing, double cellsize);
 void	output_postrebininfo(float rebintime, int npara, double totalvolume, int nvoxel);
 void	output_gmesh_formaterr();
 
