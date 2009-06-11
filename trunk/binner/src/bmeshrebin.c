@@ -168,7 +168,7 @@ int main(int argc, char ** argv)
 		cellsize = padded_bounds(bounds, res, orig, xyzsize); 
     }
 	
-	output_prerebininfo(orig, xyzsize, cellsize);
+	output_prerebininfo(orig, xyzsize, spacing, cellsize);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double) * 2); /* rebin both counts and error */

@@ -20,7 +20,7 @@ set(EXES
 	netrebin pix2mesh 
 	rebin rot3d 
 	scale3d serve sorter tran3d
-	seeall seepara seebmeshvol seebmeshvolc)
+	seeall seepara seegmesh seebmeshvol seebmeshvolc)
 
 link_libraries(vcbnogl m)
 add_executable(netrebin 
@@ -87,6 +87,7 @@ link_libraries(vcbgl)
 
 add_executable(seeall seeall.cpp formain.cpp binnerio.c)
 add_executable(seepara seepara.cpp formain.cpp cell.c binnerio.c)
+add_executable(seegmesh seegmesh.cpp formain.cpp cell.c binnerio.c)
 add_executable(seebmeshvol seebmeshvol.cpp formain.cpp cell.c binnerio.c)
 add_executable(seebmeshvolc seebmeshvolc.cpp formain.cpp cell.c binnerio.c)
 
