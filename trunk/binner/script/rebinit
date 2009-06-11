@@ -7,7 +7,7 @@ REBINNER_CMD = "gmeshrebin"
 MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
 
 def get_queue(inst):
-    return "geminiq"
+    return "asg"
 
     if inst == "ARCS":
         return "arcs"
@@ -49,20 +49,21 @@ def make_cmdscript(cname, mnum, odir, ifiles, apar, opt):
     fcscr = open(cscr, 'w')
     print >> fcscr, "#!/bin/bash"
     print >> fcscr, "cd", odir
-    #print >> fcscr, "echo \"Start:\" $(date +%s)"
     print >> fcscr, "start=$(date +%s)"
-
+    print >> fcscr, "echo \"Start:\" ${start}"
+    print >> fcscr, "echo \"Hostname:\" ${HOSTNAME}"
+    
     # Collect input files into one
     file_list = " ".join(ifiles)
 
     # Call rebinner command
-    print >> fcscr, "cat", file_list, "| " + REBINNER_CMD, " ".join(apar), \
+    print >> fcscr, "time cat", file_list, "| " + REBINNER_CMD, " ".join(apar), \
           ">", ofile
     
     #print >> fcscr, "echo \"End:\" $(date +%s)"
     print >> fcscr, "end=$(date +%s)"
     print >> fcscr, "let diff=${end}-${start}"
-    print >> fcscr, "echo \"Time: ${diff}\""
+    print >> fcscr, "echo \"Job Time: ${diff}\""
     fcscr.close()
     os.chmod(cscr, 0755)
     
@@ -160,7 +161,7 @@ def run(opts, tempfile):
 
         if not opts.debug:        
             jid = slurm.run(job_script, get_queue(instrument), outlog_name,
-                            errlog_name, verbose=opts.verbose,
+                            None, verbose=opts.verbose,
                             jobname=job_name)
 
             if opts.make_vtk:
