@@ -33,7 +33,7 @@ int main(int argc, char ** argv)
 	if ((argc != 10) && (argc != 12))
 	{
 		fprintf(stderr, 
-				"usage: %s [-b batchsize] xmin xmax num_binx ymin ymax num_biny zmin zmax num_binz\n",
+				"usage: %s [-b batchsize] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n",
 				argv[0]);
 		exit(1);
 	}
@@ -49,7 +49,7 @@ int main(int argc, char ** argv)
 		else
 		{
 			fprintf(stderr, 
-				"usage: %s [-b batchsize] xmin xmax num_binx ymin ymax num_biny zmin zmax num_binz\n",
+				"usage: %s [-b batchsize] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n",
 				argv[0]);
 			exit(1);
 		}
@@ -61,21 +61,25 @@ int main(int argc, char ** argv)
 	
 	askbounds[0] = atof(argv[c+1]);
 	askbounds[1] = atof(argv[c+2]);
-	xyzsize[0]   = atoi(argv[c+3]);
+	spacing[0]   = atof(argv[c+3]);
 	askbounds[2] = atof(argv[c+4]);
 	askbounds[3] = atof(argv[c+5]);
-	xyzsize[1]   = atoi(argv[c+6]);
+	spacing[1]   = atof(argv[c+6]);
 	askbounds[4] = atof(argv[c+7]);
 	askbounds[5] = atof(argv[c+8]);
-	xyzsize[2]   = atoi(argv[c+9]);
+	spacing[2]   = atof(argv[c+9]);
 	
 	for (j = 0; j < 3; j++)
-		spacing[j] = (askbounds[j*2+1] - askbounds[j*2])/xyzsize[j];
-		
+		xyzsize[j] = (int)ceil((askbounds[j*2+1] - askbounds[j*2])/spacing[j]);
+
 	output_askinginfo(askbounds, xyzsize, spacing);
+
+	for (j = 0; j < 3; j++)
+		spacing[j] = (askbounds[j*2+1] - askbounds[j*2])/xyzsize[j];
+
 	cellsize = fv_bounds(askbounds, spacing, orig, xyzsize);
 
-	output_prerebininfo(orig, xyzsize, cellsize);
+	output_prerebininfo(orig, xyzsize, spacing, cellsize);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	voxels = malloc(nvoxel * sizeof(double) * 2); /* rebin both counts and error */

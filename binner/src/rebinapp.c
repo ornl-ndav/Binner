@@ -274,7 +274,7 @@ void output_askinginfo(double * askbounds, int * xyzsize, double * spacing)
 	fprintf(stderr, "asking y domain     : %.3lf %.3lf\n", askbounds[2], askbounds[3]);
 	fprintf(stderr, "asking z domain     : %.3lf %.3lf\n", askbounds[4], askbounds[5]);
 	fprintf(stderr, "asking dimension    : %d %d %d\n", xyzsize[0], xyzsize[1], xyzsize[2]);
-	fprintf(stderr, "asking bin size     : %e %e %e\n", spacing[0], spacing[1], spacing[2]);
+	fprintf(stderr, "asking spacing      : %e %e %e\n", spacing[0], spacing[1], spacing[2]);
 }
 
 void output_askinginfo_short(int * xyzsize)
@@ -293,10 +293,11 @@ void output_actualinfo(double * bounds)
 	fprintf(stderr, "actual z domain     : %.3lf %.3lf\n", bounds[4], bounds[5]);
 }
 
-void output_prerebininfo(int * orig, int * xyzsize, double cellsize)
+void output_prerebininfo(int * orig, int * xyzsize, double * spacing, double cellsize)
 {
  	fprintf(stderr, "rebin volume origin : %d %d %d\n", orig[0], orig[1], orig[2]);
 	fprintf(stderr, "rebin volume size   : %d %d %d\n", xyzsize[0], xyzsize[1], xyzsize[2]);
+	fprintf(stderr, "rebin spacing       : %e %e %e\n", spacing[0], spacing[1], spacing[2]);
 	fprintf(stderr, "rebin cell size     : %e\n", cellsize);
 }
 
