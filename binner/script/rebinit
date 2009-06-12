@@ -177,7 +177,15 @@ def run(opts, tempfile):
                     print "VTK Job name:", "_".join(vtk_name)
                     print "VTK Input File:", vtkcmd[-1]
 
-                vjid = slurm.run(" ".join(vtkcmd), get_queue(instrument),
+                vscr = os.path.join(outputdir, "_".join(vtk_name) + ".sh")
+                vcscr = open(vscr, 'w')
+                print >> vcscr, "#!/bin/bash"
+                print >> vcscr, " ".join(vtkcmd)
+                            
+                vcscr.close()
+                os.chmod(vscr, 0755)
+
+                vjid = slurm.run(vscr, get_queue(instrument),
                                  verbose=opts.verbose, precursor=jid,
                                  jobname="_".join(vtk_name))
 
