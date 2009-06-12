@@ -156,9 +156,9 @@ double rebin_byslice(int npara,
 
 void printcorners(int x, int y, int z, int * orig, double * spacing)
 {
-	x = x - orig[0];
-	y = y - orig[1];
-	z = z - orig[2];
+	x = x + orig[0];
+	y = y + orig[1];
+	z = z + orig[2];
 
 	printf("%f %f %f ", x*spacing[0], y*spacing[1], z*spacing[2]);
 }
