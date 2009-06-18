@@ -61,17 +61,18 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "echo \"Start:\" ${start}"
     print >> fcscr, "echo \"Hostname:\" ${HOSTNAME}"
     print >> fcscr, ""
-    
-    for ifile in ifiles:
-        ifilerun = os.path.basename(ifile).split('_')[1]
-        print >> fcscr, "cat", ifile, "|", ROTATE_CMD, amap[ifilerun], ">>", \
-              rot_file
+
+    if not opt.skip_rot:
+        for ifile in ifiles:
+            ifilerun = os.path.basename(ifile).split('_')[1]
+            print >> fcscr, "cat", ifile, "|", ROTATE_CMD, amap[ifilerun], \
+                  ">>", rot_file
 
     # Call rebinner command
-    print >> fcscr, "time cat", rot_file, "| " + REBINNER_CMD, " ".join(apar), \
-          ">", ofile
+    print >> fcscr, "time cat", rot_file, "| " + REBINNER_CMD, \
+          " ".join(apar), ">", ofile
 
-    if not opt.no_remove_rot:
+    if not opt.no_remove_rot and not opt.skip_rot:
         print >> fcscr, "rm", rot_file
     
     print >> fcscr, "end=$(date +%s)"
@@ -244,6 +245,11 @@ if __name__ == "__main__":
                       action="store_true", help="Flag to stop removal of "\
                       +"file containing rotated data information.")
     parser.set_defaults(no_remove_rot=False)
+
+    parser.add_option("-s", "--skip-rot", dest="skip_rot", action="store_true",
+                      help="Flag to skip rotating the data. This assumes it "\
+                      +"already exists.")
+    parser.set_defaults(skip_rot=False)
                           
     (options, args) = parser.parse_args()
     
