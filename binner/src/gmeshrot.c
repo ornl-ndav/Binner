@@ -21,14 +21,15 @@ int main(int argc, char ** argv)
 
 	for (nfacets = 0; (n = get_pixel_energy(&sliceid,&emin,&emax,&hitcnt,&hiterr,corners)) > 0; nfacets ++) {
 
-		printf("%d %f %f %f %f ", sliceid, emin, emax, hitcnt, hiterr);
+		printf("%d %f %f %f %f", sliceid, emin, emax, hitcnt, hiterr);
 
 		for (i = 0; i < 8; i ++) 
 		{
 			corners[i][3] = 1.f;
 			vcbMatMult4fv(v1, mat, corners[i]);
 
-			printvertexf(v1, 3);
+			/*printvertexf(v1, 3);*/
+			printf(" %f %f %f", v1[0], v1[1], v1[2]);
 		}
 		
 		printf("\n");
