@@ -203,7 +203,9 @@ def run(opts, tempfile, atempfile):
                 vcscr.close()
                 os.chmod(vscr, 0755)
 
-                vjid = slurm.run(vscr, get_queue(instrument),
+                voutlog_name = "_".join(vtk_name) + ".out"
+
+                vjid = slurm.run(vscr, get_queue(instrument), voutlog_name,
                                  verbose=opts.verbose, precursor=jid,
                                  jobname="_".join(vtk_name))
 
