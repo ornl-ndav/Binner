@@ -41,11 +41,6 @@ def get_value(tag, lines):
 
 def make_axis(avals):
     avals = avals.split(',')
-    #parts = [float(value) for value in avals]
-    #print parts
-    #nbins = int((parts[1] - parts[0]) / parts[2])
-    #avals[2] = str(nbins)
-    #print avals
     return avals
 
 def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
