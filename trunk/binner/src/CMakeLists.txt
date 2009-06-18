@@ -13,7 +13,7 @@ include_directories(
 #)
 
 set(EXES 
-	gmeshrebin bmeshrebin largebmeshrebin bounds bslicer 
+	gmeshrebin gmeshrot bmeshrebin largebmeshrebin bounds bslicer 
 	clip3d clipvoxel compvol collector counts
 	export2vtk export2vcb 
 	gencell getfrom giveto 
@@ -33,6 +33,7 @@ add_executable(serve serve.c socketfun.c)
 add_executable(pix2mesh pix2mesh.c cell.c binnerio.c)
 add_executable(gencell gencell.c cell.c binnerio.c)
 add_executable(rot3d rot3d.c binnerio.c)
+add_executable(gmeshrot gmeshrot.c binnerio.c)
 add_executable(tran3d tran3d.c binnerio.c)
 add_executable(scale3d scale3d.c binnerio.c)
 add_executable(clip3d clip3d.c clip.c geometry.c binnerio.c)
