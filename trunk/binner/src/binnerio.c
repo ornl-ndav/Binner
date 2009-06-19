@@ -107,11 +107,15 @@ int get_pixel_energy(int * id, float * emin, float * emax, float * cnt, float * 
 {
 	int i;
 	
+	/*
 	if (scanf("%d", id) <= 0) return -1; 
 	if (scanf("%f", emin) <= 0) return -1; 
 	if (scanf("%f", emax) <= 0) return -1; 
 	if (scanf("%f", cnt) <= 0) return -1; 
 	if (scanf("%f", err) <= 0) return -1; 
+	*/
+	if (scanf("%d %f %f %f %f", id, emin, emax, cnt, err) <= 0)
+		return -1;
 
 	/* assume a 8 vertices, x-y-z coord each */	
 	for (i = 0; i < 8; v ++, i ++)

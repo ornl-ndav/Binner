@@ -20,9 +20,9 @@ LIB_PATH = -L$(TOP)/vcb/lib  -L/sw/lib
 
 LIBS =  -lpthread -lvcb  -lm
 
-OBJS = binner.o binnerio.o bmeshrebin.o largebmeshrebin.o bslicer.o cell.o clip.o clip3d.o clipvoxel.o collector.o compvol.o export2vtk.o export2vcb.o gencell.o pix2mesh.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o serve.o socketfun.o sorter.o tran3d.o volume.o voxelize.o bounds.o counts.o rebinapp.o gmeshrot.o
+OBJS = binner.o binnerio.o bmeshrebin.o largebmeshrebin.o bslicer.o cell.o clip.o clip3d.o clipvoxel.o collector.o compvol.o export2vtk.o export2vcb.o gencell.o pix2mesh.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o serve.o socketfun.o sorter.o tran3d.o volume.o voxelize.o bounds.o counts.o rebinapp.o gmeshrot.o gmeshrot2.o
 
-EXES = gmeshrebin gmeshrot bmeshrebin largebmeshrebin bounds bslicer clip3d clipvoxel compvol export2vtk export2vcb gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto serve netrebin sorter counts
+EXES = gmeshrebin gmeshrot gmeshrot2 bmeshrebin largebmeshrebin bounds bslicer clip3d clipvoxel compvol export2vtk export2vcb gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto serve netrebin sorter counts
 
 .SUFFIXES: .cc .c .cpp
 
@@ -65,6 +65,9 @@ rot3d: rot3d.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 gmeshrot: gmeshrot.o binnerio.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+gmeshrot2: gmeshrot2.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 	
 tran3d: tran3d.o binnerio.o
