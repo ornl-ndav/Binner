@@ -14,7 +14,7 @@ int main(int argc, char ** argv)
 	axis[0] = (float)atof(argv[1]);
 	axis[1] = (float)atof(argv[2]);
 	axis[2] = (float)atof(argv[3]);
-	angle   = (float)atof(argv[4]);
+	angle   = -(float)atof(argv[4]);
 
 	buf = malloc(1024*8);
 

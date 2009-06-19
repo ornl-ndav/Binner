@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
 	axis[0] = (float)atof(argv[1]);
 	axis[1] = (float)atof(argv[2]);
 	axis[2] = (float)atof(argv[3]);
-	angle   = (float)atof(argv[4]);
+	angle   = -(float)atof(argv[4]);
 	vcbRotate3fv(mat, axis, angle);
 	v0[3] = 1.f;
 
