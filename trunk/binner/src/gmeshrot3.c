@@ -15,10 +15,9 @@ void  matMult3x3(double * v0, double * mat, double * v1)
 
 int main(int argc, char ** argv)
 {
-	int nfacets, i, n, buf[1];
+	int i, n, buf[1];
 	double vdata[4 + 8*3], *v;
-
-	double mat[16], v0[4], v1[4], axis[3], angle;
+	double mat[16], axis[3], angle;
 	
 	axis[0] = atof(argv[1]);
 	axis[1] = atof(argv[2]);
@@ -29,7 +28,7 @@ int main(int argc, char ** argv)
 
 	v = vdata + 4;
 	
-	for (nfacets = 0; ; nfacets ++) 
+	for (n = 0; ; n ++) 
     {
 
 		if (fread(buf, sizeof(int), 1, stdin) <= 0)
@@ -45,5 +44,5 @@ int main(int argc, char ** argv)
 		fwrite(vdata, sizeof(double), 4 + 8*3, stdout);
 	}
 
-	return nfacets;
+	return n;
 }
