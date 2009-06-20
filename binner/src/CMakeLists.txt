@@ -13,7 +13,7 @@ include_directories(
 #)
 
 set(EXES 
-	gmeshrebin gmeshrot gmeshrot2 gmeshrot3
+	gmeshrebin gmeshrot gmeshrot2 gmeshrot3 gmesht2b gmeshb2t
 	bmeshrebin largebmeshrebin bounds bslicer 
 	clip3d clipvoxel compvol collector counts
 	export2vtk export2vcb 
@@ -37,6 +37,8 @@ add_executable(rot3d rot3d.c binnerio.c)
 add_executable(gmeshrot gmeshrot.c binnerio.c)
 add_executable(gmeshrot2 gmeshrot2.c)
 add_executable(gmeshrot3 gmeshrot3.c)
+add_executable(gmesht2b gmesht2b.c)
+add_executable(gmeshb2t gmeshb2t.c)
 add_executable(tran3d tran3d.c binnerio.c)
 add_executable(scale3d scale3d.c binnerio.c)
 add_executable(clip3d clip3d.c clip.c geometry.c binnerio.c)
