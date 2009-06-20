@@ -154,6 +154,45 @@ void  vcbRotate3fv(float * mat, float * axis, float angle)
 	mat[15] = 1.f;
 }
 
+void  vcbRotate3dv(double * mat, double * axis, double angle)
+{
+    double  angleRad, c, s, t; 
+	double * v;
+	double norm;
+	
+	v = axis;
+	norm = sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+
+	if (norm < 1e-8) {
+		v[0] = v[1] = v[2] = 0.;
+	}
+	else {
+		v[0] /= norm;
+		v[1] /= norm;
+		v[2] /= norm;
+	}
+	
+	angleRad = angle * VCB_M_PI / 180.0,
+	c = cos(angleRad);
+	s = sin(angleRad);
+	t = 1.0 - c;
+
+	mat[0]  = t * axis[0] * axis[0] + c;
+	mat[1]  = t * axis[0] * axis[1] - s * axis[2];
+	mat[2]  = t * axis[0] * axis[2] + s * axis[1];
+	mat[3]  = 0.;
+	mat[4]  = t * axis[0] * axis[1] + s * axis[2];
+	mat[5]  = t * axis[1] * axis[1] + c;
+	mat[6]  = t * axis[1] * axis[2] - s * axis[0];
+	mat[7]  = 0.;
+	mat[8]  = t * axis[0] * axis[2] - s * axis[1];
+	mat[9]  = t * axis[1] * axis[2] + s * axis[0];
+	mat[10] = t * axis[2] * axis[2] + c;
+	mat[11] = 0.;
+	mat[12] = mat[13] = mat[14] = 0.;
+	mat[15] = 1.;
+}
+
 void  vcbInvMat(float * invMat, float * origmat)
 {
 	int i, j, i1, si;

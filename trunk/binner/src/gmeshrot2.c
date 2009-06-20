@@ -29,15 +29,15 @@ int main(int argc, char ** argv)
 			}
 
 		c = 0;
-		sliceid = atof(buf+c); c = lastchar[0] + 1;
-		emin = atof(buf + c);  c = lastchar[1] + 1;
-		emax = atof(buf + c);  c = lastchar[2] + 1;
-		hitcnt = atof(buf +c); c = lastchar[3] + 1;
-		hiterr = atof(buf +c); c = lastchar[4] + 1;
+		sliceid = atoi(buf+c); c = lastchar[0] + 1;
+		emin = (float)atof(buf + c);  c = lastchar[1] + 1;
+		emax = (float)atof(buf + c);  c = lastchar[2] + 1;
+		hitcnt = (float)atof(buf +c); c = lastchar[3] + 1;
+		hiterr = (float)atof(buf +c); c = lastchar[4] + 1;
 
 		for (n = 0; n < 8 * 3; n ++)
 		{
-			vdata[n] = atof(buf + c);
+			vdata[n] = (float)atof(buf + c);
 			c = lastchar[n + 5] + 1;
 		}
 

@@ -173,6 +173,7 @@ void  vcbRotate3f(float * mat, float ax, float ay, float az, float angle);
  * Known Issues: None
  **/
 void  vcbRotate3fv(float * mat, float * axis, float angle);
+void  vcbRotate3dv(double * mat, double * axis, double angle);
 
 /** Function
  * Name: vcbInvMat
