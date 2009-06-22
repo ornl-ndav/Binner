@@ -35,7 +35,7 @@ int main(int argc, char ** argv)
 
   for (npara = 0; (n = get_pixelf(&sliceid,&hitcnt,&hiterr,corners)) > 0; ) {
 
-	correctCornersf3d(corners);
+	correctCornersf3d(corners, NULL);
 	realCubef(corners, vdata);
 
     for (i = 0; i < 6*4; i ++) {

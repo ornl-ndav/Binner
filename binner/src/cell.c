@@ -100,6 +100,22 @@ static void swapVec4(float * v1, float * v2)
 	}
 }
 
+static void swapVec4_id(float * v1, float * v2, int * id1, int * id2)
+{
+	int j;
+	float tmp [4];
+	
+	for (j = 0; j < 4; j ++)
+	{
+		tmp[j] = v1[j];
+		v1[j] = v2[j];
+		v2[j] = tmp[j];
+	}
+	
+	j = id1[0];
+	id1[0] = id2[0];
+	id2[0] = j;
+}
 
 static float ordermetric(float * ctr, float * n, float * v1, float * v2)
 {
@@ -122,7 +138,7 @@ static float ordermetric(float * ctr, float * n, float * v1, float * v2)
 	return val;
 }
 
-int correctCornersf3d(float (* vertices)[4]) /* vertices: input/output */
+int correctCornersf3d(float (* vertices)[4], int * ids) /* vertices: input/output */
 {
 	/* assume vertices has at least 8 * 4 floats */
 	/* assume all coordinates are in x,y,z,w */
@@ -163,7 +179,10 @@ int correctCornersf3d(float (* vertices)[4]) /* vertices: input/output */
 #ifdef DEBUG
 			printf("exchanging vertex %d with vertex %d\n", opposite, d);
 #endif
-			swapVec4(vertices[opposite], vertices[d]);
+			if (ids == NULL)
+				swapVec4(vertices[opposite], vertices[d]);
+			else
+				swapVec4_id(vertices[opposite], vertices[d], ids + opposite, ids+ d);
 		}
 
 		if (pivot < opposite) 
@@ -212,7 +231,11 @@ int correctCornersf3d(float (* vertices)[4]) /* vertices: input/output */
 #ifdef DEBUG
 			printf("exchanging vertex %d with vertex %d\n", k+1, d);
 #endif
-			swapVec4(vertices[k+1], vertices[d]);
+			if (ids == NULL)
+				swapVec4(vertices[k+1], vertices[d]);
+			else
+				swapVec4_id(vertices[k+1], vertices[d], ids + k+1, ids+ d);
+
 		}
 	}
 
@@ -236,7 +259,10 @@ int correctCornersf3d(float (* vertices)[4]) /* vertices: input/output */
 #ifdef DEBUG
 			printf("exchanging vertex %d with vertex %d\n", d, k+4);
 #endif
-			swapVec4(vertices[d], vertices[k+4]);
+			if (ids == NULL)
+				swapVec4(vertices[d], vertices[k+4]);
+			else
+				swapVec4_id(vertices[d], vertices[k+4], ids + d, ids+ k+4);
 		}
 	}
 	

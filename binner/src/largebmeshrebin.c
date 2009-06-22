@@ -180,7 +180,7 @@ int main(int argc, char ** argv)
 		{
 			if (npara >= f) break; /* read at most f faces, i.e. f/6 parallelipeds */
 
-			correctCornersf3d(corners);
+			correctCornersf3d(corners, NULL);
 			realCubef(corners, vbuf);
 			hcnt[npara] = hitcnt;
 			herr[npara] = hiterr;
