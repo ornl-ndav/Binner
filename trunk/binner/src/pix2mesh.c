@@ -19,7 +19,7 @@ int main(int argc, char ** argv)
 		                          &corners[i][1],
 								  &corners[i][2],
 								  &corners[i][3]);
-	correctCornersf3d(corners);
+	correctCornersf3d(corners, NULL);
 	realCubef(corners, v);
 	for (i = 0; i < 6; i ++) {
 		printf("4");

@@ -122,7 +122,7 @@ int main(int argc, char ** argv)
 		{
 			/* only ones with real hitcnt should be fixed */
 			/* otherwise, just keep the space filled would be fine */
-			correctCornersf3d(corners);
+			correctCornersf3d(corners, NULL);
 		}
 
 		realCubef(corners, vbuf);
