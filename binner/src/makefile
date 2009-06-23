@@ -112,6 +112,9 @@ bmeshrebin: bmeshrebin.o rebinapp.o binner.o voxelize.o volume.o clip.o cell.o g
 gmeshrebin: gmeshrebin.o rebinapp.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
+gmeshrebin2: gmeshrebin2.o rebinapp.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
 largebmeshrebin: largebmeshrebin.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 	

@@ -201,7 +201,7 @@ int main(int argc, char ** argv)
 								  corners[i][3]);
 	*/
 
-	correctCornersf3d(corners);
+	correctCornersf3d(corners, NULL);
 	realCubef(corners, vdata);
 
     for (i = 0; i < 6*4; i ++) {

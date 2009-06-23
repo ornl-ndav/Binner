@@ -73,9 +73,9 @@ int basicCubed(double * v)
 
 int realCubef(float (* corners)[4], float * v) /* corners: input, v: output quad list */
 {
-	/* assume corners has at least 8 * 4 floats */
-	/* assume v has at least 6 * 4 *4 floats */
-	/* assume all coordinates are in x,y,z */
+	/* assume corners has at least (8 corners) * 4 coordinate floats */
+	/* assume v has at least (6 * 4 vertices) * 4 coordinate floats */
+	/* assume all coordinates are in 4d space */
 	
 	int i, j;
 	for (i = 0; i < 6; i ++)
@@ -86,6 +86,26 @@ int realCubef(float (* corners)[4], float * v) /* corners: input, v: output quad
 
 	return 6;
 }
+
+
+int realCube3d(double * corners, double * v) /* corners: input, v: output quad list */
+{
+	/* 
+	 * a derivative of realCubef. 
+	 * this time assuming input is in 3d coordinates
+	 * already sorted in the correct vertex order
+	 */
+	
+	int i, j;
+	for (i = 0; i < 6; i ++)
+		for (j = 0; j < 4; j ++)
+			memcpy(&v[(i*4 + j)*3], 
+				   &corners[quads3d[i][j]*3], 
+				   3 * sizeof(double));
+
+	return 6;
+}
+
 
 static void swapVec4(float * v1, float * v2)
 {

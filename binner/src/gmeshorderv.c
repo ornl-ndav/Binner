@@ -7,9 +7,7 @@ int main(int argc, char ** argv)
 {
 	int i, n, buf[1];
 	double vdata[4 + 8*3], *v, out[8*3];
-
-	float emin, emax;
-	float  hitcnt, hiterr, corners[8][4];
+	float corners[8][4];
 	int id_array[8] = {0, 1, 2, 3, 4, 5, 6, 7};
 	int ids[8];
 
