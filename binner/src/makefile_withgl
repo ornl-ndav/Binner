@@ -22,9 +22,9 @@ LIB_PATH = -L$(TOP)/vcb/lib -L/System/Library/Frameworks/OpenGL.framework/Versio
 
 LIBS = -lvcbgl -lGLU -lGL -framework GLUT -lm
 
-OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o  compvol.o gencell.o pix2mesh.o geometry.o rebin.o rot3d.o scale3d.o tran3d.o volume.o voxelize.o formain.o seeall.o seepara.o seebmeshvol.o seebmeshvolc.o
+OBJS = binner.o binnerio.o bslicer.o cell.o  clip.o clip3d.o  compvol.o gencell.o pix2mesh.o geometry.o rebin.o rot3d.o scale3d.o tran3d.o volume.o voxelize.o formain.o seeall.o seepara.o seebmeshvol.o seebmeshvolc.o seegmesh.o
 
-EXES = seeall seepara seebmeshvol seebmeshvolc
+EXES = seeall seepara seebmeshvol seebmeshvolc seegmesh
 
 .SUFFIXES: .cc .c .cpp
 
