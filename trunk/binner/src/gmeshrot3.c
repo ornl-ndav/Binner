@@ -19,6 +19,12 @@ int main(int argc, char ** argv)
 	double vdata[4 + 8*3], *v;
 	double mat[16], axis[3], angle;
 	
+	if (argc != 5)
+	{
+		fprintf(stderr, "usage: %s x_axis y_axis z_axis angle\n", argv[0]);
+		exit(1);
+	}
+	
 	axis[0] = atof(argv[1]);
 	axis[1] = atof(argv[2]);
 	axis[2] = atof(argv[3]);
@@ -44,5 +50,5 @@ int main(int argc, char ** argv)
 		fwrite(vdata, sizeof(double), 4 + 8*3, stdout);
 	}
 
-	return n;
+	return 0;
 }
