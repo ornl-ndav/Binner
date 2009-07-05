@@ -51,7 +51,7 @@ int main(int argc, char ** argv)
 	v = vdata + 4;
 	
 	getcwd(PATH, 1024);
-	fprintf(stderr, "path = %s\n", PATH);
+	/* fprintf(stderr, "path = %s\n", PATH); */
 
 	for (i= 1; i < argc; i ++)
 	{
@@ -63,8 +63,8 @@ int main(int argc, char ** argv)
 			continue;
 		}
 
-		bounds[0] = bounds[2] = bounds[4] = 1e6;
-		bounds[1] = bounds[3] = bounds[5] = -1e6;	
+		bounds[0] = bounds[2] = bounds[4] = 1e16;
+		bounds[1] = bounds[3] = bounds[5] = -1e16;	
 
 		for (n = 0; ; n ++) 
 		{
@@ -79,11 +79,11 @@ int main(int argc, char ** argv)
 		}
 
 		if (argv[i][0] != '/')
-			fprintf(stderr, "%s/%s:", PATH, argv[i]);
+			fprintf(stdout, "%s/%s ", PATH, argv[i]);
 		else
-			fprintf(stderr, "%s:", argv[i]);
+			fprintf(stdout, "%s ", argv[i]);
 			
-		fprintf(stderr, "%d:%le:%le:%le:%le:%le:%le\n", n, bounds[0], bounds[1], bounds[2], bounds[3], bounds[4], bounds[5]);
+		fprintf(stdout, "%d %le %le %le %le %le %le\n", n, bounds[0], bounds[1], bounds[2], bounds[3], bounds[4], bounds[5]);
 
 		fclose(fp);
 	}
