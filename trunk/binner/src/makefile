@@ -109,13 +109,16 @@ counts: counts.o binnerio.o
 bmeshrebin: bmeshrebin.o rebinapp.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
-gmeshrebin: gmeshrebin.o 
+gmeshrebin: gmeshrebin.o rebinapp.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 gmeshrebin2: gmeshrebin2.o rebinapp.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
-gmeshindex: gmeshindex.o binner.o voxelize.o volume.o clip.o cell.o geometry.o
+gmeshindex: gmeshindex.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+gmeshquery: gmeshquery.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 largebmeshrebin: largebmeshrebin.o binner.o voxelize.o volume.o clip.o cell.o geometry.o binnerio.o 
