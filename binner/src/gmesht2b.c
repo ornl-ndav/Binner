@@ -13,7 +13,7 @@ int main(int argc, char ** argv)
 	buf = malloc(1024*8);
 	vdata = malloc(1024 * sizeof(double));
 
-	for (nfacets = 0; fgets(buf, 1024*8, stdin) != NULL; nfacets ++) 
+	for (nfacets = 0; fgets(buf, 1024*8, stdin) != NULL; ) 
     {
 		for (i = 0, c = 0; buf[i] != '\0'; i ++)
 			if (isspace(buf[i]))
@@ -23,7 +23,10 @@ int main(int argc, char ** argv)
 				c ++;
 			}
 		
-		if (c != 29) continue;
+		if (c == 29) 
+			nfacets ++;
+		else
+			continue;
 
 		c = 0;
 		sliceid = atof(buf+c); c = lastchar[0] + 1;
@@ -49,7 +52,11 @@ int main(int argc, char ** argv)
 	free(vdata);
 	free(buf);
 	
-	if (nfacets > 0) return 0; /* successful */
+	/* fprintf(stderr, "nfacets = %d\n", nfacets); */
+	
+	if (nfacets > 0) 
+		return 0; /* successful */
 	else
 		return 1; /* failure */
+
 }
