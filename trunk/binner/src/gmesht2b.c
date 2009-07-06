@@ -22,6 +22,8 @@ int main(int argc, char ** argv)
 				lastchar[c] = i;
 				c ++;
 			}
+		
+		if (c != 29) continue;
 
 		c = 0;
 		sliceid = atof(buf+c); c = lastchar[0] + 1;
