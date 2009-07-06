@@ -15,17 +15,19 @@ echo "done"
 for f in $1/*.in
 do
   echo -n "$f --> ${f}b: "
-  gmesht2b < $f > ${f}b
+  gmesht2b < $f > tmp
   return_val=$?
 
   if (( return_val > 0 ))
   then
     echo "failed"
-    rm -rf ${f}b
   else
+	gmeshorderv < tmp > ${f}b
     echo "successful"
   fi
 done
+
+rm -rf tmp
 
 exit 0
 
