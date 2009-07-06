@@ -48,5 +48,8 @@ int main(int argc, char ** argv)
 
 	free(vdata);
 	free(buf);
-	return nfacets;
+	
+	if (nfacets > 0) return 0; /* successful */
+	else
+		return 1; /* failure */
 }
