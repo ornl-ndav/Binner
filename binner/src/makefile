@@ -22,7 +22,7 @@ LIBS =  -lpthread -lvcbnogl  -lm
 
 OBJS = binner.o binnerio.o bmeshrebin.o largebmeshrebin.o bslicer.o cell.o clip.o clip3d.o clipvoxel.o collector.o compvol.o export2vtk.o export2vcb.o gencell.o pix2mesh.o geometry.o getfrom.o giveto.o netrebin.o rebin.o rot3d.o scale3d.o serve.o socketfun.o sorter.o tran3d.o volume.o voxelize.o bounds.o counts.o rebinapp.o gmeshrot.o gmeshrot2.o gmeshrot3.o gmeshb2t.o gmesht2b.o gmeshorderv.o
 
-EXES = gmeshrebin gmeshrebin2 gmeshrot gmeshrot2 gmeshrot3 gmeshb2t gmesht2b gmeshorderv bmeshrebin largebmeshrebin bounds bslicer clip3d clipvoxel compvol export2vtk export2vcb gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto serve netrebin sorter counts
+EXES = gmeshindex gmeshquery gmeshrebin gmeshrebin2 gmeshrot gmeshrot2 gmeshrot3 gmeshb2t gmesht2b gmeshorderv bmeshrebin largebmeshrebin bounds bslicer clip3d clipvoxel compvol export2vtk export2vcb gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto serve netrebin sorter counts
 
 .SUFFIXES: .cc .c .cpp
 
