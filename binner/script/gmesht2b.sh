@@ -12,15 +12,16 @@ rm -rf $1/*.inb
 
 for f in $1/*.in
 do
-  /SNS/users/jhm/binner/bin/gmesht2b < $f > ${f}b
+  echo -n "$f --> ${f}b: "
+  ../bin/gmesht2b < $f > ${f}b
   return_val=$?
 
   if (( return_val > 0 ))
   then
-    echo "$f --> ${f}b: failed"
+    echo "failed"
     rm -rf ${f}b
   else
-    echo "$f --> ${f}b: successful"
+    echo "successful"
   fi
 done
 
