@@ -13,7 +13,7 @@ rm -rf $1/*.inb
 for f in $1/*.in
 do
   echo -n "$f --> ${f}b: "
-  ../bin/gmesht2b < $f > ${f}b
+  gmesht2b < $f > ${f}b
   return_val=$?
 
   if (( return_val > 0 ))
