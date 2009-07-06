@@ -8,7 +8,9 @@ then
   exit 127 # error code 127
 fi
  
+echo -n "deleting all *.inb files ... "
 rm -rf $1/*.inb
+echo "done"
 
 for f in $1/*.in
 do
