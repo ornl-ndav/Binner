@@ -28,7 +28,7 @@ int main(int argc, char ** argv)
 	axis[0] = atof(argv[1]);
 	axis[1] = atof(argv[2]);
 	axis[2] = atof(argv[3]);
-	angle   = -atof(argv[4]);
+	angle   = atof(argv[4]);
 
 	vcbRotate3dv(mat, axis, angle);
 
