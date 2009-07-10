@@ -62,7 +62,7 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "echo \"Hostname:\" ${HOSTNAME}"
     print >> fcscr, ""
 
-    if not opt.skip_rot:
+    if not os.path.exists(os.path.join(odir, rot_file)):
         for ifile in ifiles:
             ifilerun = os.path.basename(ifile).split('_')[1]
             print >> fcscr, "cat", ifile, "|", ROTATE_CMD, amap[ifilerun], \
@@ -72,8 +72,8 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "time cat", rot_file, "| " + REBINNER_CMD, \
           " ".join(apar), ">", ofile
 
-    if not opt.no_remove_rot and not opt.skip_rot:
-        print >> fcscr, "rm", rot_file
+    #if not opt.no_remove_rot and not opt.skip_rot:
+     #   print >> fcscr, "rm", rot_file
     
     print >> fcscr, "end=$(date +%s)"
     print >> fcscr, "let diff=${end}-${start}"
