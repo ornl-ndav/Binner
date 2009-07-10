@@ -163,6 +163,15 @@ def run(opts, tempfile, atempfile):
                                    
         # Send out SLURM jobs
         mesh_num = ifile.split('bmesh')[-1].split('.')[0]
+
+        if opts.min_slice != -1:
+            if int(mesh_num) < opts.min_slice:
+                continue
+
+        if opts.max_slice != -1:
+            if int(mesh_num) > opts.max_slice:
+                continue            
+        
         base_name = []
         base_name.append(instrument)
         base_name.append(str(runlist[0]))
@@ -248,6 +257,14 @@ if __name__ == "__main__":
                       +"of the file containing rotated data information.")
     parser.set_defaults(force_rot=False)
 
+    parser.add_option("-i", "--min-slice", dest="min_slice", type=int,
+                      help="Flag to set the minimum slice to use.")
+    parser.set_defaults(min_slice=-1)
+    
+    parser.add_option("-x", "--max-slice", dest="max_slice", type=int,
+                      help="Flag to set the maximum slice to use.")
+    parser.set_defaults(max_slice=-1)
+    
     (options, args) = parser.parse_args()
     
     if len(args) < 2:
