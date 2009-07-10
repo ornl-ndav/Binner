@@ -62,7 +62,12 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "echo \"Hostname:\" ${HOSTNAME}"
     print >> fcscr, ""
 
-    if not os.path.exists(os.path.join(odir, rot_file)):
+    p_rot_file = os.path.join(odir, rot_file)
+
+    if opt.force_rot and os.path.exists(p_rot_file):
+        os.remove(p_rot_file)
+
+    if not os.path.exists(p_rot_file):
         for ifile in ifiles:
             ifilerun = os.path.basename(ifile).split('_')[1]
             print >> fcscr, "cat", ifile, "|", ROTATE_CMD, amap[ifilerun], \
@@ -72,9 +77,6 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "time cat", rot_file, "| " + REBINNER_CMD, \
           " ".join(apar), ">", ofile
 
-    #if not opt.no_remove_rot and not opt.skip_rot:
-     #   print >> fcscr, "rm", rot_file
-    
     print >> fcscr, "end=$(date +%s)"
     print >> fcscr, "let diff=${end}-${start}"
     print >> fcscr, "echo \"Job Time: ${diff}\""
@@ -241,16 +243,11 @@ if __name__ == "__main__":
                       +"rebining output.")
     parser.set_defaults(make_vtk=False)
 
-    parser.add_option("-r", "--no-remove-rot", dest="no_remove_rot",
-                      action="store_true", help="Flag to stop removal of "\
-                      +"file containing rotated data information.")
-    parser.set_defaults(no_remove_rot=False)
+    parser.add_option("-r", "--force-rot", dest="force_rot",
+                      action="store_true", help="Flag to force the creation "\
+                      +"of the file containing rotated data information.")
+    parser.set_defaults(force_rot=False)
 
-    parser.add_option("-s", "--skip-rot", dest="skip_rot", action="store_true",
-                      help="Flag to skip rotating the data. This assumes it "\
-                      +"already exists.")
-    parser.set_defaults(skip_rot=False)
-                          
     (options, args) = parser.parse_args()
     
     if len(args) < 2:
