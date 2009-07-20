@@ -15,19 +15,20 @@ echo "done"
 for f in $1/*.in
 do
   echo -n "$f --> ${f}b: "
-  gmesht2b < $f > tmp
+  gmesht2b < $f > $1/${f}.tmp
   return_val=$?
 
   if (( return_val > 0 ))
   then
     echo "failed"
   else
-	gmeshorderv < tmp > ${f}b
+	gmeshorderv < $1/${f}.tmp > ${f}b
     echo "successful"
   fi
-done
 
-rm -rf tmp
+  rm -rf $1/${f}.tmp
+
+done
 
 exit 0
 
