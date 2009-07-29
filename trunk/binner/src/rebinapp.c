@@ -232,7 +232,7 @@ double rebin_gmesh_output(
 		for (y = 0; y < xyzsize[1]; y ++)
 			for (z = 0; z < xyzsize[2]; z ++)
 			{
-				if (voxels[i*2] < 1e-16) continue;
+				//if (voxels[i*2] < 1e-16) continue;
 
 				printf("%d %f %f ", sliceid, emin, emax);
 				printf("%le %le ", voxels[i*2], voxels[i*2+1]);
