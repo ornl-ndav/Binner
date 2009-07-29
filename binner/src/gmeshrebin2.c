@@ -162,7 +162,8 @@ int main(int argc, char ** argv)
 	outputtime +=  (float)(time4-time3)/CLOCKS_PER_SEC;
 
 	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
-	fprintf(stderr, "measuring input time: %f sec, output time: %f sec\n", inputtime, outputtime);
+	fprintf(stderr, "measuring  input time: %f sec\n", inputtime);
+	fprintf(stderr, "measuring output time: %f sec\n", outputtime);
 
 	free(sid);
 	free(herr);
