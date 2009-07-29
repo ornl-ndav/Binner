@@ -26,7 +26,7 @@ int main(int argc, char ** argv)
 	double totalvolume = 0., cellsize, bounds[6], askbounds[6]; 
 	double * voxels;
 	double emin, emax, hitcnt, hiterr, corners[8][4];
-	float  rebintime = 0, outputtime = 0;
+	float  rebintime = 0, outputtime = 0, inputtime = 0;
 	int   nfields, inputformat, pixelcnt = 0, c = 0;
 	double inputv[4 + 8*3];
 
@@ -93,6 +93,8 @@ int main(int argc, char ** argv)
 	
 	while (1)
 	{
+		time3 = clock();
+
 		/* read at most f pixels in each pass */
 		for (npara = 0; npara < f; npara ++) 
 		{
@@ -123,6 +125,8 @@ int main(int argc, char ** argv)
 #if REBINDEBUG		
 		output_actualinfo(bounds);
 #endif
+		time4 = clock();
+		inputtime += (float)(time4-time3)/CLOCKS_PER_SEC;
 
 		time1 = clock();
 	
@@ -158,7 +162,7 @@ int main(int argc, char ** argv)
 	outputtime +=  (float)(time4-time3)/CLOCKS_PER_SEC;
 
 	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
-	fprintf(stderr, "measuring output time: %f sec\n", outputtime);
+	fprintf(stderr, "measuring input time: %f sec, output time: %f sec\n", inputtime, outputtime);
 
 	free(sid);
 	free(herr);
