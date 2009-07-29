@@ -18,7 +18,7 @@ float  vbuf[1024];
 
 int main(int argc, char ** argv)
 {
-	clock_t time1, time2;
+	clock_t time1, time2, time3, time4;
 
 	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
 	double * vdata, * hcnt, * herr, spacing[3];
@@ -26,7 +26,7 @@ int main(int argc, char ** argv)
 	double totalvolume = 0., cellsize, bounds[6], askbounds[6]; 
 	double * voxels;
 	double emin, emax, hitcnt, hiterr, corners[8][4];
-	float  rebintime = 0;
+	float  rebintime = 0, outputtime = 0;
 	int   nfields, inputformat, pixelcnt = 0, c = 0;
 	double inputv[4 + 8*3];
 
@@ -123,6 +123,8 @@ int main(int argc, char ** argv)
 #if REBINDEBUG		
 		output_actualinfo(bounds);
 #endif
+
+		time1 = clock();
 	
 		scale_vertices( npara * 6 * 4, 
 						vdata,
@@ -131,8 +133,6 @@ int main(int argc, char ** argv)
 						cellsize/spacing[2]);
 
 		pixelcnt += npara;
-
-		time1 = clock();
 
 		rebin_gmesh(npara,
 					nverts,
@@ -152,9 +152,13 @@ int main(int argc, char ** argv)
 	
 	}
 
+	time3 = clock();
 	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
+	time4 = clock();
+	outputtime +=  (float)(time2-time1)/CLOCKS_PER_SEC;
 
 	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
+	fprintf(stderr, "measuring output time: %f sec\n", outputtime);
 
 	free(sid);
 	free(herr);
