@@ -155,7 +155,7 @@ int main(int argc, char ** argv)
 	time3 = clock();
 	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
 	time4 = clock();
-	outputtime +=  (float)(time2-time1)/CLOCKS_PER_SEC;
+	outputtime +=  (float)(time4-time3)/CLOCKS_PER_SEC;
 
 	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
 	fprintf(stderr, "measuring output time: %f sec\n", outputtime);
