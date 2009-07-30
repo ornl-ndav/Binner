@@ -44,7 +44,9 @@ double rebin_gmesh_output(
 			double  cellsize, /* assume uniform cell size, hence cubic cells */
 			double *spacing,
 			double *voxels,
-			double emin, double emax);
+			double emin, 
+			double emax,
+			double threshold);
 
 void	output_askinginfo(double * askbounds, int * xyzsize, double * spacing);
 void	output_askinginfo_short(int * xyzsize);

@@ -25,15 +25,15 @@ int main(int argc, char ** argv)
 	int    * nverts, * sid;
 	double totalvolume = 0., cellsize, bounds[6], askbounds[6]; 
 	double * voxels;
-	double emin, emax, hitcnt, hiterr, corners[8][4];
+	double emin, emax, hitcnt, hiterr, corners[8][4], threshold;
 	float  rebintime = 0, outputtime = 0, inputtime = 0;
 	int   nfields, inputformat, pixelcnt = 0, c = 0;
 	double inputv[4 + 8*3];
 
-	if ((argc != 10) && (argc != 12))
+	if ((argc != 10) && (argc != 12) && (argc != 14))
 	{
 		fprintf(stderr, 
-				"usage: %s [-b batchsize] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n",
+				"usage: %s [-b batchsize] [-t threshold] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n",
 				argv[0]);
 		exit(1);
 	}
@@ -42,22 +42,34 @@ int main(int argc, char ** argv)
 
 	/* f: number of pixels to rebin together, default to 10000 */
 	f = 10000;
-	if (argc == 12)
+	threshold = 1e-16;
+
+	while (argc > 10)
 	{
 		if (strcmp(argv[c+1],"-b") == 0)
-			f = atoi(argv[c+2]);
+		{
+			f = (int)(atof(argv[c+2]));
+			argc -= 2;
+			c += 2;
+		}
+		else if (strcmp(argv[c+1],"-t") == 0)
+		{
+			threshold = atof(argv[c+2]);
+			argc -= 2;
+			c += 2;
+		}
 		else
 		{
 			fprintf(stderr, 
-				"usage: %s [-b batchsize] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n",
+				"usage: %s [-b batchsize] [-t threshold] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n",
 				argv[0]);
 			exit(1);
-		}
-		
-		c += 2;
+		}		
 	}
+	
 
 	fprintf(stderr, "rebinner batch size : %d pixels\n", f);
+	fprintf(stderr, "rebinner threshold  : %le \n", threshold);
 	
 	askbounds[0] = atof(argv[c+1]);
 	askbounds[1] = atof(argv[c+2]);
@@ -157,13 +169,17 @@ int main(int argc, char ** argv)
 	}
 
 	time3 = clock();
-	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
+	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax, threshold);
 	time4 = clock();
 	outputtime +=  (float)(time4-time3)/CLOCKS_PER_SEC;
 
+	fprintf(stderr, "rebin input time    : %f sec\n", inputtime);
+	fprintf(stderr, 
+			"rebin input rate    : %.3f MB/sec\n", 
+			pixelcnt*(sizeof(int)+sizeof(double)*(4 + 8 *3)/inputtime/1e6));
+
+	fprintf(stderr, "rebin output time   : %f sec\n", outputtime);
 	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
-	fprintf(stderr, "measuring  input time: %f sec\n", inputtime);
-	fprintf(stderr, "measuring output time: %f sec\n", outputtime);
 
 	free(sid);
 	free(herr);

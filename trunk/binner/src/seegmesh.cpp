@@ -178,7 +178,10 @@ void display (void)
 	glFrontFace(GL_CCW);
 	glDisable(GL_CULL_FACE);
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 	glCallList(list_id);
+	glDisable(GL_BLEND);
 
 	drawCLUT(); /* draw the color lookup table */
 
@@ -223,7 +226,7 @@ int main(int argc, char ** argv)
   vcbCustomizeColorTableColdHot(tlut, 0, 255);
 
   for (i = 0; i < 256; i ++)
-	tlut[i * 4+3] = 1.f;
+	tlut[i * 4+3] = i/255.f;
 
   mainwin = initGLUT(argc,argv);
 
@@ -262,12 +265,17 @@ int main(int argc, char ** argv)
 		abbox.high[2] = VCB_MAXVAL(abbox.high[2],vdata[i*4+2]);
     }
 
-	red = (16+log10(hitcnt+1e-16));
+/*
+	red = (8+log10(hitcnt));
 	if (red < 0) red = 0;
-	if (red > 16) red = 16;
-	i = (int)(red*16 + 0.5);
+	if (red > 6) red = 6;
+	i = (int)(red*42 + 0.5);
 	if (i > 255) i = 255;
-	glColor3fv(&tlut[i*4]);
+*/
+	i = (int)(hitcnt/1e-2 * 255);
+	if (i > 255) i = 255;
+	if (i < 0) i = 0;
+	glColor4fv(&tlut[i*4]);
 
 	for (i = 0; i < 6; i ++)
 	  for (j = 0; j < 4; j ++)
