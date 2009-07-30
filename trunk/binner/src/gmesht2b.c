@@ -6,12 +6,30 @@ int main(int argc, char ** argv)
 	int nfacets, i, n, sliceid;
 	float mat[16], v0[4], v1[4], axis[3], angle;
 	double * vdata, * v;
-	double emin, emax, hitcnt, hiterr;
+	double emin, emax, hitcnt, hiterr, threshold;
 	char * buf;
 	int lastchar[50], c;
 
 	buf = malloc(1024*8);
 	vdata = malloc(1024 * sizeof(double));
+
+	threshold = 1e-16;
+
+	if (argc == 3)
+	{
+		if (strcmp(argv[1],"-t") == 0)
+			threshold = atof(argv[2]);
+		else
+		{
+			fprintf(stderr, "usage: %s [-t threshhold] \n", argv[0]);
+			exit(1);
+		}
+	}
+	else if (argc != 1)
+	{
+		fprintf(stderr, "usage: %s [-t threshhold] \n", argv[0]);
+		exit(1);
+	}
 
 	for (nfacets = 0; fgets(buf, 1024*8, stdin) != NULL; ) 
     {
@@ -27,6 +45,9 @@ int main(int argc, char ** argv)
 			nfacets ++;
 		else
 			continue;
+
+		hitcnt = atof(buf + lastchar[2] + 1);
+		if (hitcnt < threshold) continue;
 
 		c = 0;
 		sliceid = atof(buf+c); c = lastchar[0] + 1;
