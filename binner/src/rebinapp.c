@@ -216,7 +216,9 @@ double rebin_gmesh_output(
 			double  cellsize, /* assume uniform cell size, hence cubic cells */
 			double *spacing,
 			double *voxels,
-			double emin, double emax)
+			double emin, 
+			double emax,
+			double threshold)
 {
 	int i, nonempty, nvoxel, x, y, z;
 	double totalvolume = 0.0, volumescale;
@@ -232,7 +234,7 @@ double rebin_gmesh_output(
 		for (y = 0; y < xyzsize[1]; y ++)
 			for (z = 0; z < xyzsize[2]; z ++)
 			{
-				if (voxels[i*2] < 1e-16) { i ++; continue;}
+				if (voxels[i*2] < threshold) { i ++; continue;}
 
 				printf("%d %f %f ", sliceid, emin, emax);
 				printf("%le %le ", voxels[i*2], voxels[i*2+1]);
@@ -249,11 +251,14 @@ double rebin_gmesh_output(
 			}
 
 	for (i = 0, nonempty = 0; i < nvoxel; i ++)
-		if (voxels[i*2] > 1e-16)
+		if (voxels[i*2] > threshold)
 		{
 			nonempty ++;
 			totalvolume += voxels[i*2];
 		}
+
+	fprintf(stderr, 
+	        "no. nonempty bins   : %d\n", nonempty);
 	
 	fprintf(stderr, 
 			"rebinned volume     : %.2f%% occupied\n", 
@@ -305,10 +310,10 @@ void output_prerebininfo(int * orig, int * xyzsize, double * spacing, double cel
 
 void output_postrebininfo(float rebintime, int npara, double totalvolume, int nvoxel)
 {
+	fprintf(stderr, "rebinned pixels     : %d\n", npara);
 	fprintf(stderr, "rebin time          : %.3f sec\n", rebintime);
-	fprintf(stderr, "rebin throughput    : %.2f per second, %d total\n", npara/rebintime, npara);
+	fprintf(stderr, "rebin throughput    : %.2f pixels/sec\n", npara/rebintime);
 	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume);
-	fprintf(stderr, "all bins            : %d\n", nvoxel);
 }
 
 void output_gmesh_formaterr()
