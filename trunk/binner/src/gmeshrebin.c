@@ -164,7 +164,7 @@ int main(int argc, char ** argv)
 	
 	}
 
-	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax);
+	totalvolume = rebin_gmesh_output(sid[0], orig, xyzsize, cellsize, spacing, voxels, emin, emax, 1e-20);
 
 	output_postrebininfo(rebintime, pixelcnt, totalvolume, nvoxel);
 
