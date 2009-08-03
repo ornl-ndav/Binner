@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
 int main(int argc, char ** argv)
 {
 	int nfacets, i, n, sliceid;
-	float mat[16], v0[4], v1[4], axis[3], angle;
-	double * vdata, * v;
+	double * vdata;
 	double emin, emax, hitcnt, hiterr, threshold;
 	char * buf;
 	int lastchar[50], c;
@@ -50,7 +51,7 @@ int main(int argc, char ** argv)
 		if (hitcnt < threshold) continue;
 
 		c = 0;
-		sliceid = atof(buf+c); c = lastchar[0] + 1;
+		sliceid = atoi(buf+c); c = lastchar[0] + 1;
 		emin = atof(buf + c);  c = lastchar[1] + 1;
 		emax = atof(buf + c);  c = lastchar[2] + 1;
 		hitcnt = atof(buf +c); c = lastchar[3] + 1;
