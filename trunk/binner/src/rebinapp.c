@@ -241,12 +241,12 @@ double rebin_gmesh_output(
 				i ++;
 				printcorners(x, y, z, orig, spacing);
 				printcorners(x+1, y, z, orig, spacing);
-				printcorners(x, y+1, z, orig, spacing);
 				printcorners(x+1, y+1, z, orig, spacing);
+				printcorners(x, y+1, z, orig, spacing);
 				printcorners(x, y, z+1, orig, spacing);
 				printcorners(x+1, y, z+1, orig, spacing);
-				printcorners(x, y+1, z+1, orig, spacing);
 				printcorners(x+1, y+1, z+1, orig, spacing);
+				printcorners(x, y+1, z+1, orig, spacing);
 				printf("\n");
 			}
 
