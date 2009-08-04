@@ -236,7 +236,7 @@ double rebin_gmesh_output(
 			{
 				if (voxels[i*2] < threshold) { i ++; continue;}
 
-				printf("%d %f %f ", sliceid, emin, emax);
+				printf("%d %e %e ", sliceid, emin, emax);
 				printf("%le %le ", voxels[i*2], voxels[i*2+1]);
 				i ++;
 				printcorners(x, y, z, orig, spacing);

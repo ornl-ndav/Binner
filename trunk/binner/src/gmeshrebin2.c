@@ -120,6 +120,8 @@ int main(int argc, char ** argv)
 			for (i = 0; i < 6; i ++)
 				nverts[npara*6+i] = 4;
 
+			emin = inputv[0];
+			emax = inputv[1];
 			hcnt[npara] = inputv[2];//hitcnt;
 			herr[npara] = inputv[3];//hiterr;
 			sid[npara] = sliceid;
