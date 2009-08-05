@@ -12,23 +12,21 @@ echo -n "deleting all *.inb files ... "
 rm -rf $1/*.inb
 echo "done"
 
-for f in $1/*.in.gz
+for f in $1/*.in
 do
-  fh=${f%.*}
-  echo -n "$f --> ${fh}b: "
-  zcat ${f} | gmesht2b > ${f}.tmp
-  #gmesht2b < $f > ${f}.tmp
+  echo -n "$f --> ${f}b: "
+  gmesht2b < $f > $1/${f}.tmp
   return_val=$?
 
   if (( return_val > 0 ))
   then
     echo "failed"
   else
-	gmeshorderv < ${f}.tmp > ${fh}b
+	gmeshorderv < $1/${f}.tmp > ${f}b
     echo "successful"
   fi
 
-  rm -rf ${f}.tmp
+  rm -rf $1/${f}.tmp
 
 done
 
