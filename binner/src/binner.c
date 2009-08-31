@@ -360,6 +360,7 @@ double bin_smallpara3d_150(	int		nfacets,
 
 	int i, j, k, l, id;
 	int smalllb[3], smallub[3], coord[3], totalverts; 
+	double one = 1.0, a, b;
 
 time1 = clock();
 
@@ -407,13 +408,39 @@ time1 = clock();
 
 			if ((hitcnt != NULL) && (hiterr != NULL))
 			{
-				voxels[id*2]   += hitcnt[i/6];
-				voxels[id*2+1] += hiterr[i/6];
+				if (voxels != NULL)
+				{
+					voxels[id*2]   += hitcnt[i/6];
+					voxels[id*2+1] += hiterr[i/6];
+				}
+				else
+				{
+					fwrite(&smalllb[0], sizeof(int), 1, stdout);
+					fwrite(&smalllb[1], sizeof(int), 1, stdout);
+					fwrite(&smalllb[2], sizeof(int), 1, stdout);
+					fwrite(&hitcnt[i/6], sizeof(double), 1, stdout);
+					fwrite(&hiterr[i/6], sizeof(double), 1, stdout);
+				}
 			}
 			else
 			{
+				if (voxels != NULL)
+				{
+					voxels[id*2]   += 1.0;
+					voxels[id*2+1] += 1.0;
+				}
+				else
+				{
+					fwrite(&smalllb[0], sizeof(int), 1, stdout);
+					fwrite(&smalllb[1], sizeof(int), 1, stdout);
+					fwrite(&smalllb[2], sizeof(int), 1, stdout);
+					fwrite(&one, sizeof(double), 1, stdout);
+					fwrite(&one, sizeof(double), 1, stdout);
+				}
+/*
 				voxels[id*2]   += 1.0;
 				voxels[id*2+1] += 1.0;
+*/
 			}
 
 			/* voxels[id*2] += factor; */
@@ -464,8 +491,24 @@ time1 = clock();
 						if (voxel_volume > 1e-16)
 						{
 							factor = voxel_volume/(para_volume*para_volume);
-							voxels[id*2]   += hitcnt[i/6]*factor;
-							voxels[id*2+1] += hiterr[i/6]*factor * factor;
+
+							a = hitcnt[i/6]*factor;
+							b = hiterr[i/6]*factor * factor;
+
+							if (voxels != NULL)
+							{
+								voxels[id*2]   += a;
+								voxels[id*2+1] += b;
+							}
+							else
+							{
+								fwrite(&j, sizeof(int), 1, stdout);
+								fwrite(&k, sizeof(int), 1, stdout);
+								fwrite(&l, sizeof(int), 1, stdout);
+								fwrite(&a, sizeof(double), 1, stdout);
+								fwrite(&b, sizeof(double), 1, stdout);
+							}
+
 						}
 						//total_volume += factor; //voxel_volume * factor;
 					}
@@ -477,7 +520,9 @@ time2 = clock();
 	free(face_starts);
 	
 	/* sum up only the hits: voxels[i*2]. errs are at voxels[2*i+1] */
-	total_volume = count_volume(voxels, xyzsize[0]*xyzsize[1]*xyzsize[2]*2, 2);
+	if (voxels != NULL)
+		total_volume = count_volume(voxels, xyzsize[0]*xyzsize[1]*xyzsize[2]*2, 2);
+
 #if REBINDEBUG
 	fprintf(stderr, "bin_small recorded total_volume = %lf, before scaling\n", total_volume);
 #endif
