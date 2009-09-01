@@ -33,7 +33,11 @@ int main(int argc, char ** argv)
 	
 	for (m = ninputs ; m > 0; ) 
 	{
-		FD_COPY(&masterfds, &readfds);
+		/* 
+		 * FD_COPY(&masterfds, &readfds);
+		 * not portable on all unix flavors
+		 */
+		memcpy(&readfds, &masterfds, sizeof(fd_set));
 		
 		if ((n = select(ninputs + 3, &readfds, NULL, NULL, NULL)) < 0)
 		{
