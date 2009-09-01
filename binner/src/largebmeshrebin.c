@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
 	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3], nonempty;
 	double * vdata, * hcnt, * herr, spacing[3];
 	int    * nverts, * sid;
-	double totalvolume, cellsize, tmp, askbounds[6], bounds[6]; 
+	double totalvolume, cellsize, tmp, askbounds[6]; 
 	double * voxels;
 	float  hitcnt, hiterr, corners[8][4];
 	float  rebintime = 0;

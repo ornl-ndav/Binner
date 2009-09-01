@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "binner.h"
 
 void update_bounds(int n, double * bound, double * v)

@@ -4,7 +4,7 @@
 int main(int argc, char ** argv)
 {
 
-	int nfacets, i, n, buf[1];
+	int nfacets, i, buf[1];
 	double vdata[4 + 8*3];
 
 	for (nfacets = 0; ; nfacets ++) 

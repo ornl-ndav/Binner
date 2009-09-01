@@ -10,7 +10,9 @@
 
 #include "socketfun.h"
 
-static char * inadport_decimal(struct sockaddr_in *sad)
+
+/*static */ 
+char * inadport_decimal(struct sockaddr_in *sad)
 {
         static char buf[32];
         int a;
@@ -24,6 +26,7 @@ static char * inadport_decimal(struct sockaddr_in *sad)
                         0xffff & (int)ntohs(sad->sin_port));
         return buf;
 }
+
 
 int server_setup(char * dn, int * pn)
 {

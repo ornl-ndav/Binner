@@ -20,7 +20,7 @@ int main(int argc, char ** argv)
 {
 	clock_t time1, time2;
 
-	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
+	int i, j, n, f, npara, sliceid, nvoxel, orig[3], xyzsize[3];
 	double * vdata, * hcnt, * herr, spacing[3];
 	int    * nverts, * sid;
 	double totalvolume = 0., cellsize, bounds[6], askbounds[6]; 
@@ -28,7 +28,7 @@ int main(int argc, char ** argv)
 	float emin, emax;
 	float  hitcnt, hiterr, corners[8][4];
 	float  rebintime = 0;
-	int   nfields, inputformat, pixelcnt = 0, c = 0;
+	int   pixelcnt = 0, c = 0;
 
 	if ((argc != 10) && (argc != 12))
 	{

@@ -20,14 +20,14 @@ int main(int argc, char ** argv)
 {
 	clock_t time1, time2, time3, time4;
 
-	int i, j, n, f, npara, sliceid, res, nvoxel, orig[3], xyzsize[3];
+	int i, j, f, npara, sliceid, nvoxel, orig[3], xyzsize[3];
 	double * vdata, * hcnt, * herr, spacing[3];
 	int    * nverts, * sid;
 	double totalvolume = 0., cellsize, bounds[6], askbounds[6]; 
 	double * voxels;
-	double emin, emax, hitcnt, hiterr, corners[8][4], threshold;
+	double emin, emax, threshold;
 	float  rebintime = 0, outputtime = 0, inputtime = 0;
-	int   nfields, inputformat, pixelcnt = 0, c = 0;
+	int   pixelcnt = 0, c = 0;
 	double inputv[4 + 8*3];
 
 	if ((argc != 10) && (argc != 12) && (argc != 14))

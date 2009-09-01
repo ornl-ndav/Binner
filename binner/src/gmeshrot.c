@@ -7,7 +7,6 @@ int main(int argc, char ** argv)
 {
 	int nfacets, i, n, sliceid;
 	float mat[16], v0[4], v1[4], axis[3], angle;
-	float vdata[1024], * v;
 	float emin, emax, hitcnt, hiterr, corners[8][4];
 	
 	axis[0] = (float)atof(argv[1]);
