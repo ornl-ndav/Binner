@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "binner.h"
 
 static char buf[4096];
@@ -21,7 +22,6 @@ int main(int argc, char ** argv)
 {
 	int i, n, tag;
 	double bounds[6];
-	FILE * fp;
 
 	if ((argc <= 1) || (argc >= 10))
 	{

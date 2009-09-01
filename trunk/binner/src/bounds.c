@@ -25,10 +25,9 @@ float xmin, xmax, ymin, ymax;
 
 int main(int argc, char ** argv)
 {
-  int   i, j, n, ndims, orig, nvals, dummy;
+  int   i, n;
   int   sliceid;
   float hitcnt, hiterr, corners[8][4];
-  double red;
 
   abbox.low[0] = abbox.low[1] = abbox.low[2] = 1e6;
   abbox.high[0] = abbox.high[1] = abbox.high[2] = -1e6;

@@ -13,8 +13,6 @@
 
 int main(int argc, char ** argv)
 {
-	clock_t time1, time2, time3;
-
 	int nfacets, i, j, k, n, vid;
 	double * vdata, * v;
 	int    * nverts;        /* at most 200 facets */
@@ -23,7 +21,6 @@ int main(int argc, char ** argv)
 	double bounds[6], * voxels;
 	int    nvoxel;
 	int    orig[3], xyzsize[3];
-	int    res;
 	int    f, toread;
 	
 	static char netbuf[1000000];

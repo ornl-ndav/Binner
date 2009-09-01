@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <pthread.h>
 #include "dllist.h"
@@ -124,10 +125,8 @@ void * sorter_thread(void * sock)
 int main(int argc, char ** argv)
 {
 	int sock1, sock2, port;
-	char portstring[40];
 	int i, readin;
 	task_t *t;
-	Dllist tmp;
     pthread_t tid;
 	pthread_attr_t attr[1];
 	FILE * portnum_file;

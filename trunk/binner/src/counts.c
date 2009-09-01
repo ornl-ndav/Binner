@@ -23,12 +23,10 @@ float xmin, xmax, ymin, ymax;
 
 int main(int argc, char ** argv)
 {
-  int   i, j, n, ndims, orig, nvals, dummy, nzero;
-  int   sliceid;
+  int   n, nzero, sliceid;
   float hitcnt, hiterr, corners[8][4];
   float totalhitcnt, totalhiterr;
   float maxcnt, maxerr, mincnt, minerr;
-  double red;
 
   nzero = 0;
   totalhitcnt = 0;
