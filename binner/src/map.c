@@ -207,7 +207,8 @@ int main(int argc, char ** argv, char ** envp)
 
 		sinkinput = malloc(80);
 		sprintf(sinkinput,"%d",nbinners); /*reusing errormsg for sink's argv */
-		execl("/Users/huangj/huangj/coding/binner/bin/reduce", "reduce", sinkinput, NULL); 
+		//execl("/Users/huangj/huangj/coding/binner/bin/reduce", "reduce", sinkinput, NULL); 
+		execl("reduce", "reduce", sinkinput, NULL); 
 		perror("exec failed for reduce process");
 		exit(1); 		
 	}
