@@ -7,7 +7,7 @@
 
 #define REBINDEBUG 0
 
-char * usage = "usage: %s [-n num_binners] [-t threshold] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
+char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
 
 #define BATCH_SZ 1000
 #define ITEM_SZ (sizeof(int) + sizeof(double)*(4 + 8*3))
@@ -95,9 +95,13 @@ int main(int argc, char ** argv, char ** envp)
 	char * sinkinput;
 
 
-	int nbinners = 3, c = 1; /* default to 2 parallel rebinners */
-	
-	if (argc == 1)
+	int c = 1, nforks = 2; /* default to a parallelism of 2 */
+
+#if REBINDEBUG	
+	fprintf(stderr, "argc = %d \n", argc);
+#endif
+
+	if (argc < 3)
 	{
 		fprintf(stderr, usage, argv[0]);
 		exit(1);
@@ -105,27 +109,32 @@ int main(int argc, char ** argv, char ** envp)
 
 	if (strcmp(argv[c],"-n") == 0)
 	{
-		nbinners = (int)(atof(argv[c+1]));
+		nforks = (int)(atof(argv[c+1]));
 		argc -= 2;
 		c += 2;
+	}
+	else
+	{
+		fprintf(stderr, usage, argv[0]);
+		exit(1);
 	}
 
 	signal(SIGPIPE, sigpipe_handler);
 
-	/* spawn off "nbinners" rebinner and one sink processes */
-	/* accordingly, there are "nbinners" threads as writers to push data through */
+	/* spawn off "nforks" rebinner and one sink processes */
+	/* accordingly, there are "nforks" threads as writers to push data through */
 #if REBINDEBUG
-	printf("sizeof(struct tk) = %ld, nbinners = %d\n", sizeof(struct tk), nbinners);
+	printf("sizeof(struct tk) = %ld, nforks = %d\n", sizeof(struct tk), nforks);
 #endif
-	t = (task_t *) malloc(sizeof(struct tk) * nbinners);
-	sinkstreams = (int *) malloc(sizeof(int) * nbinners);
-	vals = (int *) malloc(sizeof(int) * nbinners);
+	t = (task_t *) malloc(sizeof(struct tk) * nforks);
+	sinkstreams = (int *) malloc(sizeof(int) * nforks);
+	vals = (int *) malloc(sizeof(int) * nforks);
 
 #if REBINDEBUG
 	printf("sizes: item = %ld, batchsz = %d, tasksz = %ld\n", ITEM_SZ,BATCH_SZ,TASK_SZ);
 #endif
 
-	for (i = 0; i < nbinners; i++)
+	for (i = 0; i < nforks; i++)
 	{
 		if (pipe(pipefd1) < 0)
 		{
@@ -170,8 +179,7 @@ int main(int argc, char ** argv, char ** envp)
 			dup2(pipefd2[1], 1);
 			close(pipefd2[1]);
 
-			// execve("./gmeshrebin3", argv+c, envp);
-			execl("/bin/cat", "cat", NULL);
+			execvp(argv[c], &argv[c]);
 			sprintf(errormsg, "exec failed for rebinner process %d", i);
 			perror(errormsg);
 			exit(1); 
@@ -192,13 +200,13 @@ int main(int argc, char ** argv, char ** envp)
 	
 	if (sink > 0)
 	{
-		for (i = 0; i < nbinners; i ++)
+		for (i = 0; i < nforks; i ++)
 			close(sinkstreams[i]);
 		free(sinkstreams);
 	}
 	else /* in the sink process */
 	{
-		for (i = 0; i < nbinners; i ++)
+		for (i = 0; i < nforks; i ++)
 		{
 			dup2(sinkstreams[i], i + 3);
 			close(sinkstreams[i]);
@@ -206,8 +214,8 @@ int main(int argc, char ** argv, char ** envp)
 		}
 
 		sinkinput = malloc(80);
-		sprintf(sinkinput,"%d",nbinners); /*reusing errormsg for sink's argv */
-		execl("reduce", "reduce", sinkinput, NULL); 
+		sprintf(sinkinput,"%d",nforks); /*reusing errormsg for sink's argv */
+		execlp("reduce", "reduce", sinkinput, NULL); 
 		perror("exec failed for reduce process");
 		exit(1); 		
 	}
@@ -217,7 +225,7 @@ int main(int argc, char ** argv, char ** envp)
 	pthread_attr_init(attr);
 	pthread_attr_setscope(attr, PTHREAD_SCOPE_SYSTEM);
 
-	for (i = 0; i < nbinners; i ++) {
+	for (i = 0; i < nforks; i ++) {
 		t[i].buffer = malloc(TASK_SZ);
 		t[i].nbytes = 0;
 		t[i].offset = 0;
@@ -226,7 +234,7 @@ int main(int argc, char ** argv, char ** envp)
 		pthread_create(&(t[i].tid), attr, pusher, vals+i);
 	}
 
-	for (i = 0; i < nbinners; i ++)
+	for (i = 0; i < nforks; i ++)
 	{
 		pthread_join(t[i].tid, NULL);
 #if REBINDEBUG
@@ -234,7 +242,7 @@ int main(int argc, char ** argv, char ** envp)
 #endif
 	}
 
-	for (i = 0; i < nbinners + 1; i ++)
+	for (i = 0; i < nforks + 1; i ++)
 	{
 #if REBINDEBUG
 		fprintf(stderr, "pid = %ld wait returned \n", wait(&status));
