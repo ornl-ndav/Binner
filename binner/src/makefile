@@ -47,7 +47,7 @@ getfrom: getfrom.o socketfun.o
 giveto: giveto.o socketfun.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
-reduce: reduce.o
+reduce: reduce.o reducefunc.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 map: map.o
