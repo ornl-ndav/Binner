@@ -138,10 +138,10 @@ void   free_dmlist(Dmlist dm);
  *  Dmlist dm: The Dmlist to add to.
  *  void* data: The new node to add to "dm"
  *  int nbytes: The size of data in bytes.
- * Return: None
+ * Return: dm now has a copy of "data", returned is the head address of that copy
  * Known Issues: None
  **/
-void   dml_append(Dmlist dm, void * data, int nbytes);
+void *   dml_append(Dmlist dm, void * data, int nbytes);
 
 /** Function
  * Name: dml_totalbytes
