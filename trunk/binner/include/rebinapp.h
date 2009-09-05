@@ -55,6 +55,10 @@ void	output_prerebininfo(int * orig, int * xyzsize, double * spacing, double cel
 void	output_postrebininfo(float rebintime, int npara, double totalvolume, int nvoxel);
 void	output_gmesh_formaterr();
 
+void	gmesh_singlebin_output(double * dp, 
+							int x, int y, int z, 
+							int * orig, double * spacing);
+
 #ifdef __cplusplus
 }  /* extern C */
 #endif

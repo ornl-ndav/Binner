@@ -84,6 +84,7 @@ void * pusher(void * ip)
 
 	pthread_join(t[i].tid, NULL);
 
+	return NULL;
 }
 
 int main(int argc, char ** argv, char ** envp)
@@ -215,7 +216,8 @@ int main(int argc, char ** argv, char ** envp)
 
 		sinkinput = malloc(80);
 		sprintf(sinkinput,"%d",nforks); /*reusing errormsg for sink's argv */
-		execlp("reduce", "reduce", sinkinput, NULL); 
+		/* execlp("reduce", "reduce", sinkinput, NULL); */
+		execvp("reduce", argv);
 		perror("exec failed for reduce process");
 		exit(1); 		
 	}
