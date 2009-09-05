@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-int reducefunc_unitsize();
+int reduce_init(int argc, char ** argv);
 
 /*
  * the input contains k items
@@ -14,7 +14,9 @@ int reducefunc_unitsize();
  * return -1 to indicate that this reduction function
  * has failied
  */
-int reducefunc(void * v, int k);
+int reduce_func(void * v, int k);
+
+int reduce_done();
 
 #ifdef __cplusplus
 }  /* extern C */

@@ -7,7 +7,10 @@
 
 #include "reducefunc.h"
 
+#define REBINDEBUG 0
 #define BUFSIZE 4*1024*1024
+
+/* reduce receives the whole list or argv received by "map", verbatim */
 
 int main(int argc, char ** argv)
 {
@@ -16,18 +19,24 @@ int main(int argc, char ** argv)
 	char * netbuf;
 	int unitsize, toread;
 
+/*
 	if (argc != 2)
 	{
 		fprintf(stderr, "usage: reduce number_of_input_streams\n");
 		fprintf(stderr, "%s %s\n", argv[0], argv[1]);
 		exit(1);
 	}
+*/
 	
 	close(0);
 
-	unitsize = reducefunc_unitsize();
+	unitsize = reduce_init(argc, argv);
 
-	ninputs = (int)(atof(argv[1]));
+	ninputs = (int)(atof(argv[2]));
+
+#if REBINDEBUG
+	fprintf(stderr, "reduce running with %d inputs\n", ninputs);
+#endif
 
 	netbuf = malloc(BUFSIZE);
 	
@@ -60,15 +69,21 @@ int main(int argc, char ** argv)
 				for (n = 0, toread = BUFSIZE; toread > 0; )
 				{
 					n += read(i, netbuf+n, toread);
+#if REBINDEBUG
+					fprintf(stderr, "reduce read %d bytes, ", n);
+#endif
 					toread = n - (n / unitsize) * unitsize;
+#if REBINDEBUG
+					fprintf(stderr, "toread = %d bytes\n", toread);
+#endif
 				}
 
 #if REBINDEBUG
-				fprintf(stder, "reduce read %d bytes from fd: %d\n", n, i);
+				fprintf(stderr, "reduce read %d bytes from fd: %d\n", n, i);
 #endif
 				if (n > 0)
 				{
-					reducefunc(netbuf, n/unitsize);
+					reduce_func(netbuf, n/unitsize);
 					nbytes += n;
 				}
 				else
@@ -83,10 +98,12 @@ int main(int argc, char ** argv)
 			}
 	}
 
+	reduce_done();
+
 #if REBINDEBUG
 	fprintf(stderr,"reduce ninputs = %d \n", ninputs);
+	fprintf(stderr,"reduce read %d bytes.\n", nbytes);
 #endif
-	fprintf(stderr,"reduce wrote %d bytes.\n", nbytes);
 	free(netbuf);
 
 	return 0;
