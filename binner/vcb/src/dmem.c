@@ -26,9 +26,11 @@ void   free_dmlist(Dmlist dm)
 		free(fptr->d);
 }
 
-void   dml_append(Dmlist dm, void * data, int nbytes)
+void *  dml_append(Dmlist dm, void * data, int nbytes)
 {
 	Dmlist fptr, bptr;
+	void * head_addr;
+	
 	for (fptr = dm; fptr != NULL; bptr = fptr, fptr = fptr->link) {
 		if (fptr->nbytes + nbytes <= DMEMALLOCSIZE)
 			break;
@@ -39,8 +41,12 @@ void   dml_append(Dmlist dm, void * data, int nbytes)
 		fptr = bptr->link;
 	}
 
+	head_addr = (void *) (&fptr->d[fptr->nbytes]);
+
 	memcpy(&fptr->d[fptr->nbytes], data, nbytes);
 	fptr->nbytes += nbytes;
+
+	return head_addr;
 }
 
 void  dml_straverse(Dmlist dm, int ensz)
