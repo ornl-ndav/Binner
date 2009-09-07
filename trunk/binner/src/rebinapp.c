@@ -143,9 +143,9 @@ double rebin_byslice(int npara,
 
 		/* vcbGenBinm("500.bin", VCB_DOUBLE, 3, orig, xyzsize, 2, voxels); */
 #if REBINDEBUG
-		printf("rebin_slice recorded totalvolume = %lf, before scaling\n", totalvolume);
+		fprintf(stderr, "rebin_slice recorded totalvolume = %lf, before scaling\n", totalvolume);
 		for (i = 0; i < nvoxel; i ++)
-			printf("voxels[%d] = %lf error[%d] = %lf\n", i, voxels[i*2], i, voxels[i*2+1]);
+			fprintf(stderr, "voxels[%d] = %lf error[%d] = %lf\n", i, voxels[i*2], i, voxels[i*2+1]);
 #endif
 	}
 	
