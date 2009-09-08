@@ -130,7 +130,7 @@ double rebin_byslice(int npara,
 								orig, 
 								xyzsize,
 								cellsize, 
-								voxels);
+								voxels, 0., 0.);
 
 		for (i = 0; i < nvoxel; voxels[i*2] *= volumescale, i ++);   /* counts */
 		for (i = 0; i < nvoxel; voxels[i*2+1] *= volumescale, i ++); /* error */
@@ -212,7 +212,7 @@ double rebin_gmesh(int npara,
 									orig, 
 									xyzsize,
 									cellsize, 
-									voxels);
+									voxels, emin, emax);
 		}
 	}
 	
@@ -223,7 +223,7 @@ void gmesh_singlebin_output(double * dp,
 							int sid, int x, int y, int z, 
 							int * orig, double * spacing)
 {
-	printf("%d %le %le ", sid, dp[0], dp[1]);
+	printf("%d %le %le %le %le ", sid, dp[2], dp[3], dp[0], dp[1]);
 	printcorners(x, y, z, orig, spacing);
 	printcorners(x+1, y, z, orig, spacing);
 	printcorners(x+1, y+1, z, orig, spacing);
@@ -262,8 +262,10 @@ double rebin_gmesh_output(
 			for (z = 0; z < xyzsize[2]; z ++)
 			{
 				if (voxels[i*2] < threshold) { i ++; continue;}
+				/*
 				gmesh_singlebin_output(&voxels[i*2], sliceid, x, y, z, orig, spacing);
-#if 0
+				*/
+#if 1
 				printf("%d %e %e ", sliceid, emin, emax);
 				printf("%le %le ", voxels[i*2], voxels[i*2+1]);
 				printcorners(x, y, z, orig, spacing);

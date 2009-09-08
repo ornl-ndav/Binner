@@ -7,7 +7,7 @@
 #include "rebinapp.h"
 #include "reducefunc.h"
 
-#define ITEMSIZE (sizeof(int)*4 + sizeof(double)*2)
+#define ITEMSIZE (sizeof(int)*4 + sizeof(double)*4)
 
 static JRB b;
 static Dmlist dm;

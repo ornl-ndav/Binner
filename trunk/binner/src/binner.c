@@ -338,11 +338,12 @@ time4 = clock();
 	return total_volume;
 }
 
-int pipedump(int mode, int sliceid, int x, int y, int z, double en, double er)
+int pipedump(int mode, int sliceid, double emin, double emax, int x, int y, int z, double en, double er)
 {
-#define UNIT 32
+#define UNIT 48
+#define max_n_units 1300
 	static int cnt = 0;
-	static char buf[UNIT*2000];
+	static char buf[UNIT*max_n_units];
 	
 	if (mode == 1)
 	{
@@ -351,7 +352,7 @@ int pipedump(int mode, int sliceid, int x, int y, int z, double en, double er)
 		return 1;
 	}
 
-	if (cnt == 2000)
+	if (cnt == max_n_units)
 	{
 		write(1, buf, cnt*UNIT);
 		cnt = 0;
@@ -365,6 +366,8 @@ int pipedump(int mode, int sliceid, int x, int y, int z, double en, double er)
 		memcpy(&buf[cnt*UNIT+12], &z, sizeof(int));
 		memcpy(&buf[cnt*UNIT+16], &en, sizeof(double));
 		memcpy(&buf[cnt*UNIT+24], &er, sizeof(double));
+		memcpy(&buf[cnt*UNIT+32], &emin, sizeof(double));
+		memcpy(&buf[cnt*UNIT+40], &emax, sizeof(double));
 		cnt ++;
 		
 		return 0;
@@ -382,7 +385,7 @@ double bin_smallpara3d_150(
 						int *	orig, 
 						int *	xyzsize,
 						double  ccs, /* cubic cell size, assume uniform cell size */ 
-						double *voxels) 
+						double *voxels, double emin, double emax) 
 {
 	clock_t time1, time2;
 
@@ -462,7 +465,7 @@ time1 = clock();
 					fwrite(&hiterr[i/6], sizeof(double), 1, stdout);
 				*/
 					nwrote ++;
-					pipedump(0, sliceid, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
+					pipedump(0, sliceid, emin, emax, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
 				}
 			}
 			else
@@ -481,7 +484,7 @@ time1 = clock();
 					fwrite(&one, sizeof(double), 1, stdout);
 					fwrite(&one, sizeof(double), 1, stdout);
 */
-					pipedump(0, sliceid, smalllb[0], smalllb[1], smalllb[2], one, one);
+					pipedump(0, sliceid, emin, emax, smalllb[0], smalllb[1], smalllb[2], one, one);
 
 					nwrote ++;
 				}
@@ -557,7 +560,7 @@ time1 = clock();
 								fwrite(&a, sizeof(double), 1, stdout);
 								fwrite(&b, sizeof(double), 1, stdout);
 								*/
-								pipedump(0, sliceid, j, k, l, a, b);
+								pipedump(0, sliceid, emin, emax, j, k, l, a, b);
 
 								nwrote ++;
 							}
@@ -568,7 +571,7 @@ time1 = clock();
 		}
 	}
 
-	pipedump(1, sliceid, j, k, l, a, b);
+	pipedump(1, sliceid, emin, emax, j, k, l, a, b);
 
 time2 = clock();
 
