@@ -9,7 +9,7 @@
 
 char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
 
-#define BATCH_SZ 1000
+#define BATCH_SZ 2000
 #define ITEM_SZ (sizeof(int) + sizeof(double)*(4 + 8*3))
 #define TASK_SZ (ITEM_SZ * BATCH_SZ)
 
@@ -24,6 +24,7 @@ typedef struct tk {
 
 task_t * t;
 pthread_mutex_t lock1;
+pthread_mutex_t lock2;
 char errormsg [80];
 
 void sigpipe_handler(int dummy)
@@ -34,7 +35,8 @@ void sigpipe_handler(int dummy)
 
 void * pusher(void * ip)
 {
-	int i = ((int *)ip)[0], n, k, total = 0;
+	int i = ((int *)ip)[0], n, towrite, total = 0;
+	char * bp;
 
 #if REBINDEBUG
 	fprintf(stderr, "pusher %d is here, fd= %d, pid = %d\n", i, t[i].fd, (int)(t[i].pid));
@@ -42,24 +44,44 @@ void * pusher(void * ip)
 
 	while(1)
 	{
+
 		if (t[i].nbytes == 0)
 		{
-			pthread_mutex_lock(&lock1);
-				n = fread(t[i].buffer, ITEM_SZ, BATCH_SZ, stdin);
-			pthread_mutex_unlock(&lock1);
+pthread_mutex_lock(&lock1);
+
+			n = fread(t[i].buffer, ITEM_SZ, BATCH_SZ, stdin);
 #if REBINDEBUG
 			fprintf(stderr, "pusher %d read %d items\n", i, n);
 #endif
+pthread_mutex_unlock(&lock1);
+
 			if (n <= 0) break; /* exit point. leaving while loop */
 
 			t[i].nbytes = n*ITEM_SZ;
 			t[i].offset = 0;
+
 		}
 
-		if (t[i].offset < t[i].nbytes)
+		if (t[i].nbytes > 0)
 		{
-			k = write(t[i].fd, t[i].buffer+t[i].offset, t[i].nbytes);
-			if (k <= 0) 
+
+#if REBINDEBUG
+			fprintf(stderr, "pusher %d to write %d bytes\n", i, t[i].nbytes - t[i].offset);
+#endif
+
+			bp = t[i].buffer+t[i].offset;
+
+			for (n = 0, towrite = t[i].nbytes; towrite > 0; )
+			{
+				n += write(t[i].fd, bp+n, towrite);
+				
+				if (n % ITEM_SZ != 0) 
+					towrite =  ITEM_SZ - (n % ITEM_SZ);
+				else
+					towrite = 0;
+			} /* make sure write occurs on boundaries of ITEM_SZ bytes */
+
+			if (n <= 0) 
 			{
 				sprintf(errormsg,
 				        "thread %d failed to write to fd: %d, %d bytes left, quitting.\n", 
@@ -67,22 +89,21 @@ void * pusher(void * ip)
 				perror(errormsg);
 				break; /*exit point. leaving while loop */
 			}
+
 #if REBINDEBUG
-			fprintf(stderr, "pusher %d wrote %d bytes\n", i, k);
+			fprintf(stderr, "pusher %d done writing %d bytes\n", i, n);
 #endif
-			t[i].offset += k;
-			t[i].nbytes -= k;
+			t[i].offset += n;
+			t[i].nbytes -= n;
 			
-			total += k;
+			total += n;
 		}
 	}
 
-	fprintf(stderr, "thread %d closing, wrote %d bytes\n", i, total);
+	fprintf(stderr, "thread %d processed  : %d input pixels\n", i, total/ITEM_SZ);
 
 	close(t[i].fd);
 	free(t[i].buffer);
-
-	pthread_join(t[i].tid, NULL);
 
 	return NULL;
 }
@@ -125,14 +146,14 @@ int main(int argc, char ** argv, char ** envp)
 	/* spawn off "nforks" rebinner and one sink processes */
 	/* accordingly, there are "nforks" threads as writers to push data through */
 #if REBINDEBUG
-	printf("sizeof(struct tk) = %ld, nforks = %d\n", sizeof(struct tk), nforks);
+	fprintf(stderr, "sizeof(struct tk) = %ld, nforks = %d\n", sizeof(struct tk), nforks);
 #endif
 	t = (task_t *) malloc(sizeof(struct tk) * nforks);
 	sinkstreams = (int *) malloc(sizeof(int) * nforks);
 	vals = (int *) malloc(sizeof(int) * nforks);
 
 #if REBINDEBUG
-	printf("sizes: item = %ld, batchsz = %d, tasksz = %ld\n", ITEM_SZ,BATCH_SZ,TASK_SZ);
+	fprintf(stderr, "sizes: item = %ld, batchsz = %d, tasksz = %ld\n", ITEM_SZ,BATCH_SZ,TASK_SZ);
 #endif
 
 	for (i = 0; i < nforks; i++)
@@ -144,6 +165,10 @@ int main(int argc, char ** argv, char ** envp)
 			exit(1);
 		}
 
+#if REBINDEBUG
+		fprintf(stderr, "fork: pid = %d\n", pid);
+#endif
+
 		if (pipe(pipefd2) < 0)
 		{
 			sprintf(errormsg, "outgoing pipe for rebinner #%d", i);
@@ -153,7 +178,7 @@ int main(int argc, char ** argv, char ** envp)
 
 		pid = fork();
 #if REBINDEBUG
-		printf("fork: pid = %d\n", pid);
+		fprintf(stderr, "fork: pid = %d\n", pid);
 #endif
 		if (pid < 0)
 		{
@@ -214,8 +239,6 @@ int main(int argc, char ** argv, char ** envp)
 			close(t[i].fd);
 		}
 
-		sinkinput = malloc(80);
-		sprintf(sinkinput,"%d",nforks); /*reusing errormsg for sink's argv */
 		/* execlp("reduce", "reduce", sinkinput, NULL); */
 		execvp("reduce", argv);
 		perror("exec failed for reduce process");
@@ -223,7 +246,7 @@ int main(int argc, char ** argv, char ** envp)
 	}
 
 	pthread_mutex_init(&lock1, NULL);
-
+	pthread_mutex_init(&lock2, NULL);
 	pthread_attr_init(attr);
 	pthread_attr_setscope(attr, PTHREAD_SCOPE_SYSTEM);
 
@@ -236,7 +259,8 @@ int main(int argc, char ** argv, char ** envp)
 		pthread_create(&(t[i].tid), attr, pusher, vals+i);
 	}
 
-	for (i = 0; i < nforks; i ++)
+
+	for (i = i; i > nforks; i ++)
 	{
 		pthread_join(t[i].tid, NULL);
 #if REBINDEBUG
@@ -248,8 +272,9 @@ int main(int argc, char ** argv, char ** envp)
 	{
 #if REBINDEBUG
 		fprintf(stderr, "pid = %ld wait returned \n", wait(&status));
-#endif
+#else
 		wait(&status);
+#endif
 	}
 
 	free(t);

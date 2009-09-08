@@ -338,6 +338,37 @@ time4 = clock();
 	return total_volume;
 }
 
+int pipedump(int mode, int x, int y, int z, double en, double er)
+{
+	static int cnt = 0;
+	static char buf[28*2300];
+	
+	if (mode == 1)
+	{
+		write(1, buf, cnt*28);
+		cnt = 0;
+		return 1;
+	}
+
+	if (cnt == 2300)
+	{
+		write(1, buf, cnt*28);
+		cnt = 0;
+		return 1;
+	}
+	else
+	{
+		memcpy(&buf[cnt*28],   &x, sizeof(int));
+		memcpy(&buf[cnt*28+4], &y, sizeof(int));
+		memcpy(&buf[cnt*28+8], &z, sizeof(int));
+		memcpy(&buf[cnt*28+12], &en, sizeof(double));
+		memcpy(&buf[cnt*28+20], &er, sizeof(double));
+		cnt ++;
+		
+		return 0;
+	}
+
+}
 
 double bin_smallpara3d_150(	int		nfacets, 
 						int   * nverts,
@@ -358,9 +389,13 @@ double bin_smallpara3d_150(	int		nfacets,
 	int    wnfacets; //wnverts[6];
 	int    *face_starts;
 
-	int i, j, k, l, id;
+	int i, j, k, l, id, nwrote = 0;
 	int smalllb[3], smallub[3], coord[3], totalverts; 
 	double one = 1.0, a, b;
+
+#if REBINDEBUG
+	fprintf(stderr, "bin_small start: npixels = %d\n", nfacets/6);
+#endif
 
 time1 = clock();
 
@@ -415,11 +450,15 @@ time1 = clock();
 				}
 				else
 				{
+				/*
 					fwrite(&smalllb[0], sizeof(int), 1, stdout);
 					fwrite(&smalllb[1], sizeof(int), 1, stdout);
 					fwrite(&smalllb[2], sizeof(int), 1, stdout);
 					fwrite(&hitcnt[i/6], sizeof(double), 1, stdout);
 					fwrite(&hiterr[i/6], sizeof(double), 1, stdout);
+				*/
+					nwrote ++;
+					pipedump(0, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
 				}
 			}
 			else
@@ -431,11 +470,16 @@ time1 = clock();
 				}
 				else
 				{
+/*
 					fwrite(&smalllb[0], sizeof(int), 1, stdout);
 					fwrite(&smalllb[1], sizeof(int), 1, stdout);
 					fwrite(&smalllb[2], sizeof(int), 1, stdout);
 					fwrite(&one, sizeof(double), 1, stdout);
 					fwrite(&one, sizeof(double), 1, stdout);
+*/
+					pipedump(0, smalllb[0], smalllb[1], smalllb[2], one, one);
+
+					nwrote ++;
 				}
 /*
 				voxels[id*2]   += 1.0;
@@ -486,7 +530,7 @@ time1 = clock();
 
 						id = ((j - orig[0])*xyzsize[1] + k - orig[1])*xyzsize[2] + l - orig[2];
 						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
-						//assert(voxel_volume >= 0);
+						assert(voxel_volume >= 0);
 						
 						if (voxel_volume > 1e-16)
 						{
@@ -502,11 +546,16 @@ time1 = clock();
 							}
 							else
 							{
+/*
 								fwrite(&j, sizeof(int), 1, stdout);
 								fwrite(&k, sizeof(int), 1, stdout);
 								fwrite(&l, sizeof(int), 1, stdout);
 								fwrite(&a, sizeof(double), 1, stdout);
 								fwrite(&b, sizeof(double), 1, stdout);
+								*/
+								pipedump(0, j, k, l, a, b);
+
+								nwrote ++;
 							}
 
 						}
@@ -515,6 +564,8 @@ time1 = clock();
 		}
 	}
 
+	pipedump(1, j, k, l, a, b);
+
 time2 = clock();
 
 	free(face_starts);
@@ -522,6 +573,11 @@ time2 = clock();
 	/* sum up only the hits: voxels[i*2]. errs are at voxels[2*i+1] */
 	if (voxels != NULL)
 		total_volume = count_volume(voxels, xyzsize[0]*xyzsize[1]*xyzsize[2]*2, 2);
+
+#if REBINDEBUG
+	fprintf(stderr, "bin_small end:  npixels = %d, wrote nvoxels = %d, %d bytes\n", nfacets/6, nwrote, nwrote * 28);
+#endif
+
 
 #if REBINDEBUG
 	fprintf(stderr, "bin_small recorded total_volume = %lf, before scaling\n", total_volume);
