@@ -56,7 +56,7 @@ void	output_postrebininfo(float rebintime, int npara, double totalvolume, int nv
 void	output_gmesh_formaterr();
 
 void	gmesh_singlebin_output(double * dp, 
-							int x, int y, int z, 
+							int sliceid, int x, int y, int z, 
 							int * orig, double * spacing);
 
 #ifdef __cplusplus

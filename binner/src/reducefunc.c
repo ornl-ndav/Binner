@@ -7,7 +7,7 @@
 #include "rebinapp.h"
 #include "reducefunc.h"
 
-#define ITEMSIZE (sizeof(int)*3 + sizeof(double)*2)
+#define ITEMSIZE (sizeof(int)*4 + sizeof(double)*2)
 
 static JRB b;
 static Dmlist dm;
@@ -41,6 +41,8 @@ static void calc_bounds(int argc, char ** argv)
 	volumescale = (cellsize/spacing[0]) * (cellsize/spacing[1]) * (cellsize/spacing[2]);
 	volumescale =  1.0/volumescale;
 
+	output_askinginfo(askbounds, xyzsize, spacing);
+	output_prerebininfo(orig, xyzsize, spacing, cellsize);
 }
 
 int reduce_init(int argc, char ** argv)
@@ -63,7 +65,8 @@ static int cmp (Jval a, Jval b)
 	i1 = jval_v(a);
 	i2 = jval_v(b);
 	
-	for (k = 0; k < 3; k ++)
+	/* i1[0], i2[0]: sliceid, should be the same */
+	for (k = 1; k < 4; k ++)
 		if (i1[k] != i2[k])
 			return (i1[k] - i2[k]);
 	
@@ -78,8 +81,8 @@ static void accumulate_counts(void * h, void * v)
 	hc = h;
 	vc = v;
 	
-	hc += sizeof(int)*3;
-	vc += sizeof(int)*3;
+	hc += sizeof(int)*4;
+	vc += sizeof(int)*4;
 	
 	d1 = (double *) hc;
 	d2 = (double *) vc;
@@ -138,14 +141,14 @@ int reduce_done()
 		v = jval_v(bn->key);
 		ip = v;
 		c = v;
-		dp = (double *)(c+12);
+		dp = (double *)(c+16);
 		
 		if (dp[0] > 1e-16)
 		{
 			dp[0] *= volumescale;
 			dp[1] *= volumescale;
 			totalvolume += dp[0];
-			gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], orig, spacing);
+			gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
 			nvox ++;
 		}
 		/*write(1, v, ITEMSIZE);*/

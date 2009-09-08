@@ -8,7 +8,7 @@
 #include "reducefunc.h"
 
 #define REBINDEBUG 0
-#define BUFSIZE 8*1024*1024
+#define BUFSIZE 2*1024*1024
 
 /* reduce receives the whole list or argv received by "map", verbatim */
 

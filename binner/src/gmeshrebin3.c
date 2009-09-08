@@ -76,9 +76,10 @@ int main(int argc, char ** argv)
 		}		
 	}
 	
-
+#if REBINDEBUG
 	fprintf(stderr, "rebinner batch size : %d pixels\n", f);
 	fprintf(stderr, "rebinner threshold  : %le \n", threshold);
+#endif
 	
 	askbounds[0] = atof(argv[c+1]);
 	askbounds[1] = atof(argv[c+2]);
@@ -93,14 +94,16 @@ int main(int argc, char ** argv)
 	for (j = 0; j < 3; j++)
 		xyzsize[j] = (int)ceil((askbounds[j*2+1] - askbounds[j*2])/spacing[j]);
 
-	output_askinginfo(askbounds, xyzsize, spacing);
+	if (filtermode < 1)
+		output_askinginfo(askbounds, xyzsize, spacing);
 
 	for (j = 0; j < 3; j++)
 		spacing[j] = (askbounds[j*2+1] - askbounds[j*2])/xyzsize[j];
 
 	cellsize = fv_bounds(askbounds, spacing, orig, xyzsize);
 
-	output_prerebininfo(orig, xyzsize, spacing, cellsize);
+	if (filtermode < 1)
+		output_prerebininfo(orig, xyzsize, spacing, cellsize);
 
 	nvoxel = xyzsize[0]*xyzsize[1]*xyzsize[2];
 	if (filtermode == 1)
@@ -168,7 +171,9 @@ int main(int argc, char ** argv)
 
 		if (npara <= 0) 
 		{
+#if REBINDEBUG
 			fprintf(stderr, "%d read no more pixels. quitting\n", pid);
+#endif
 			break; /* did not read in any pixels */
 		}
 
