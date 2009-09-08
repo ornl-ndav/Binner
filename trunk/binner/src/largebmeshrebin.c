@@ -208,7 +208,7 @@ int main(int argc, char ** argv)
 
 		for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-		totalvolume += bin_smallpara3d_150(npara*6, 
+		totalvolume += bin_smallpara3d_150(sid[0], npara*6, 
 								nverts,
 								vdata, /* the vertices */
 								hcnt,        /* hit counter */
@@ -216,7 +216,7 @@ int main(int argc, char ** argv)
 								orig, 
 								xyzsize,
 								cellsize, 
-								voxels);
+								voxels, 0., 0.);
 
 		time2 = clock();
 

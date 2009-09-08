@@ -57,7 +57,7 @@ time1 = clock();
 	voxels = malloc(nvoxel * sizeof(double));
 	for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-	totalvolume = bin_smallpara3d_150(nfacets, 
+	totalvolume = bin_smallpara3d_150(0, nfacets, 
 							nverts,
 							vdata, /* the vertices */
 							NULL,  /* no hit counter */
@@ -65,7 +65,7 @@ time1 = clock();
 							orig, 
 							xyzsize,
 							cellsize, 
-							voxels);
+							voxels, 0., 0.);
 
 time2 = clock();
 	printf("total time: %.3f sec, total volume: %lf\n",(float)(time2-time1)/CLOCKS_PER_SEC, totalvolume);
