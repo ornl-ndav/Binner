@@ -13,7 +13,7 @@ include_directories(
 #)
 
 set(EXES 
-	gmeshrebin gmeshrebin2
+	gmeshrebin gmeshrebin2 gmeshrebin3
 	gmeshrot gmeshrot2 gmeshrot3 gmesht2b gmeshb2t
 	gmeshindex gmeshquery gmeshorderv
 	bmeshrebin largebmeshrebin bounds bslicer 
@@ -22,10 +22,12 @@ set(EXES
 	gencell getfrom giveto 
 	netrebin pix2mesh 
 	rebin rot3d 
+	map reduce
 	scale3d serve sorter tran3d
 	seeall seepara seegmesh seebmeshvol seebmeshvolc)
 
-link_libraries(vcbnogl m)
+link_libraries(pthread vcbnogl m)
+
 add_executable(netrebin 
                netrebin.c socketfun.c binner.c voxelize.c 
 			   volume.c clip.c cell.c geometry.c binnerio.c)
@@ -72,6 +74,17 @@ add_executable(gmeshrebin
 add_executable(gmeshrebin2 
                gmeshrebin2.c rebinapp.c binner.c voxelize.c volume.c 
                clip.c cell.c geometry.c binnerio.c)
+
+add_executable(gmeshrebin3 
+               gmeshrebin3.c rebinapp.c binner.c voxelize.c volume.c 
+               clip.c cell.c geometry.c binnerio.c)
+
+add_executable(reduce 
+               reduce.c reducefunc.c rebinapp.c binner.c voxelize.c volume.c 
+               clip.c cell.c geometry.c binnerio.c)
+
+add_executable(map map.c)
+
 
 add_executable(largebmeshrebin 
                largebmeshrebin.c binner.c voxelize.c volume.c 
