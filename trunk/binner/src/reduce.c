@@ -135,7 +135,7 @@ int main(int argc, char ** argv)
 	fprintf(stderr,"reduce read %d bytes.\n", nbytes);
 #endif
 	free(netbuf);
-	for (i = 0; i < ninputs; i ++)
+	for (i = 3; i < 3+ninputs; i ++)
 		free(backup[i]);
 
 	return 0;
