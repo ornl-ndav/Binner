@@ -148,10 +148,11 @@ int reduce_done()
 			gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], orig, spacing);
 			nvox ++;
 		}
-		//write(1, v, ITEMSIZE);
+		/*write(1, v, ITEMSIZE);*/
 	}
 
-	fprintf(stderr, "total volume = %lf, %d voxels\n", totalvolume, nvox);
+	fprintf(stderr, "rebinned n_voxels   : %d\n", nvox);
+	fprintf(stderr, "rebinned sum_energy : %lf\n", totalvolume);
 
 	free_dmlist(dm);
 	jrb_free_tree(b);

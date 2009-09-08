@@ -10,6 +10,7 @@
 #include "binner.h"
 #include "cell.h"
 #include "volume.h"
+#include <unistd.h>
 
 #define REBINDEBUG 0
 
@@ -29,6 +30,8 @@ int main(int argc, char ** argv)
 	int    pixelcnt = 0, c = 0, filtermode = 0;
 	double inputv[4 + 8*3];
 
+	pid_t pid = getpid();
+	
 	if ((argc < 10) || (argc > 15))
 	{
 		/* 
@@ -118,13 +121,28 @@ int main(int argc, char ** argv)
 	{
 		time3 = clock();
 
+#if REBINDEBUG
+		fprintf(stderr, "%d ready to take new inputs. lasttime did %d pixels\n", pid, npara);
+#endif
+
 		/* read at most f pixels in each pass */
 		for (npara = 0; npara < f; npara ++) 
 		{
 			if (fread(&sliceid, sizeof(int), 1, stdin) <= 0)
+			{
+#if REBINDEBUG
+				fprintf(stderr, "%d did not read correct sliceid\n", pid);
+#endif
 				break; /* did not read in a correct pixel */
+			}
 
-			fread(inputv, sizeof(double), 4 + 8 *3, stdin);
+			if (fread(inputv, sizeof(double), 4 + 8 *3, stdin) < 28)
+			{
+#if REBINDEBUG
+				fprintf(stderr, "%d did not read correct doubles\n", pid);
+#endif
+				break; /* did not read in a correct pixel */
+			}
 
 			realCube3d(inputv + 4, &vdata[(npara*6*4)*3]);
 		
@@ -144,16 +162,30 @@ int main(int argc, char ** argv)
 #endif
 		}
 
-		if (npara <= 0) break; /* did not read in any pixels */
-
-		bounding_box(npara*6*4, bounds, vdata);	
-#if REBINDEBUG		
-		output_actualinfo(bounds);
+#if REBINDEBUG
+		fprintf(stderr, "%d done reading inputs: %d pixels\n", pid, npara);
 #endif
+
+		if (npara <= 0) 
+		{
+			fprintf(stderr, "%d read no more pixels. quitting\n", pid);
+			break; /* did not read in any pixels */
+		}
+
+/*
+		bounding_box(npara*6*4, bounds, vdata);	
+//#if REBINDEBUG		
+		output_actualinfo(bounds);
+//#endif
+*/
 		time4 = clock();
 		inputtime += (float)(time4-time3)/CLOCKS_PER_SEC;
 
 		time1 = clock();
+
+#if REBINDEBUG
+		fprintf(stderr, "%d begin scaling %d pixels\n", pid, npara);
+#endif
 	
 		scale_vertices( npara * 6 * 4, 
 						vdata,
@@ -162,6 +194,10 @@ int main(int argc, char ** argv)
 						cellsize/spacing[2]);
 
 		pixelcnt += npara;
+
+#if REBINDEBUG
+		fprintf(stderr, "%d begin rebinning\n", pid);
+#endif
 
 		rebin_gmesh(npara,
 					nverts,
@@ -177,9 +213,21 @@ int main(int argc, char ** argv)
 					emin, emax);
 	
 		time2 = clock();
+
+#if REBINDEBUG
+		fprintf(stderr, "%d completes rebinning %d pixels, %d total\n", pid, npara, pixelcnt);
+#endif
+
 		rebintime += (float)(time2-time1)/CLOCKS_PER_SEC;
+		
+		if (npara < f) 
+			break; /* cannot read enough inputs to fullfill pipeline */
 	
 	}
+
+#if REBINDEBUG
+	fprintf(stderr, "%d finished rebinning %d pixels\n", pid, pixelcnt);
+#endif
 
 	if (filtermode == 0)
 	{

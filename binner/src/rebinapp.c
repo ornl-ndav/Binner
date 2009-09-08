@@ -195,15 +195,21 @@ double rebin_gmesh(int npara,
 		fprintf(stderr, "before rebin: n = %d, npara = %d, slice %d has %d paras\n", n, npara, sliceid[n], j);
 #endif
 
-		totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
-								nverts + n*6,
-								vdata + n*6*4*3, /* the vertices */
-								hitcnt + n,        /* hit counter */
-								hiterr + n,        /* hit counter error */
-								orig, 
-								xyzsize,
-								cellsize, 
-								voxels);
+		if (j > 0)
+		{
+#if REBINDEBUG
+			fprintf(stderr, "calling bin_smallpara3d on %d pixels, voxels = 0x%lx\n", j, voxels);
+#endif
+			totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
+									nverts + n*6,
+									vdata + n*6*4*3, /* the vertices */
+									hitcnt + n,        /* hit counter */
+									hiterr + n,        /* hit counter error */
+									orig, 
+									xyzsize,
+									cellsize, 
+									voxels);
+		}
 	}
 	
 	return totalvolume;
