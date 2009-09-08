@@ -73,7 +73,8 @@ double bin_smallpara3d_150(
 						int *	orig, 
 						int *	xyzsize,
 						double  ccs, /* cubic cell size, assume uniform cell size */ 
-						double *voxels);
+						double *voxels,
+						double emin, double emax);
 
 #ifdef __cplusplus
 }  /* extern C */
