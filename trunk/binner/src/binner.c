@@ -338,31 +338,33 @@ time4 = clock();
 	return total_volume;
 }
 
-int pipedump(int mode, int x, int y, int z, double en, double er)
+int pipedump(int mode, int sliceid, int x, int y, int z, double en, double er)
 {
+#define UNIT 32
 	static int cnt = 0;
-	static char buf[28*2300];
+	static char buf[UNIT*2000];
 	
 	if (mode == 1)
 	{
-		write(1, buf, cnt*28);
+		write(1, buf, cnt*UNIT);
 		cnt = 0;
 		return 1;
 	}
 
-	if (cnt == 2300)
+	if (cnt == 2000)
 	{
-		write(1, buf, cnt*28);
+		write(1, buf, cnt*UNIT);
 		cnt = 0;
 		return 1;
 	}
 	else
 	{
-		memcpy(&buf[cnt*28],   &x, sizeof(int));
-		memcpy(&buf[cnt*28+4], &y, sizeof(int));
-		memcpy(&buf[cnt*28+8], &z, sizeof(int));
-		memcpy(&buf[cnt*28+12], &en, sizeof(double));
-		memcpy(&buf[cnt*28+20], &er, sizeof(double));
+		memcpy(&buf[cnt*UNIT+0], &sliceid, sizeof(int));
+		memcpy(&buf[cnt*UNIT+4], &x, sizeof(int));
+		memcpy(&buf[cnt*UNIT+8], &y, sizeof(int));
+		memcpy(&buf[cnt*UNIT+12], &z, sizeof(int));
+		memcpy(&buf[cnt*UNIT+16], &en, sizeof(double));
+		memcpy(&buf[cnt*UNIT+24], &er, sizeof(double));
 		cnt ++;
 		
 		return 0;
@@ -370,7 +372,9 @@ int pipedump(int mode, int x, int y, int z, double en, double er)
 
 }
 
-double bin_smallpara3d_150(	int		nfacets, 
+double bin_smallpara3d_150(
+						int     sliceid,
+						int		nfacets, 
 						int   * nverts,
 						double *v, /* the vertices */
 						double *hitcnt,
@@ -458,7 +462,7 @@ time1 = clock();
 					fwrite(&hiterr[i/6], sizeof(double), 1, stdout);
 				*/
 					nwrote ++;
-					pipedump(0, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
+					pipedump(0, sliceid, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
 				}
 			}
 			else
@@ -477,7 +481,7 @@ time1 = clock();
 					fwrite(&one, sizeof(double), 1, stdout);
 					fwrite(&one, sizeof(double), 1, stdout);
 */
-					pipedump(0, smalllb[0], smalllb[1], smalllb[2], one, one);
+					pipedump(0, sliceid, smalllb[0], smalllb[1], smalllb[2], one, one);
 
 					nwrote ++;
 				}
@@ -553,7 +557,7 @@ time1 = clock();
 								fwrite(&a, sizeof(double), 1, stdout);
 								fwrite(&b, sizeof(double), 1, stdout);
 								*/
-								pipedump(0, j, k, l, a, b);
+								pipedump(0, sliceid, j, k, l, a, b);
 
 								nwrote ++;
 							}
@@ -564,7 +568,7 @@ time1 = clock();
 		}
 	}
 
-	pipedump(1, j, k, l, a, b);
+	pipedump(1, sliceid, j, k, l, a, b);
 
 time2 = clock();
 

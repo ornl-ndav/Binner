@@ -120,7 +120,9 @@ double rebin_byslice(int npara,
 
 		for (i = 0; i < nvoxel*2; voxels[i] = 0.0, i ++);
 
-		totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
+		totalvolume += bin_smallpara3d_150(
+								sliceid[n],
+								j * 6, /* npara*6 */ 
 								nverts + n*6,
 								vdata + n*6*4*3, /* the vertices */
 								hitcnt + n,        /* hit counter */
@@ -200,7 +202,9 @@ double rebin_gmesh(int npara,
 #if REBINDEBUG
 			fprintf(stderr, "calling bin_smallpara3d on %d pixels, voxels = 0x%lx\n", j, voxels);
 #endif
-			totalvolume += bin_smallpara3d_150(j * 6, /* npara*6 */ 
+			totalvolume += bin_smallpara3d_150(
+									sliceid[n],
+									j * 6, /* npara*6 */ 
 									nverts + n*6,
 									vdata + n*6*4*3, /* the vertices */
 									hitcnt + n,        /* hit counter */
@@ -216,10 +220,10 @@ double rebin_gmesh(int npara,
 }
 
 void gmesh_singlebin_output(double * dp, 
-							int x, int y, int z, 
+							int sid, int x, int y, int z, 
 							int * orig, double * spacing)
 {
-	printf("%le %le ", dp[0], dp[1]);
+	printf("%d %le %le ", sid, dp[0], dp[1]);
 	printcorners(x, y, z, orig, spacing);
 	printcorners(x+1, y, z, orig, spacing);
 	printcorners(x+1, y+1, z, orig, spacing);
@@ -258,7 +262,7 @@ double rebin_gmesh_output(
 			for (z = 0; z < xyzsize[2]; z ++)
 			{
 				if (voxels[i*2] < threshold) { i ++; continue;}
-				gmesh_singlebin_output(&voxels[i*2], x, y, z, orig, spacing);
+				gmesh_singlebin_output(&voxels[i*2], sliceid, x, y, z, orig, spacing);
 #if 0
 				printf("%d %e %e ", sliceid, emin, emax);
 				printf("%le %le ", voxels[i*2], voxels[i*2+1]);

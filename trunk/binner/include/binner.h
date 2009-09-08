@@ -63,7 +63,9 @@ double bin_para3d_150(	int		nfacets,
 						double  ccs, /* cubic cell size */ 
 						double *voxels);
 
-double bin_smallpara3d_150(	int		nfacets, 
+double bin_smallpara3d_150(
+						int     sliceid,
+						int		nfacets, 
 						int   * nverts,
 						double *v, /* the vertices */
 						double *hitcnt,

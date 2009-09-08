@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <pthread.h>
 
-#define REBINDEBUG 1
+#define REBINDEBUG 0
 
 char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
 
