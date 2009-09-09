@@ -158,8 +158,8 @@ int reduce_done()
 		/*write(1, v, ITEMSIZE);*/
 	}
 
-	fprintf(stderr, "rebinned n_voxels   : %d\n", nvox);
-	fprintf(stderr, "rebinned sum_energy : %le\n", totalvolume*volumescale);
+	fprintf(stderr, "no. nonempty bins   : %d\n", nvox);
+	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume*volumescale);
 
 	free_dmlist(dm);
 	jrb_free_tree(b);
