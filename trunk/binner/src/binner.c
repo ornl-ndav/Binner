@@ -338,41 +338,49 @@ time4 = clock();
 	return total_volume;
 }
 
-int pipedump(int mode, int sliceid, double emin, double emax, int x, int y, int z, double en, double er)
+int pipedump(int mode, 
+			int sliceid, 
+			double emin, double emax, 
+			int x, int y, int z, 
+			double en, double er)
 {
 #define UNIT 48
 #define max_n_units 1300
 	static int cnt = 0;
 	static char buf[UNIT*max_n_units];
+	static totalwrote = 0;
 	
 	if (mode == 1)
 	{
 		write(1, buf, cnt*UNIT);
-		cnt = 0;
-		return 1;
-	}
-
-	if (cnt == max_n_units)
-	{
-		write(1, buf, cnt*UNIT);
+		totalwrote += cnt;
+#if REBINDEBUG
+		fprintf(stderr, "pipedump total n_voxels wrote: %d\n", totalwrote);
+#endif
 		cnt = 0;
 		return 1;
 	}
 	else
 	{
-		memcpy(&buf[cnt*UNIT+0], &sliceid, sizeof(int));
-		memcpy(&buf[cnt*UNIT+4], &x, sizeof(int));
-		memcpy(&buf[cnt*UNIT+8], &y, sizeof(int));
+		memcpy(&buf[cnt*UNIT+0],  &sliceid, sizeof(int));
+		memcpy(&buf[cnt*UNIT+4],  &x, sizeof(int));
+		memcpy(&buf[cnt*UNIT+8],  &y, sizeof(int));
 		memcpy(&buf[cnt*UNIT+12], &z, sizeof(int));
 		memcpy(&buf[cnt*UNIT+16], &en, sizeof(double));
 		memcpy(&buf[cnt*UNIT+24], &er, sizeof(double));
 		memcpy(&buf[cnt*UNIT+32], &emin, sizeof(double));
 		memcpy(&buf[cnt*UNIT+40], &emax, sizeof(double));
 		cnt ++;
-		
-		return 0;
 	}
 
+	if (cnt == max_n_units)
+	{
+		write(1, buf, cnt*UNIT);
+		totalwrote += cnt;
+		cnt = 0;
+	}
+
+	return 0;
 }
 
 double bin_smallpara3d_150(
@@ -457,13 +465,6 @@ time1 = clock();
 				}
 				else
 				{
-				/*
-					fwrite(&smalllb[0], sizeof(int), 1, stdout);
-					fwrite(&smalllb[1], sizeof(int), 1, stdout);
-					fwrite(&smalllb[2], sizeof(int), 1, stdout);
-					fwrite(&hitcnt[i/6], sizeof(double), 1, stdout);
-					fwrite(&hiterr[i/6], sizeof(double), 1, stdout);
-				*/
 					nwrote ++;
 					pipedump(0, sliceid, emin, emax, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
 				}
@@ -477,15 +478,7 @@ time1 = clock();
 				}
 				else
 				{
-/*
-					fwrite(&smalllb[0], sizeof(int), 1, stdout);
-					fwrite(&smalllb[1], sizeof(int), 1, stdout);
-					fwrite(&smalllb[2], sizeof(int), 1, stdout);
-					fwrite(&one, sizeof(double), 1, stdout);
-					fwrite(&one, sizeof(double), 1, stdout);
-*/
 					pipedump(0, sliceid, emin, emax, smalllb[0], smalllb[1], smalllb[2], one, one);
-
 					nwrote ++;
 				}
 /*
@@ -513,8 +506,8 @@ time1 = clock();
 #else
 			para_volume = (smallub[0]-smalllb[0]+1)*(smallub[1]-smalllb[1]+1)*(smallub[2]-smalllb[2]+1);
 #endif
-			//assert(para_volume >= 0);
-			 
+
+			assert(para_volume >= 0);			 
 			if (para_volume < 1e-16) continue; /*don't do anything */
 			
 			if ((hitcnt != NULL) && (hiterr != NULL))
@@ -539,12 +532,14 @@ time1 = clock();
 						voxel_volume = partialvoxel_volume(wnfacets, &nverts[i], vp, coord, ccs);
 						assert(voxel_volume >= 0);
 						
-						if (voxel_volume > 1e-16)
+						if (voxel_volume > 1e-17)
 						{
 							factor = voxel_volume/(para_volume*para_volume);
 
 							a = hitcnt[i/6]*factor;
 							b = hiterr[i/6]*factor * factor;
+							assert(a >= 0);
+							assert(b >= 0);
 
 							if (voxels != NULL)
 							{
@@ -553,15 +548,7 @@ time1 = clock();
 							}
 							else
 							{
-/*
-								fwrite(&j, sizeof(int), 1, stdout);
-								fwrite(&k, sizeof(int), 1, stdout);
-								fwrite(&l, sizeof(int), 1, stdout);
-								fwrite(&a, sizeof(double), 1, stdout);
-								fwrite(&b, sizeof(double), 1, stdout);
-								*/
 								pipedump(0, sliceid, emin, emax, j, k, l, a, b);
-
 								nwrote ++;
 							}
 

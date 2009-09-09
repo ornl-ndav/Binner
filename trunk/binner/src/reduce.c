@@ -4,7 +4,6 @@
 
 #include <unistd.h>
 #include <sys/select.h>
-
 #include "reducefunc.h"
 
 #define REBINDEBUG 0
@@ -17,7 +16,7 @@ int main(int argc, char ** argv)
 	fd_set readfds, masterfds;
 	int i, n, m, k, nbytes = 0, ninputs;
 	char * netbuf;
-	int unitsize, toread;
+	int unitsize;
 
 	char * backup[16]; /* maximum - 16 inputs */
 	int bcnt[16];
@@ -69,7 +68,7 @@ int main(int argc, char ** argv)
 		}
 
 
-#if REBINDEBUG
+#if 0
 		fprintf(stderr, "reduce select returned %d, ninputs = %d \n", n, m);
 #endif
 		
@@ -77,27 +76,11 @@ int main(int argc, char ** argv)
 			if (FD_ISSET(i, &readfds))
 			{
 				n = read(i, netbuf, BUFSIZE);
-#if 0
-				n += read(i, netbuf+n, toread);
-
-				for (n = 0, toread = BUFSIZE; toread > 0; )
-				{
-					n += read(i, netbuf+n, toread);
-
-					fprintf(stderr, "reduce read %d bytes from %d, ", n, i);
-
-					if (n % unitsize != 0) 
-						toread = unitsize - (n % unitsize);
-					else
-						toread = 0;
-					fprintf(stderr, "toread = %d bytes\n", toread);
-				}
-#endif
-
 
 #if REBINDEBUG
-				fprintf(stderr, "reduce read %d bytes from fd: %d\n", n, i);
+				fprintf(stderr, "reduce read %d bytes from fd: %d, bcnt = %d, %d items, %d extra bytes\n", n, i, bcnt[i], n/unitsize, n%unitsize);
 #endif
+
 				if (n > 0)
 				{
 					if (bcnt[i] > 0)
