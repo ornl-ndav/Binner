@@ -7,6 +7,7 @@
 #include "rebinapp.h"
 #include "reducefunc.h"
 
+#define REBINDEBUG 0
 #define ITEMSIZE (sizeof(int)*4 + sizeof(double)*4)
 
 static JRB b;
@@ -62,8 +63,8 @@ static int cmp (Jval a, Jval b)
 {
 	int * i1, * i2, k;
 	
-	i1 = jval_v(a);
-	i2 = jval_v(b);
+	i1 = (int *)(jval_v(a));
+	i2 = (int *)(jval_v(b));
 	
 	/* i1[0], i2[0]: sliceid, should be the same */
 	for (k = 1; k < 4; k ++)
@@ -90,6 +91,8 @@ static void accumulate_counts(void * h, void * v)
 	d1[0] += d2[0]; /* rebinned counts */
 	d1[1] += d2[1]; /* rebinned error */
 }
+
+static int found = 0;
 
 int reduce_func(void * v, int k)
 {
@@ -121,6 +124,7 @@ int reduce_func(void * v, int k)
 		{
 			h = jval_v(bn->val);
 			accumulate_counts(h, v);
+			found ++;
 		}
 	}
 
@@ -143,11 +147,11 @@ int reduce_done()
 		c = v;
 		dp = (double *)(c+16);
 		
-		if (dp[0] > 1e-16)
+		/*if (dp[0] > 1e-16)*/
 		{
+			totalvolume += dp[0];
 			dp[0] *= volumescale;
 			dp[1] *= volumescale;
-			totalvolume += dp[0];
 			gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
 			nvox ++;
 		}
@@ -155,7 +159,7 @@ int reduce_done()
 	}
 
 	fprintf(stderr, "rebinned n_voxels   : %d\n", nvox);
-	fprintf(stderr, "rebinned sum_energy : %lf\n", totalvolume);
+	fprintf(stderr, "rebinned sum_energy : %le\n", totalvolume*volumescale);
 
 	free_dmlist(dm);
 	jrb_free_tree(b);

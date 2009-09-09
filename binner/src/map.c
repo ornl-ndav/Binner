@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 #define REBINDEBUG 0
 
@@ -100,7 +101,8 @@ pthread_mutex_unlock(&lock1);
 		}
 	}
 
-	fprintf(stderr, "thread %d processed  : %d input pixels\n", i, total/ITEM_SZ);
+	fprintf(stderr, "thread %d processed  : %d input pixels, %d leftover bytes\n", 
+			i, total/ITEM_SZ, total%ITEM_SZ);
 
 	close(t[i].fd);
 	free(t[i].buffer);
@@ -115,9 +117,11 @@ int main(int argc, char ** argv, char ** envp)
 	int pipefd1[2], pipefd2[2], *sinkstreams, *vals;
 	pthread_attr_t attr[1];
 	char * sinkinput;
-
-
 	int c = 1, nforks = 2; /* default to a parallelism of 2 */
+
+	struct  timeval time1, time2;
+
+	gettimeofday(&time1, 0);
 
 #if REBINDEBUG	
 	fprintf(stderr, "argc = %d \n", argc);
@@ -279,6 +283,11 @@ int main(int argc, char ** argv, char ** envp)
 
 	free(t);
 	free(vals);
+
+	gettimeofday(&time2, 0);
+	fprintf(stderr, "rebinner uptime     : %f sec\n", 
+			(time2 . tv_sec - time1 . tv_sec ) +
+                  (time2 . tv_usec - time1 . tv_usec) / 1e6f);
 
 	return 0;
 }
