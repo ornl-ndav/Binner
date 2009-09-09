@@ -27,6 +27,7 @@ task_t * t;
 pthread_mutex_t lock1;
 pthread_mutex_t lock2;
 char errormsg [80];
+int  totalpixcnt = 0;
 
 void sigpipe_handler(int dummy)
 {
@@ -51,6 +52,8 @@ void * pusher(void * ip)
 pthread_mutex_lock(&lock1);
 
 			n = fread(t[i].buffer, ITEM_SZ, BATCH_SZ, stdin);
+			totalpixcnt += n;
+
 #if REBINDEBUG
 			fprintf(stderr, "pusher %d read %d items\n", i, n);
 #endif
@@ -120,6 +123,7 @@ int main(int argc, char ** argv, char ** envp)
 	int c = 1, nforks = 2; /* default to a parallelism of 2 */
 
 	struct  timeval time1, time2;
+	float  seconds;
 
 	gettimeofday(&time1, 0);
 
@@ -285,9 +289,13 @@ int main(int argc, char ** argv, char ** envp)
 	free(vals);
 
 	gettimeofday(&time2, 0);
-	fprintf(stderr, "rebinner uptime     : %f sec\n", 
-			(time2 . tv_sec - time1 . tv_sec ) +
-                  (time2 . tv_usec - time1 . tv_usec) / 1e6f);
+
+	fprintf(stderr, "num_pixels processed: %d\n", totalpixcnt);
+	seconds = 	(time2 . tv_sec - time1 . tv_sec ) +
+                  (time2 . tv_usec - time1 . tv_usec) / 1e6f;
+				  
+	fprintf(stderr, "rebinner runtime    : %f sec\n", seconds);
+	fprintf(stderr, "rebin throughput    : %.2f pixels/sec\n", totalpixcnt/seconds);
 
 	return 0;
 }
