@@ -2,8 +2,9 @@
 
 import os
 
-VERSION = "1.0"
-REBINNER_CMD = "gmeshrebin2"
+VERSION = "1.1"
+REBINNER_CMD = "gmeshrebin3 -f"
+MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
 ROTATE_CMD = "gmeshrot3 0 1 0"
 MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
 
@@ -74,7 +75,12 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
                   ">>", rot_file
 
     # Call rebinner command
-    print >> fcscr, "time cat", rot_file, "| " + REBINNER_CMD, \
+    if opt.multi_thread:
+        rebin_cmd = MULTI_THREAD_REBINNER_CMD % opt.threads
+    else:
+        rebin_cmd = REBINNER_CMD
+    
+    print >> fcscr, "time cat", rot_file, "| " + rebin_cmd, \
           "-b", str(opt.batch_size), "-t", str(opt.threshold), \
           " ".join(apar), ">", ofile
 
@@ -190,10 +196,15 @@ def run(opts, tempfile, atempfile):
                                                 outputdir, rebin_input,
                                                 axis_pars, opts)
 
-        if not opts.debug:        
+        if not opts.debug:
+            kwargs = {}
+            if opts.multi_thread and opts.threads > 1:
+                kwargs["nodes"] = 1
+                kwargs["cpus"] = opts.threads
+                
             jid = slurm.run(job_script, get_queue(instrument), outlog_name,
                             None, verbose=opts.verbose,
-                            jobname=job_name)
+                            jobname=job_name, **kwargs)
 
             if opts.make_vtk:
                 vtkcmd = [MAKE_VTK_CMD]
@@ -274,6 +285,15 @@ if __name__ == "__main__":
                       help="Flag to set the threshold for writing rebinned "\
                       +"voxels to file.")
     parser.set_defaults(threshold=1.0e-16)
+
+    parser.add_option("-m", "--multi-thread", dest="multi_thread",
+                      action="store_true", help="Trigger the use of "\
+                      +"multi-threading")
+    parser.set_defaults(multi_thread=False)
+
+    parser.add_option("-p", "--threads", dest="threads", type=int,
+                      help="Flag to set the number of threads. Default is 1.")
+    parser.set_defaults(threads=1)
     
     (options, args) = parser.parse_args()
     
