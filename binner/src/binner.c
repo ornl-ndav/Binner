@@ -466,7 +466,7 @@ time1 = clock();
 				else
 				{
 					nwrote ++;
-					pipedump(0, sliceid, emin, emax, smalllb[0], smalllb[1], smalllb[2], hitcnt[i/6], hiterr[i/6]);
+					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], hitcnt[i/6], hiterr[i/6]);
 				}
 			}
 			else
@@ -478,7 +478,7 @@ time1 = clock();
 				}
 				else
 				{
-					pipedump(0, sliceid, emin, emax, smalllb[0], smalllb[1], smalllb[2], one, one);
+					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], one, one);
 					nwrote ++;
 				}
 /*
@@ -548,7 +548,7 @@ time1 = clock();
 							}
 							else
 							{
-								pipedump(0, sliceid, emin, emax, j, k, l, a, b);
+								pipedump(0, sliceid, emin, emax, j - orig[0], k - orig[1], l - orig[2], a, b);
 								nwrote ++;
 							}
 
