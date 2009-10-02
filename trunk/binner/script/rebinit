@@ -8,6 +8,52 @@ MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
 ROTATE_CMD = "gmeshrot3 0 1 0"
 MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
 
+def myExtend(a,b):
+    """Append the items in b into a. This does do error checking."""
+    if a is None:
+        a = None
+    if b is None or len(b) <= 0:
+        return a
+    for i in b:
+        remove = False
+        if i < 0:
+            remove = True
+            i = -1*i
+        try:
+            a.index(i)
+            if remove:
+                a.remove(i)
+        except ValueError:
+            if not remove:
+                a.append(i)
+    return a
+
+def generateList(args, options=None):
+    """Convert a string list into a list of integers"""
+    if len(args) <= 0:
+        return []
+    if type(args) == type(""):
+        args = [args]
+    runs = []
+    for run in args:
+        if run.find(",") >= 0:
+            myExtend(runs,generateList(run.split(",")))
+        else:
+            try:
+                iRun = int(run)
+                runs.append(iRun)
+            except:
+                ends = run.split("-")
+                if len(ends) == 2:
+                    ends = map(lambda x: int(x),ends)
+                    ends.sort()
+                    myExtend(runs,range(ends[0],ends[1]+1))
+                else:
+                    if options is not None and options.verbose:
+                        print "WARN: Skipping run \"%s\"" %run
+    runs.sort()
+    return runs
+
 def get_angle_map(afilename):
     amap = {}
     afile = open(afilename, 'r')
@@ -114,8 +160,9 @@ def run(opts, tempfile, atempfile):
     instrument = get_value("INST", flines)
     runs = get_value("RUN", flines)
 
-    import sns_inst_util
-    runlist = sns_inst_util.generateList(runs)
+    #import sns_inst_util
+    #runlist = sns_inst_util.generateList(runs)
+    runlist = generateList(runs)
     num_runs = len(runlist)
 
     if opts.verbose:
