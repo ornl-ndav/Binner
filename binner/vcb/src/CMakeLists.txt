@@ -1,5 +1,11 @@
 set(TOP ${PROJECT_SOURCE_DIR})
 
+if(NOT BINNER_INSTALL_DIR)
+  set(DEST ${TOP})
+else(NOT BINNER_INSTALL_DIR)
+  set(DEST ${BINNER_INSTALL_DIR})
+endif(NOT BINNER_INSTALL_DIR)
+
 include_directories(
   ${TOP}/include 
 )
@@ -21,29 +27,32 @@ set(SRCS
 
 add_library(vcbnogl STATIC ${SRCS})
 
-set(GLSRCS 
-    ${SRCS}
-    ArcBall.cpp glew.c splatting.c vcbglutils.c
-)
-  
-#find_package(OPENGL REQUIRED)
-#find_package(GLUT REQUIRED)
-include(${TOP}/CMakeModules/OpenGLConfig.cmake)
-				
-include_directories(
-   ${OPENGL_INCLUDE_DIR}
-   ${GLUT_INCLUDE_DIR}
-)
+if (NOT NOGL)
+	set(GLSRCS 
+		${SRCS}
+		ArcBall.cpp glew.c splatting.c vcbglutils.c
+	)
+	  
+	#find_package(OPENGL REQUIRED)
+	#find_package(GLUT REQUIRED)
+	include(${TOP}/CMakeModules/OpenGLConfig.cmake)
+					
+	include_directories(
+	   ${OPENGL_INCLUDE_DIR}
+	   ${GLUT_INCLUDE_DIR}
+	)
 
-add_library(vcbgl STATIC ${GLSRCS})
-target_link_libraries(vcbgl ${OPENGL_glu_LIBRARY} ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARY})
+	add_library(vcbgl STATIC ${GLSRCS})
+	target_link_libraries(vcbgl ${OPENGL_glu_LIBRARY} ${OPENGL_gl_LIBRARY} ${GLUT_LIBRARY})
 
-if(NOT BINNER_INSTALL_DIR)
-  set(DEST ${TOP})
-else(NOT BINNER_INSTALL_DIR)
-  set(DEST ${BINNER_INSTALL_DIR})
-endif(NOT BINNER_INSTALL_DIR)
+	install(TARGETS vcbnogl vcbgl
+			LIBRARY DESTINATION ${DEST}/lib
+			ARCHIVE DESTINATION ${DEST}/lib)
 
-install(TARGETS vcbnogl vcbgl 
-		LIBRARY DESTINATION ${DEST}/lib
-		ARCHIVE DESTINATION ${DEST}/lib)
+else(NOT NOGL)
+
+	install(TARGETS vcbnogl 
+			LIBRARY DESTINATION ${DEST}/lib
+			ARCHIVE DESTINATION ${DEST}/lib)
+
+endif(NOT NOGL)

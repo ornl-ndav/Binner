@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 2.6)
 # you can do a "mkdir build; cd build" under any directory
 #
 # then run command as:
-#     cmake PATH-TO-BINNER-TREE -DBINNER_INSTALL_DIR /usr/local
+#     cmake PATH-TO-BINNER-TREE -DNOGL=yes -DBINNER_INSTALL_DIR=/usr/local
 #
 # if not BINNER_INSTALL_DIR is defined, the
 #     BINNER_INSTALL_DIR is defaulted as PATH-TO-BINNER-TREE
@@ -13,6 +13,9 @@ cmake_minimum_required(VERSION 2.6)
 # installation goes under:
 #     ${BINNER_INSTALL_DIR}/bin, and
 #     ${BINNER_INSTALL_DIR}/lib
+#
+# if NOGL=yes is defined:
+#     then don't build any components that require OpenGL and GLUT
 #
 
 # BINNER version number in popular convention
