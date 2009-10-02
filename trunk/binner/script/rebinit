@@ -56,7 +56,16 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     rot_file = "_".join(cname) + ".inb"
 
     fcscr = open(cscr, 'w')
-    print >> fcscr, "#!/bin/bash"
+    if not opt.lens:
+        print >> fcscr, "#!/bin/bash"
+
+    if opt.lens:
+        # Setup PBS stuff
+        print >> fcscr, "#PBS -A csc030"
+        print >> fcscr, "#PBS -j oe"
+        print >> fcscr, "#PBS -l walltime=00:10:00"
+        print >> fcscr, "#PBS -l nodes=1:ppn=%d" % opt.threads
+        
     print >> fcscr, "cd", odir
     print >> fcscr, "start=$(date +%s)"
     print >> fcscr, "echo \"Start:\" ${start}"
@@ -157,7 +166,6 @@ def run(opts, tempfile, atempfile):
 
     # Construct the jobs
     
-    import slurm
     for ifile in filelist:
         rebin_input = []
         pifile = os.path.join(filedir, ifile)
@@ -168,7 +176,6 @@ def run(opts, tempfile, atempfile):
             if opts.verbose:
                 print "Input files:", rebin_input
                                    
-        # Send out SLURM jobs
         mesh_num = ifile.split('bmesh')[-1].split('.')[0]
 
         if opts.min_slice != -1:
@@ -197,41 +204,44 @@ def run(opts, tempfile, atempfile):
                                                 axis_pars, opts)
 
         if not opts.debug:
-            kwargs = {}
-            if opts.multi_thread and opts.threads > 1:
-                kwargs["nodes"] = 1
-                kwargs["cpus"] = opts.threads
-                
-            jid = slurm.run(job_script, get_queue(instrument), outlog_name,
-                            None, verbose=opts.verbose,
-                            jobname=job_name, **kwargs)
+            if not opt.lens:
+                # Send out SLURM jobs
+                kwargs = {}
+                if opts.multi_thread and opts.threads > 1:
+                    kwargs["nodes"] = 1
+                    kwargs["cpus"] = opts.threads
 
-            if opts.make_vtk:
-                vtkcmd = [MAKE_VTK_CMD]
-                vtkcmd.append(os.path.join(outputdir, out_file))
+                import slurm
+                jid = slurm.run(job_script, get_queue(instrument), outlog_name,
+                                None, verbose=opts.verbose,
+                                jobname=job_name, **kwargs)
 
-                vtk_name = []
-                vtk_name.append(instrument)
-                vtk_name.append(str(runlist[0]))
-                vtk_name.append("rvtk"+mesh_num)
+                if opts.make_vtk:
+                    vtkcmd = [MAKE_VTK_CMD]
+                    vtkcmd.append(os.path.join(outputdir, out_file))
+                    
+                    vtk_name = []
+                    vtk_name.append(instrument)
+                    vtk_name.append(str(runlist[0]))
+                    vtk_name.append("rvtk"+mesh_num)
 
-                if opts.verbose:
-                    print "VTK Job name:", "_".join(vtk_name)
-                    print "VTK Input File:", vtkcmd[-1]
+                    if opts.verbose:
+                        print "VTK Job name:", "_".join(vtk_name)
+                        print "VTK Input File:", vtkcmd[-1]
 
-                vscr = os.path.join(outputdir, "_".join(vtk_name) + ".sh")
-                vcscr = open(vscr, 'w')
-                print >> vcscr, "#!/bin/bash"
-                print >> vcscr, " ".join(vtkcmd)
-                            
-                vcscr.close()
-                os.chmod(vscr, 0755)
+                    vscr = os.path.join(outputdir, "_".join(vtk_name) + ".sh")
+                    vcscr = open(vscr, 'w')
+                    print >> vcscr, "#!/bin/bash"
+                    print >> vcscr, " ".join(vtkcmd)
+                    
+                    vcscr.close()
+                    os.chmod(vscr, 0755)
 
-                voutlog_name = "_".join(vtk_name) + ".out"
+                    voutlog_name = "_".join(vtk_name) + ".out"
 
-                vjid = slurm.run(vscr, get_queue(instrument), voutlog_name,
-                                 verbose=opts.verbose, precursor=jid,
-                                 jobname="_".join(vtk_name))
+                    vjid = slurm.run(vscr, get_queue(instrument), voutlog_name,
+                                     verbose=opts.verbose, precursor=jid,
+                                     jobname="_".join(vtk_name))
 
 if __name__ == "__main__":
     import optparse
@@ -294,6 +304,10 @@ if __name__ == "__main__":
     parser.add_option("-p", "--threads", dest="threads", type=int,
                       help="Flag to set the number of threads. Default is 1.")
     parser.set_defaults(threads=1)
+
+    parser.add_option("", "--lens", dest="lens", action="store_true",
+                      help="Run jobs on the LENS cluster.")
+    parser.set_defaults(lens=False)
     
     (options, args) = parser.parse_args()
     
