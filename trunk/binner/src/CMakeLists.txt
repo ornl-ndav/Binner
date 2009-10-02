@@ -5,6 +5,13 @@ include_directories(
   ${TOP}/vcb/include
 )
 
+if(NOT BINNER_INSTALL_DIR)
+  set(DEST ${TOP})
+else(NOT BINNER_INSTALL_DIR)
+  set(DEST ${BINNER_INSTALL_DIR})
+endif(NOT BINNER_INSTALL_DIR)
+
+
 #set(LIBS vcbnogl)
 #add_library(${LIBS} STATIC IMPORTED)
 #set_property(
@@ -23,7 +30,9 @@ set(EXES
 	netrebin pix2mesh 
 	rebin rot3d 
 	map reduce
-	scale3d serve sorter tran3d
+	scale3d serve sorter tran3d)
+
+set(GLEXES
 	seeall seepara seegmesh seebmeshvol seebmeshvolc)
 
 link_libraries(pthread vcbnogl m)
@@ -100,32 +109,36 @@ target_link_libraries(collector ${PTHREAD_LIBRARY})
 add_executable(sorter sorter.c socketfun.c binnerio.c)
 target_link_libraries(sorter ${PTHREAD_LIBRARY})
 
-#find_package(OPENGL REQUIRED)
-#find_package(GLUT REQUIRED)
+if (NOT NOGL)
+	#find_package(OPENGL REQUIRED)
+	#find_package(GLUT REQUIRED)
 
-include(${TOP}/vcb/CMakeModules/OpenGLConfig.cmake)
+	include(${TOP}/vcb/CMakeModules/OpenGLConfig.cmake)
 
-include_directories(
-#   ${OPENGL_INCLUDE_DIR}/Headers
-   ${OPENGL_INCLUDE_DIR}
-   ${GLUT_INCLUDE_DIR}
-)
+	include_directories(
+	#   ${OPENGL_INCLUDE_DIR}/Headers
+	   ${OPENGL_INCLUDE_DIR}
+	   ${GLUT_INCLUDE_DIR}
+	)
 
-link_libraries(vcbgl)
+	link_libraries(vcbgl)
 
-add_executable(seeall seeall.cpp formain.cpp binnerio.c)
-add_executable(seepara seepara.cpp formain.cpp cell.c binnerio.c)
-add_executable(seegmesh seegmesh.cpp formain.cpp cell.c binnerio.c)
-add_executable(seebmeshvol seebmeshvol.cpp formain.cpp cell.c binnerio.c)
-add_executable(seebmeshvolc seebmeshvolc.cpp formain.cpp cell.c binnerio.c)
+	add_executable(seeall seeall.cpp formain.cpp binnerio.c)
+	add_executable(seepara seepara.cpp formain.cpp cell.c binnerio.c)
+	add_executable(seegmesh seegmesh.cpp formain.cpp cell.c binnerio.c)
+	add_executable(seebmeshvol seebmeshvol.cpp formain.cpp cell.c binnerio.c)
+	add_executable(seebmeshvolc seebmeshvolc.cpp formain.cpp cell.c binnerio.c)
 
-if(NOT BINNER_INSTALL_DIR)
-  set(DEST ${TOP})
-else(NOT BINNER_INSTALL_DIR)
-  set(DEST ${BINNER_INSTALL_DIR})
-endif(NOT BINNER_INSTALL_DIR)
+	install(TARGETS ${EXES} ${GLEXES}
+			RUNTIME DESTINATION ${DEST}/bin
+			LIBRARY DESTINATION ${DEST}/lib
+			ARCHIVE DESTINATION ${DEST}/lib)
 
-install(TARGETS ${EXES}
-		RUNTIME DESTINATION ${DEST}/bin
-		LIBRARY DESTINATION ${DEST}/lib
-		ARCHIVE DESTINATION ${DEST}/lib)
+else(NOT NOGL)
+
+	install(TARGETS ${EXES}
+			RUNTIME DESTINATION ${DEST}/bin
+			LIBRARY DESTINATION ${DEST}/lib
+			ARCHIVE DESTINATION ${DEST}/lib)
+
+endif(NOT NOGL)
