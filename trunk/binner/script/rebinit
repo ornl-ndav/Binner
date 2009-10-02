@@ -200,7 +200,12 @@ def run(opts, tempfile, atempfile):
     
     # Gather the base set of files
 
-    filedir = os.path.join(basedir, str(runlist[0]), str(runlist[0])+"-mesh")
+    if opts.inputdir is not None:
+        filedir = os.path.join(opts.inputdir, str(runlist[0]),
+                               str(runlist[0])+"-mesh")
+    else:
+        filedir = os.path.join(basedir, str(runlist[0]),
+                               str(runlist[0])+"-mesh")
     if opts.verbose:
         print "Input File directory:", filedir
 
@@ -315,6 +320,9 @@ if __name__ == "__main__":
     parser.add_option("-o", "--outputdir", dest="outputdir",
                       help="Specify a directory to receive the rebinning "\
                       +"output.")
+
+    parser.add_option("-i", "--inputdir", dest="inputdir",
+                      help="Specify a directory to get the rebinning input.")
 
     parser.add_option("-k", "--make-vtk", dest="make_vtk", action="store_true",
                       help="Flag to turn on creation of vtk files from "\
