@@ -321,7 +321,7 @@ if __name__ == "__main__":
                       help="Specify a directory to receive the rebinning "\
                       +"output.")
 
-    parser.add_option("-i", "--inputdir", dest="inputdir",
+    parser.add_option("-n", "--inputdir", dest="inputdir",
                       help="Specify a directory to get the rebinning input.")
 
     parser.add_option("-k", "--make-vtk", dest="make_vtk", action="store_true",
