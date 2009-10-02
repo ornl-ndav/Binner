@@ -201,8 +201,7 @@ def run(opts, tempfile, atempfile):
     # Gather the base set of files
 
     if opts.inputdir is not None:
-        filedir = os.path.join(opts.inputdir, str(runlist[0]),
-                               str(runlist[0])+"-mesh")
+        filedir = opts.inputdir
     else:
         filedir = os.path.join(basedir, str(runlist[0]),
                                str(runlist[0])+"-mesh")
