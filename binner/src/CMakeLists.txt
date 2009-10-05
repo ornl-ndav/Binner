@@ -21,7 +21,7 @@ endif(NOT BINNER_INSTALL_DIR)
 
 set(EXES 
 	gmeshrebin gmeshrebin2 gmeshrebin3
-	gmeshrot gmeshrot2 gmeshrot3 gmesht2b gmeshb2t
+	gmeshrot gmeshrot2 gmeshrot3 gmeshmat gmesht2b gmeshb2t
 	gmeshindex gmeshquery gmeshorderv
 	bmeshrebin largebmeshrebin bounds bslicer 
 	clip3d clipvoxel compvol collector counts
@@ -53,6 +53,7 @@ add_executable(gmeshorderv gmeshorderv.c cell.c)
 add_executable(gmeshrot gmeshrot.c binnerio.c)
 add_executable(gmeshrot2 gmeshrot2.c)
 add_executable(gmeshrot3 gmeshrot3.c)
+add_executable(gmeshmat gmeshmat.c)
 add_executable(gmesht2b gmesht2b.c)
 add_executable(gmeshb2t gmeshb2t.c)
 add_executable(tran3d tran3d.c binnerio.c)
