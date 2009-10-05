@@ -293,6 +293,14 @@ def run(opts, tempfile, atempfile):
                     vjid = slurm.run(vscr, get_queue(instrument), voutlog_name,
                                      verbose=opts.verbose, precursor=jid,
                                      jobname="_".join(vtk_name))
+            else:
+                import sns_os
+                cmd = []
+                cmd.append("qsub")
+                cmd.append("-o %s" % outlog_name)
+                cmd.append(job_script)
+
+                sns_os.run2(" ".join(cmd))
 
 if __name__ == "__main__":
     import optparse
