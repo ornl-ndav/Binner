@@ -297,6 +297,7 @@ def run(opts, tempfile, atempfile):
                 import sns_os
                 cmd = []
                 cmd.append("qsub")
+                cmd.append("-N %s" % job_name)
                 cmd.append("-o %s" % outlog_name)
                 cmd.append(job_script)
 
