@@ -255,7 +255,7 @@ def run(opts, tempfile, atempfile):
                                                 axis_pars, opts)
 
         if not opts.debug:
-            if not opt.lens:
+            if not opts.lens:
                 # Send out SLURM jobs
                 kwargs = {}
                 if opts.multi_thread and opts.threads > 1:
