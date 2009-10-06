@@ -147,7 +147,7 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     
     return (cscr, ofile)
 
-def make_vtkscript(outputdir, out_file, instrument runlist, mesh_num, opt):
+def make_vtkscript(outputdir, out_file, instrument, runlist, mesh_num, opt):
     vtkcmd = [MAKE_VTK_CMD]
     vtkcmd.append(os.path.join(outputdir, out_file))
     
