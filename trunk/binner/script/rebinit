@@ -303,6 +303,7 @@ def run(opts, tempfile, atempfile):
                 cmd.append("qsub")
                 cmd.append("-N %s" % job_name)
                 cmd.append("-o %s" % outlog_name)
+                cmd.append("-q analysis")
                 cmd.append(job_script)
 
                 jid = sns_os.run2(" ".join(cmd))
