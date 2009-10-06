@@ -109,7 +109,10 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
         # Setup PBS stuff
         print >> fcscr, "#PBS -A csc030"
         print >> fcscr, "#PBS -j oe"
-        print >> fcscr, "#PBS -l walltime=00:10:00"
+        if opt.walltime is None:
+            print >> fcscr, "#PBS -l walltime=00:10:00"
+        else:
+            print >> fcscr, "#PBS -l walltime=%s" % opt.walltime
         print >> fcscr, "#PBS -l nodes=1:ppn=%d" % opt.threads
         
     print >> fcscr, "cd", odir
@@ -375,6 +378,9 @@ if __name__ == "__main__":
     parser.add_option("", "--lens", dest="lens", action="store_true",
                       help="Run jobs on the LENS cluster.")
     parser.set_defaults(lens=False)
+
+    parser.add_option("-w", "--walltime", dest="walltime", help="Set the "\
+                      +"walltime for the PBS jobs.")
     
     (options, args) = parser.parse_args()
     
