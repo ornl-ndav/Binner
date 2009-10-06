@@ -147,6 +147,31 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     
     return (cscr, ofile)
 
+def make_vtkscript(outputdir, out_file, instrument runlist, mesh_num, opt):
+    vtkcmd = [MAKE_VTK_CMD]
+    vtkcmd.append(os.path.join(outputdir, out_file))
+    
+    vtk_name = []
+    vtk_name.append(instrument)
+    vtk_name.append(str(runlist[0]))
+    vtk_name.append("rvtk"+mesh_num)
+    
+    if opt.verbose:
+        print "VTK Job name:", "_".join(vtk_name)
+        print "VTK Input File:", vtkcmd[-1]
+        
+        vscr = os.path.join(outputdir, "_".join(vtk_name) + ".sh")
+        vcscr = open(vscr, 'w')
+        print >> vcscr, "#!/bin/bash"
+        print >> vcscr, " ".join(vtkcmd)
+        
+        vcscr.close()
+        os.chmod(vscr, 0755)
+        
+        voutlog_name = "_".join(vtk_name) + ".out"
+
+    return (vtk_name, voutlog_name)
+
 def run(opts, tempfile, atempfile):
     if opts.verbose:
         print "Opening", tempfile
@@ -268,27 +293,6 @@ def run(opts, tempfile, atempfile):
                                 jobname=job_name, **kwargs)
 
                 if opts.make_vtk:
-                    vtkcmd = [MAKE_VTK_CMD]
-                    vtkcmd.append(os.path.join(outputdir, out_file))
-                    
-                    vtk_name = []
-                    vtk_name.append(instrument)
-                    vtk_name.append(str(runlist[0]))
-                    vtk_name.append("rvtk"+mesh_num)
-
-                    if opts.verbose:
-                        print "VTK Job name:", "_".join(vtk_name)
-                        print "VTK Input File:", vtkcmd[-1]
-
-                    vscr = os.path.join(outputdir, "_".join(vtk_name) + ".sh")
-                    vcscr = open(vscr, 'w')
-                    print >> vcscr, "#!/bin/bash"
-                    print >> vcscr, " ".join(vtkcmd)
-                    
-                    vcscr.close()
-                    os.chmod(vscr, 0755)
-
-                    voutlog_name = "_".join(vtk_name) + ".out"
 
                     vjid = slurm.run(vscr, get_queue(instrument), voutlog_name,
                                      verbose=opts.verbose, precursor=jid,
@@ -301,7 +305,7 @@ def run(opts, tempfile, atempfile):
                 cmd.append("-o %s" % outlog_name)
                 cmd.append(job_script)
 
-                sns_os.run2(" ".join(cmd))
+                jid = sns_os.run2(" ".join(cmd))
 
 if __name__ == "__main__":
     import optparse
