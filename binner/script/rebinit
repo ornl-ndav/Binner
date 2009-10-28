@@ -159,7 +159,7 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "echo \"Job Time: ${diff}\""
     if opt.pbs is not None:
         if opt.pbs == "oic":
-            print >> fcscr, "cp", rot_file, odir
+            print >> fcscr, "cp", ofile, odir
     fcscr.close()
     os.chmod(cscr, 0755)
     
