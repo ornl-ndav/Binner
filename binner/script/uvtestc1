@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+# This script is made to run test case 1 on the RDAV UltraViolet machine. 
+# This script will provide the option to extend test case 1 by running VisIt
+
+import os
+
+VERSION = "1.0"
+
+def run(opts):
+    pass
+
+if __name__ == "__main__":
+    import optparse
+
+    description = []
+    description.append("This script launches test case 1 with option to run")
+    description.append("VisIt extension.")
+
+    parser = optparse.OptionParser("usage: %prog [options]", None,
+                                   optparse.Option, VERSION, 'error',
+                                   " ".join(description))
+
+    run(options)
