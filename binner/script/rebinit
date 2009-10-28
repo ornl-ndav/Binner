@@ -105,11 +105,10 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     rot_file = "_".join(cname) + ".inb"
 
     fcscr = open(cscr, 'w')
-    if not opt.lens:
-        print >> fcscr, "#!/bin/bash"
 
     if opt.pbs is not None:
         # Setup PBS stuff
+        print >> fcscr, "#!/bin/bash"
         if opt.pbs == "lens":
             print >> fcscr, "#PBS -A csc030"
         if opt.pbs == "oic":
