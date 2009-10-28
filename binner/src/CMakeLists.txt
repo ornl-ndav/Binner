@@ -28,7 +28,7 @@ set(EXES
 	export2vtk export2vcb 
 	gencell getfrom giveto 
 	netrebin pix2mesh 
-	rebin rot3d 
+	rebin rot3d rotmat
 	map reduce
 	scale3d serve sorter tran3d)
 
@@ -47,6 +47,7 @@ add_executable(serve serve.c socketfun.c)
 add_executable(pix2mesh pix2mesh.c cell.c binnerio.c)
 add_executable(gencell gencell.c cell.c binnerio.c)
 add_executable(rot3d rot3d.c binnerio.c)
+add_executable(rotmat rotmat.c)
 add_executable(gmeshindex gmeshindex.c)
 add_executable(gmeshquery gmeshquery.c)
 add_executable(gmeshorderv gmeshorderv.c cell.c)

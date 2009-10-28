@@ -20,7 +20,7 @@ LIB_PATH = -L$(TOP)/vcb/lib  -L/sw/lib
 
 LIBS =  -lpthread -lvcbnogl  -lm
 
-EXES = gmeshindex gmeshquery gmeshrebin gmeshrebin2 gmeshrebin3 gmeshrot gmeshrot2 gmeshrot3 gmeshb2t gmesht2b gmeshorderv bmeshrebin largebmeshrebin bounds bslicer clip3d clipvoxel compvol export2vtk export2vcb gencell pix2mesh rebin rot3d scale3d tran3d collector getfrom giveto reduce serve netrebin sorter counts map gmeshmat
+EXES = gmeshindex gmeshquery gmeshrebin gmeshrebin2 gmeshrebin3 gmeshrot gmeshrot2 gmeshrot3 gmeshb2t gmesht2b gmeshorderv bmeshrebin largebmeshrebin bounds bslicer clip3d clipvoxel compvol export2vtk export2vcb gencell pix2mesh rebin rot3d rotmat scale3d tran3d collector getfrom giveto reduce serve netrebin sorter counts map gmeshmat
 
 .SUFFIXES: .cc .c .cpp
 
@@ -66,6 +66,9 @@ gencell: gencell.o cell.o binnerio.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 rot3d: rot3d.o binnerio.o
+	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
+
+rotmat: rotmat.o
 	$(CC) -o $@ $^ $(LIB_PATH) $(LIBS)
 
 gmeshrot: gmeshrot.o binnerio.o
