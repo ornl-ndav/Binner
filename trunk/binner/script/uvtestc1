@@ -12,6 +12,7 @@ ROTDATA_LOC = "800-rebin"
 ROTDATA_HEAD = "CNCS_800_rbmesh"
 ROTDATA_EXT = ".inb"
 LOGDIR = "logs"
+LOG_EXT = ".out"
 
 FILEFORMAT = "%s%04d%s"
 
@@ -24,7 +25,6 @@ REBINDATA_EXT = ".in"
 def make_cmd(opt, ibin, logloc):
     ifile = FILEFORMAT % (ROTDATA_HEAD, ibin, ROTDATA_EXT)
     ofile = FILEFORMAT % (REBINDATA_HEAD, ibin, REBINDATA_EXT)
-    lfile = FILEFORMAT % (REBINDATA_HEAD, ibin, ".out")
     rebin_cmd = MULTI_THREAD_REBINNER_CMD % opt.threads
 
     cmd = []
@@ -44,10 +44,36 @@ def run(opts):
     if not os.path.exists(log_location):
         os.mkdir(log_location)
 
+    pid_list = []
+
+    # Launch rebinning jobs
     for i in range(NUM_SLICES):
         rcmd = make_cmd(opts, i, log_location)
         if opts.verbose > 1:
             print "Rebin Cmd:", rcmd
+
+        if not opts.debug:
+            lfile = FILEFORMAT % (REBINDATA_HEAD, ibin, LOG_EXT)
+            log_file = os.path.join(log_location, lfile)
+        else:
+            print "Executing", rcmd
+
+    # Begin log watch
+    import dircache
+    import time
+    jobs_complete = False
+    while not jobs_complete:
+        filelist = [lfile for lfile in dircache.listdir(log_location) \
+                    if dfile.endswith(LOG_EXT)]
+        if opts.verbose > 0:
+            print "Log Files Found:", filelist
+
+        if len(filelist) < NUM_SLICES:
+            time.sleep(30)
+        else:
+            jobs_complete = True
+
+    # Determine success/fail criteria
 
 
 if __name__ == "__main__":
