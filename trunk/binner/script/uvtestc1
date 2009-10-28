@@ -18,7 +18,7 @@ FILEFORMAT = "%s%04d%s"
 
 REBINNER_CMD = "gmeshrebin3 -f"
 MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
-REBIN_GRID = [-1.6, 2.0, 0.05, -0.4, 0.4, 0.05, -0.1, 2.4, 0.05]
+REBIN_GRID = [-1.6, 2.0, 0.01, -0.4, 0.4, 0.01, -0.1, 2.4, 0.01]
 REBINDATA_HEAD = "CNCS_800_rebin"
 REBINDATA_EXT = ".in"
 
@@ -59,14 +59,18 @@ def run(opts):
             print "Rebin Cmd:", rcmd
 
         if not opts.debug:
-            print "Executing"
-            lfile = FILEFORMAT % (REBINDATA_HEAD, ibin, LOG_EXT)
+            print "Executing Slice", i
+            lfile = FILEFORMAT % (REBINDATA_HEAD, i, LOG_EXT)
             log_file = os.path.join(log_location, lfile)
-            proc = sub.Popen(rcmd, stdout=log_file, stderr=log_file,
-                             shell=True)
+            lfh = open(log_file, 'w')
+            
+            proc = sub.Popen(rcmd, stdout=lfh, stderr=lfh, shell=True)
             pid_list.append(proc.pid)
         else:
             print "Executing", rcmd
+
+    if opts.verbose > 0:
+        print "PIDs:", pid_list
 
     # Begin log watch
     import dircache
@@ -74,7 +78,7 @@ def run(opts):
     jobs_complete = False
     while not jobs_complete:
         filelist = [lfile for lfile in dircache.listdir(log_location) \
-                    if dfile.endswith(LOG_EXT)]
+                    if lfile.endswith(LOG_EXT)]
         if opts.verbose > 0:
             print "Log Files Found:", filelist
 
