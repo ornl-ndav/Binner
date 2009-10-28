@@ -52,14 +52,19 @@ def run(opts):
         nslices = NUM_SLICES
 
     # Launch rebinning jobs
+    import subprocess as sub
     for i in range(nslices):
         rcmd = make_cmd(opts, i, log_location)
         if opts.verbose > 1:
             print "Rebin Cmd:", rcmd
 
         if not opts.debug:
+            print "Executing"
             lfile = FILEFORMAT % (REBINDATA_HEAD, ibin, LOG_EXT)
             log_file = os.path.join(log_location, lfile)
+            proc = sub.Popen(rcmd, stdout=log_file, stderr=log_file,
+                             shell=True)
+            pid_list.append(proc.pid)
         else:
             print "Executing", rcmd
 
