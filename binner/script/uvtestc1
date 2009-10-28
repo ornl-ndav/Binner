@@ -46,8 +46,13 @@ def run(opts):
 
     pid_list = []
 
+    if opts.max_slice is not None:
+        nslices = int(opts.max_slice)
+    else:
+        nslices = NUM_SLICES
+
     # Launch rebinning jobs
-    for i in range(NUM_SLICES):
+    for i in range(nslices):
         rcmd = make_cmd(opts, i, log_location)
         if opts.verbose > 1:
             print "Rebin Cmd:", rcmd
@@ -68,7 +73,7 @@ def run(opts):
         if opts.verbose > 0:
             print "Log Files Found:", filelist
 
-        if len(filelist) < NUM_SLICES:
+        if len(filelist) < nslices:
             time.sleep(30)
         else:
             jobs_complete = True
@@ -104,6 +109,9 @@ if __name__ == "__main__":
     parser.add_option("-t", "--threads", dest="threads", type=int,
                       help="Flag to set the number of threads. Default is 1.")
     parser.set_defaults(threads=1)
+
+    parser.add_option("-x", "--max-slice", dest="max_slice",
+                      help="Flag to set the maximum slice to use.")
 
     (options, args) = parser.parse_args()
 
