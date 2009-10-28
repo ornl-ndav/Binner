@@ -7,8 +7,48 @@ import os
 
 VERSION = "1.0"
 
+NUM_SLICES = 160
+ROTDATA_LOC = "800-rebin"
+ROTDATA_HEAD = "CNCS_800_rbmesh"
+ROTDATA_EXT = ".inb"
+LOGDIR = "logs"
+
+FILEFORMAT = "%s%04d%s"
+
+REBINNER_CMD = "gmeshrebin3 -f"
+MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
+REBIN_GRID = [-1.6, 2.0, 0.05, -0.4, 0.4, 0.05, -0.1, 2.4, 0.05]
+REBINDATA_HEAD = "CNCS_800_rebin"
+REBINDATA_EXT = ".in"
+
+def make_cmd(opt, ibin, logloc):
+    ifile = FILEFORMAT % (ROTDATA_HEAD, ibin, ROTDATA_EXT)
+    ofile = FILEFORMAT % (REBINDATA_HEAD, ibin, REBINDATA_EXT)
+    lfile = FILEFORMAT % (REBINDATA_HEAD, ibin, ".out")
+    rebin_cmd = MULTI_THREAD_REBINNER_CMD % opt.threads
+
+    cmd = []
+    cmd.append("cat")
+    cmd.append(os.path.join(opt.inputdir, ifile))
+    cmd.append("|")
+    cmd.append(rebin_cmd)
+    cmd.extend([str(x) for x in REBIN_GRID])
+    cmd.append(">")
+    cmd.append(os.path.join(opt.outputdir, ofile))
+
+    return " ".join(cmd)
+
 def run(opts):
-    pass
+    # Create log file directory if necessary
+    log_location = os.path.join(opts.outputdir, LOGDIR)
+    if not os.path.exists(log_location):
+        os.mkdir(log_location)
+
+    for i in range(NUM_SLICES):
+        rcmd = make_cmd(opts, i, log_location)
+        if opts.verbose > 1:
+            print "Rebin Cmd:", rcmd
+
 
 if __name__ == "__main__":
     import optparse
@@ -20,5 +60,32 @@ if __name__ == "__main__":
     parser = optparse.OptionParser("usage: %prog [options]", None,
                                    optparse.Option, VERSION, 'error',
                                    " ".join(description))
+
+    parser.add_option("-v", "--verbose", dest="verbose", action="count",
+                      help="Flag for turning on script verbosity")
+
+    parser.add_option("-d", "--debug", dest="debug", action="store_true",
+                      help="Flag for turning off job execution.")
+    parser.set_defaults(debug=False)
+
+    parser.add_option("-o", "--outputdir", dest="outputdir",
+                      help="Specify a directory to receive the rebinning "\
+                      +"output. This location will also house the log files.")
+
+    parser.add_option("-i", "--inputdir", dest="inputdir",
+                      help="Specify a directory to get the rebinning input.")
+
+    parser.add_option("-t", "--threads", dest="threads", type=int,
+                      help="Flag to set the number of threads. Default is 1.")
+    parser.set_defaults(threads=1)
+
+    (options, args) = parser.parse_args()
+
+    if options.inputdir is None:
+        parser.error("Please specify the directory for the input (rotated) "\
+                     +"data files!")
+
+    if options.outputdir is None:
+        parser.error("Please specify the location to write the rebinned data!")
 
     run(options)
