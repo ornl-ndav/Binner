@@ -68,7 +68,7 @@ def run(opts):
             lfh = open(log_file, 'w')
 
             if i == 0:
-                start_time = time.time()
+                start_time = int(time.time())
             proc = sub.Popen(rcmd, stdout=lfh, stderr=lfh, shell=True)
             proc_list.append(proc)
         else:
@@ -91,11 +91,18 @@ def run(opts):
 
     # Determine success/fail criteria
     import dircache
-    loglist = [lfile for lfile in dircache.listdir(log_location) \
+    import stat
+    loglist = [(os.stat(os.path.join(log_location, lfile))[stat.ST_MTIME],
+                lfile) for lfile in dircache.listdir(log_location) \
                if lfile.endswith(LOG_EXT)]
+    loglist.sort()
     if opts.verbose > 0:
         print "Log Files Found:", loglist
 
+    end_time = loglist[-1][0]
+
+    job_time = end_time - start_time
+    print "Total Running Time:", job_time, "seconds"
 
 
 if __name__ == "__main__":
