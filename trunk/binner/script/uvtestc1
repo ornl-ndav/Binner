@@ -75,7 +75,7 @@ def run(opts):
             print "Executing", rcmd
 
     if opts.verbose > 0:
-        print "PIDs:", proc_list
+        print "PIDs:", [proc.pid for proc in proc_list]
 
     # Begin PID watch
     jobs_complete = False
@@ -88,6 +88,8 @@ def run(opts):
             time.sleep(30)
         except ValueError:
             jobs_complete = True
+
+    print "Jobs Completed"
 
     # Determine success/fail criteria
     import dircache
