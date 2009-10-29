@@ -77,19 +77,16 @@ def run(opts):
         if opts.verbose > 1:
             print "Rebin Cmd:", rcmd
 
-        if not opts.debug:
-            if opts.verbose > 0:
-                print "Executing Slice", i
-            lfile = FILEFORMAT % (REBINDATA_HEAD, i, LOG_EXT)
-            log_file = os.path.join(log_location, lfile)
-            lfh = open(log_file, 'w')
-
-            if i == 0:
-                start_time = time.time()
-            proc = sub.Popen(rcmd, stdout=lfh, stderr=lfh, shell=True)
-            proc_list.append(proc)
-        else:
-            print "Executing", rcmd
+        if opts.verbose > 0:
+            print "Executing Slice", i
+        lfile = FILEFORMAT % (REBINDATA_HEAD, i, LOG_EXT)
+        log_file = os.path.join(log_location, lfile)
+        lfh = open(log_file, 'w')
+        
+        if i == 0:
+            start_time = time.time()
+        proc = sub.Popen(rcmd, stdout=lfh, stderr=lfh, shell=True)
+        proc_list.append(proc)
 
     if opts.verbose > 0:
         print "PIDs:", [proc.pid for proc in proc_list]
@@ -137,10 +134,6 @@ if __name__ == "__main__":
 
     parser.add_option("-v", "--verbose", dest="verbose", action="count",
                       help="Flag for turning on script verbosity")
-
-    parser.add_option("-d", "--debug", dest="debug", action="store_true",
-                      help="Flag for turning off job execution.")
-    parser.set_defaults(debug=False)
 
     parser.add_option("-o", "--outputdir", dest="outputdir",
                       help="Specify a directory to receive the rebinning "\
