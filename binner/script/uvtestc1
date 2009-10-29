@@ -80,9 +80,6 @@ def run(opts):
     # Begin PID watch
     jobs_complete = False
     while not jobs_complete:
-        if opts.verbose > 0:
-            print "Log Files Found:", filelist
-
         status = [pid.poll() for pid in proc_list]
         if opts.verbose > 0:
             print "Status:", status
@@ -96,6 +93,10 @@ def run(opts):
     import dircache
     loglist = [lfile for lfile in dircache.listdir(log_location) \
                if lfile.endswith(LOG_EXT)]
+    if opts.verbose > 0:
+        print "Log Files Found:", loglist
+
+
 
 if __name__ == "__main__":
     import optparse
