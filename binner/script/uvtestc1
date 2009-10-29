@@ -53,6 +53,9 @@ def run(opts):
 
     # Launch rebinning jobs
     import subprocess as sub
+    import time
+    start_time = None
+    
     for i in range(nslices):
         rcmd = make_cmd(opts, i, log_location)
         if opts.verbose > 1:
@@ -63,7 +66,9 @@ def run(opts):
             lfile = FILEFORMAT % (REBINDATA_HEAD, i, LOG_EXT)
             log_file = os.path.join(log_location, lfile)
             lfh = open(log_file, 'w')
-            
+
+            if i == 0:
+                start_time = time.time()
             proc = sub.Popen(rcmd, stdout=lfh, stderr=lfh, shell=True)
             proc_list.append(proc)
         else:
@@ -73,8 +78,6 @@ def run(opts):
         print "PIDs:", proc_list
 
     # Begin PID watch
-    import time
-    start_time = None
     jobs_complete = False
     while not jobs_complete:
         if opts.verbose > 0:
