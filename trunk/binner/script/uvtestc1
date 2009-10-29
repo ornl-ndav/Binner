@@ -37,14 +37,13 @@ def format_time(jtime):
 def make_cmd(opt, ibin, logloc):
     ifile = FILEFORMAT % (ROTDATA_HEAD, ibin, ROTDATA_EXT)
     ofile = FILEFORMAT % (REBINDATA_HEAD, ibin, REBINDATA_EXT)
-    rebin_cmd = MULTI_THREAD_REBINNER_CMD % opt.threads
-
+    
     cmd = []
     cmd.append("cat")
     cmd.append(os.path.join(opt.inputdir, ifile))
     cmd.append("|")
-    cmd.append(rebin_cmd)
-    cmd.extend([str(x) for x in REBIN_GRID])
+    cmd.append(opt.rebin_cmd)
+    cmd.extend(opt.grid)
     cmd.append(">")
     cmd.append(os.path.join(opt.outputdir, ofile))
 
@@ -67,7 +66,12 @@ def run(opts):
     import subprocess as sub
     import time
     start_time = None
-    
+
+    # Make things that only need to be done once
+    opts.grid = [str(x) for x in REBIN_GRID]
+    opts.rebin_cmd = MULTI_THREAD_REBINNER_CMD % opts.threads
+
+    # Execute rebinning jobs
     for i in range(nslices):
         rcmd = make_cmd(opts, i, log_location)
         if opts.verbose > 1:
