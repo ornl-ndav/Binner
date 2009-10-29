@@ -44,7 +44,7 @@ def run(opts):
     if not os.path.exists(log_location):
         os.mkdir(log_location)
 
-    pid_list = []
+    proc_list = []
 
     if opts.max_slice is not None:
         nslices = int(opts.max_slice)
@@ -65,30 +65,34 @@ def run(opts):
             lfh = open(log_file, 'w')
             
             proc = sub.Popen(rcmd, stdout=lfh, stderr=lfh, shell=True)
-            pid_list.append(proc.pid)
+            proc_list.append(proc)
         else:
             print "Executing", rcmd
 
     if opts.verbose > 0:
-        print "PIDs:", pid_list
+        print "PIDs:", proc_list
 
-    # Begin log watch
-    import dircache
+    # Begin PID watch
     import time
+    start_time = None
     jobs_complete = False
     while not jobs_complete:
-        filelist = [lfile for lfile in dircache.listdir(log_location) \
-                    if lfile.endswith(LOG_EXT)]
         if opts.verbose > 0:
             print "Log Files Found:", filelist
 
-        if len(filelist) < nslices:
+        status = [pid.poll() for pid in proc_list]
+        if opts.verbose > 0:
+            print "Status:", status
+        try:
+            index = status.index(None)
             time.sleep(30)
-        else:
+        except ValueError:
             jobs_complete = True
 
     # Determine success/fail criteria
-
+    import dircache
+    loglist = [lfile for lfile in dircache.listdir(log_location) \
+               if lfile.endswith(LOG_EXT)]
 
 if __name__ == "__main__":
     import optparse
