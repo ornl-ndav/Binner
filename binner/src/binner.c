@@ -1,8 +1,10 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <assert.h>
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
 #include "binner.h"
 #include "vcbutils.h"
 #include "vcblinalg.h"
