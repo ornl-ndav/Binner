@@ -7,6 +7,7 @@ REBINNER_CMD = "gmeshrebin3 -f"
 MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
 ROTATE_CMD = "gmeshrot3 0 1 0"
 MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
+MATRIX_ROT_CMD = "gmeshmat"
 
 def myExtend(a,b):
     """Append the items in b into a. This does do error checking."""
@@ -140,9 +141,14 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     if not os.path.exists(p_rot_file):
         for ifile in ifiles:
             ifilerun = os.path.basename(ifile).split('_')[1]
-            print >> fcscr, "cat", ifile, "|", ROTATE_CMD, amap[ifilerun], \
-                  ">>", rot_file
-
+            if opt.use_matrix is None:
+                print >> fcscr, "cat", ifile, "|", ROTATE_CMD, \
+                      amap[ifilerun], ">>", rot_file
+            else:
+                mat_vals = " ".join(opt.use_matrix.split(','))
+                print >> fcscr, "cat", ifile, "|", MATRIX_ROT_CMD, mat_vals, \
+                      ">>", rot_file
+                
     # Call rebinner command
     if opt.multi_thread:
         rebin_cmd = MULTI_THREAD_REBINNER_CMD % opt.threads
@@ -223,8 +229,10 @@ def run(opts, tempfile, atempfile):
     threshold = get_value("THRESH", flines)
 
     # Get angle map
-    
-    angle_map = get_angle_map(atempfile)
+    if opts.use_matrix is None:
+        angle_map = get_angle_map(atempfile)
+    else:
+        angle_map = None
 
     # Make a home for the output
 
@@ -394,10 +402,13 @@ if __name__ == "__main__":
 
     parser.add_option("-w", "--walltime", dest="walltime", help="Set the "\
                       +"walltime for the PBS jobs.")
+
+    parser.add_option("", "--use-matrix", dest="use_matrix", help="Use a "\
+                      +"matrix to perform the rotation.")
     
     (options, args) = parser.parse_args()
     
-    if len(args) < 2:
+    if len(args) < 2 and option.use_matrix is None:
         parser.error("Must specify the template file and the angle map on "\
                      +"the command-line")
         
