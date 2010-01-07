@@ -344,9 +344,9 @@ int pipedump(int mode,
 			int sliceid, 
 			double emin, double emax, 
 			int x, int y, int z, 
-			double en, double er)
+			double en, double er, double fraction)
 {
-#define UNIT 48
+#define UNIT 56
 #define max_n_units 1300
 	static int cnt = 0;
 	static char buf[UNIT*max_n_units];
@@ -372,6 +372,7 @@ int pipedump(int mode,
 		memcpy(&buf[cnt*UNIT+24], &er, sizeof(double));
 		memcpy(&buf[cnt*UNIT+32], &emin, sizeof(double));
 		memcpy(&buf[cnt*UNIT+40], &emax, sizeof(double));
+		memcpy(&buf[cnt*UNIT+48], &fraction, sizeof(double));
 		cnt ++;
 	}
 
@@ -468,7 +469,7 @@ time1 = clock();
 				else
 				{
 					nwrote ++;
-					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], hitcnt[i/6], hiterr[i/6]);
+					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], hitcnt[i/6], hiterr[i/6], one);
 				}
 			}
 			else
@@ -480,7 +481,7 @@ time1 = clock();
 				}
 				else
 				{
-					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], one, one);
+					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], one, one, one);
 					nwrote ++;
 				}
 /*
@@ -511,11 +512,13 @@ time1 = clock();
 
 			assert(para_volume >= 0);			 
 			if (para_volume < 1e-16) continue; /*don't do anything */
-			
+
+#if 0
 			if ((hitcnt != NULL) && (hiterr != NULL))
 				factor = hitcnt[i/6]/para_volume;// * hiterr[i/6];
 			else
 				factor = 1.0;
+#endif
 
 			for (j = smalllb[0]; j <= smallub[0]; j ++)
 				for (k = smalllb[1]; k <= smallub[1]; k ++)
@@ -536,9 +539,10 @@ time1 = clock();
 						
 						if (voxel_volume > 1e-17)
 						{
-							factor = voxel_volume/(para_volume*para_volume);
+							/* factor = voxel_volume/(para_volume*para_volume); */
+							factor = voxel_volume/para_volume;
 
-							a = hitcnt[i/6]*factor;
+							a = hitcnt[i/6]/para_volume*factor*factor;
 							b = hiterr[i/6]*factor * factor;
 							assert(a >= 0);
 							assert(b >= 0);
@@ -550,17 +554,16 @@ time1 = clock();
 							}
 							else
 							{
-								pipedump(0, sliceid, emin, emax, j - orig[0], k - orig[1], l - orig[2], a, b);
+								pipedump(0, sliceid, emin, emax, j - orig[0], k - orig[1], l - orig[2], a, b, factor);
 								nwrote ++;
 							}
 
 						}
-						//total_volume += factor; //voxel_volume * factor;
 					}
 		}
 	}
 
-	pipedump(1, sliceid, emin, emax, j, k, l, a, b);
+	pipedump(1, sliceid, emin, emax, j, k, l, a, b, one);
 
 time2 = clock();
 

@@ -29,7 +29,7 @@ int main(int argc, char ** argv)
 		exit(1);
 	}
 */
-	
+    
 	close(0);
 
 	unitsize = reduce_init(argc, argv);

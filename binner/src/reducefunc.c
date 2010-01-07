@@ -8,7 +8,7 @@
 #include "reducefunc.h"
 
 #define REBINDEBUG 0
-#define ITEMSIZE (sizeof(int)*4 + sizeof(double)*4)
+#define ITEMSIZE (sizeof(int)*4 + sizeof(double)*5)
 
 static JRB b;
 static Dmlist dm;
@@ -90,6 +90,7 @@ static void accumulate_counts(void * h, void * v)
 	
 	d1[0] += d2[0]; /* rebinned counts */
 	d1[1] += d2[1]; /* rebinned error */
+    d1[4] += d2[4]; /* rebin fractions */
 }
 
 static int found = 0;
@@ -105,6 +106,8 @@ int reduce_func(void * v, int k)
 	 * the input contains k items
 	 * starting at the address pointed to by v
 	 */
+    printf("reduce_func running\n");
+    
 #if 0
 	write(1, v, k*ITEMSIZE); 
 	return 0;
@@ -145,13 +148,19 @@ int reduce_done()
 		v = jval_v(bn->key);
 		ip = v;
 		c = v;
-		dp = (double *)(c+16);
+		dp = (double *)(c+sizeof(int)*4);
 		
 		/*if (dp[0] > 1e-16)*/
 		{
+#if 0
+            dp[0] /= 1.0;
+            dp[1] /= 1.0;
+#else
+            dp[0] /= dp[4];
+            dp[1] /= dp[4];
+            dp[0] /= volumescale;
+#endif
 			totalvolume += dp[0];
-			dp[0] *= volumescale;
-			dp[1] *= volumescale;
 			gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
 			nvox ++;
 		}
@@ -159,7 +168,8 @@ int reduce_done()
 	}
 
 	fprintf(stderr, "no. nonempty bins   : %d\n", nvox);
-	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume*volumescale);
+	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume);
+	/*fprintf(stderr, "volumescale         : %le\n", volumescale);*/
 
 	free_dmlist(dm);
 	jrb_free_tree(b);
