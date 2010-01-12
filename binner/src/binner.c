@@ -529,7 +529,7 @@ time1 = clock();
 							factor = voxel_volume/para_volume;
 
 							a = hitcnt[i/6]/para_volume*factor;
-							b = hiterr[i/6]*factor * factor;
+							b = hiterr[i/6]*hiterr[i/6] * factor * factor;
 							assert(a >= 0);
 							assert(b >= 0);
 
