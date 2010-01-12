@@ -168,7 +168,7 @@ int reduce_done()
 	}
 
 	fprintf(stderr, "no. nonempty bins   : %d\n", nvox);
-	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume);
+	fprintf(stderr, "recorded total cnt  : %le\n", totalvolume*spacing[0]*spacing[1]*spacing[2]);
 	/*fprintf(stderr, "volumescale         : %le\n", volumescale);*/
 
 	free_dmlist(dm);
