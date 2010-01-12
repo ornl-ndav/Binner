@@ -484,14 +484,8 @@ time1 = clock();
 					pipedump(0, sliceid, emin, emax, smalllb[0] - orig[0], smalllb[1] - orig[1], smalllb[2] - orig[2], one, one, one);
 					nwrote ++;
 				}
-/*
-				voxels[id*2]   += 1.0;
-				voxels[id*2+1] += 1.0;
-*/
 			}
 
-			/* voxels[id*2] += factor; */
-			/* total_volume += factor; */
 		}
 		else
 		{
@@ -513,13 +507,6 @@ time1 = clock();
 			assert(para_volume >= 0);			 
 			if (para_volume < 1e-16) continue; /*don't do anything */
 
-#if 0
-			if ((hitcnt != NULL) && (hiterr != NULL))
-				factor = hitcnt[i/6]/para_volume;// * hiterr[i/6];
-			else
-				factor = 1.0;
-#endif
-
 			for (j = smalllb[0]; j <= smallub[0]; j ++)
 				for (k = smalllb[1]; k <= smallub[1]; k ++)
 					for (l = smalllb[2]; l <= smallub[2]; l ++)
@@ -539,10 +526,9 @@ time1 = clock();
 						
 						if (voxel_volume > 1e-17)
 						{
-							/* factor = voxel_volume/(para_volume*para_volume); */
 							factor = voxel_volume/para_volume;
 
-							a = hitcnt[i/6]/para_volume*factor*factor;
+							a = hitcnt[i/6]/para_volume*factor;
 							b = hiterr[i/6]*factor * factor;
 							assert(a >= 0);
 							assert(b >= 0);
