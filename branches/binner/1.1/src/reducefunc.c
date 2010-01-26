@@ -106,7 +106,7 @@ int reduce_func(void * v, int k)
 	 * the input contains k items
 	 * starting at the address pointed to by v
 	 */
-    printf("reduce_func running\n");
+	/*printf("reduce_func running\n");*/
     
 #if 0
 	write(1, v, k*ITEMSIZE); 
