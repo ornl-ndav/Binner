@@ -172,9 +172,16 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
     print >> fcscr, "echo \"Job Time: ${diff}\""
     if opt.pbs is not None:
         if opt.pbs == "oic":
+            if opt.make_vtk:
+                vtkcmd = [MAKE_VTK_CMD.replace("SNS", "home/jnu")]
+                vtkcmd.append(ofile)
+                print >> fcscr, " ".join(vtkcmd)
+            
             print >> fcscr, "cp", ofile, odir
             if not os.path.exists(p_rot_file):
                 print >> fcscr, "cp", rot_file, odir
+            if opt.make_vtk:
+                print >> fcscr, "cp", ofile.replace('.in', '.vtk'), odir
     fcscr.close()
     os.chmod(cscr, 0755)
     
@@ -306,7 +313,7 @@ def run(opts, tempfile, atempfile):
         outlog_name = "_".join(base_name) + ".out"
         errlog_name = "_".join(base_name) + ".err"
         
-        if opts.verbose > 1:
+        if opts.verbose > 0:
             print "Job name:", job_name
             print "Output Log name:", outlog_name
 
