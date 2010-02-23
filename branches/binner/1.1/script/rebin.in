@@ -6,6 +6,8 @@
 #
 INST:CNCS
 RUN:800-860
+# Set the mode for rebinning (QVEC or HKL)
+MODE:QVEC
 # Each axis should be specified in min, max, width
 XAXIS:-1.8,2.4,0.01
 YAXIS:-0.4,0.4,0.01
