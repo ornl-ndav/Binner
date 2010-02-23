@@ -93,7 +93,7 @@ def make_axis(avals):
     avals = avals.split(',')
     return avals
 
-def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
+def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
     cscr = os.path.join(odir, "_".join(cname) + ".sh")
 
     if opt.verbose > 0:
@@ -179,7 +179,8 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
                 print >> fcscr, " ".join(vtkcmd)
             if opt.make_nxs:
                 nxscmd = [MAKE_NXS_CMD.replace("SNS", "home/jnu")]
-                nxscmd.append()
+                nxscmd.append("--bins="+",".join(apar))
+                nxscmd.append("--mode="+rmode)
                 nxscmd.append(ofile)
                 print >> fcscr, " ".join(nxscmd)
                 
@@ -333,7 +334,7 @@ def run(opts, tempfile, atempfile):
 
         (job_script, out_file) = make_cmdscript(base_name, mesh_num, angle_map,
                                                 outputdir, rebin_input,
-                                                axis_pars, opts)
+                                                axis_pars, mode, opts)
 
         if not opts.debug:
             if opts.pbs is None:
