@@ -2,11 +2,12 @@
 
 import os
 
-VERSION = "1.1"
+VERSION = "1.2"
 REBINNER_CMD = "gmeshrebin3 -f"
 MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
 ROTATE_CMD = "gmeshrot3 0 1 0"
 MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
+MAKE_NXS_CMD = "python /SNS/software/bin/convert_nxs_8.py"
 MATRIX_ROT_CMD = "gmeshmat"
 
 def myExtend(a,b):
@@ -176,12 +177,19 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, opt):
                 vtkcmd = [MAKE_VTK_CMD.replace("SNS", "home/jnu")]
                 vtkcmd.append(ofile)
                 print >> fcscr, " ".join(vtkcmd)
-            
+            if opt.make_nxs:
+                nxscmd = [MAKE_NXS_CMD.replace("SNS", "home/jnu")]
+                nxscmd.append()
+                nxscmd.append(ofile)
+                print >> fcscr, " ".join(nxscmd)
+                
             print >> fcscr, "cp", ofile, odir
             if not os.path.exists(p_rot_file):
                 print >> fcscr, "cp", rot_file, odir
             if opt.make_vtk:
                 print >> fcscr, "cp", ofile.replace('.in', '.vtk'), odir
+            if opt.make_nxs:
+                print >> fcscr, "cp", ofile.replace('.in', '.nxs'), odir
     fcscr.close()
     os.chmod(cscr, 0755)
     
@@ -244,6 +252,12 @@ def run(opts, tempfile, atempfile):
     axis_pars.extend(zaxis)
 
     threshold = get_value("THRESH", flines)
+
+    mode = get_value("MODE", flines)
+    if mode is None:
+        mode = "qvec"
+    else:
+        mode = mode.lower()
 
     # Get angle map
     if opts.use_matrix is None:
@@ -382,6 +396,11 @@ if __name__ == "__main__":
                       help="Flag to turn on creation of vtk files from "\
                       +"rebining output.")
     parser.set_defaults(make_vtk=False)
+    
+    parser.add_option("", "--make-nxs", dest="make_nxs", action="store_true",
+                      help="Flag to turn on creation of InElSxtal NeXus "\
+                      +"files from rebining output.")
+    parser.set_defaults(make_nxs=False)
 
     parser.add_option("-r", "--force-rot", dest="force_rot",
                       action="store_true", help="Flag to force the creation "\
