@@ -171,19 +171,31 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
     print >> fcscr, "end=$(date +%s)"
     print >> fcscr, "let diff=${end}-${start}"
     print >> fcscr, "echo \"Job Time: ${diff}\""
+    
+    if opt.make_vtk:
+        vtkcmd = []
+        if opt.pbs is not None:
+            if opt.pbs == "oic":
+                vtkcmd.append(MAKE_VTK_CMD.replace("SNS", "home/jnu"))
+        else:
+            vtkcmd.append(MAKE_VTK_CMD)
+        vtkcmd.append(ofile)
+        print >> fcscr, " ".join(vtkcmd)
+
+    if opt.make_nxs:
+        nxscmd = []
+        if opt.pbs is not None:
+            if opt.pbs == "oic":
+                nxscmd.append(MAKE_NXS_CMD.replace("SNS", "home/jnu"))
+        else:
+            nxscmd.append(MAKE_NXS_CMD)
+        nxscmd.append("--bins="+",".join(apar))
+        nxscmd.append("--mode="+rmode)
+        nxscmd.append(ofile)
+        print >> fcscr, " ".join(nxscmd)
+
     if opt.pbs is not None:
         if opt.pbs == "oic":
-            if opt.make_vtk:
-                vtkcmd = [MAKE_VTK_CMD.replace("SNS", "home/jnu")]
-                vtkcmd.append(ofile)
-                print >> fcscr, " ".join(vtkcmd)
-            if opt.make_nxs:
-                nxscmd = [MAKE_NXS_CMD.replace("SNS", "home/jnu")]
-                nxscmd.append("--bins="+",".join(apar))
-                nxscmd.append("--mode="+rmode)
-                nxscmd.append(ofile)
-                print >> fcscr, " ".join(nxscmd)
-                
             print >> fcscr, "cp", ofile, odir
             if not os.path.exists(p_rot_file):
                 print >> fcscr, "cp", rot_file, odir
@@ -191,6 +203,7 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
                 print >> fcscr, "cp", ofile.replace('.in', '.vtk'), odir
             if opt.make_nxs:
                 print >> fcscr, "cp", ofile.replace('.in', '.nxs'), odir
+
     fcscr.close()
     os.chmod(cscr, 0755)
     
@@ -348,12 +361,6 @@ def run(opts, tempfile, atempfile):
                 jid = slurm.run(job_script, get_queue(instrument), outlog_name,
                                 None, verbose=opts.verbose,
                                 jobname=job_name, **kwargs)
-
-                if opts.make_vtk:
-
-                    vjid = slurm.run(vscr, get_queue(instrument), voutlog_name,
-                                     verbose=opts.verbose, precursor=jid,
-                                     jobname="_".join(vtk_name))
             else:
                 import sns_os
                 cmd = []
