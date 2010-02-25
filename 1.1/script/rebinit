@@ -108,6 +108,9 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
 
     fcscr = open(cscr, 'w')
 
+    if opt.force_rot and os.path.exists(p_rot_file):
+        os.remove(p_rot_file)
+
     if opt.pbs is not None:
         # Setup PBS stuff
         print >> fcscr, "#!/bin/bash"
@@ -139,9 +142,6 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
     print >> fcscr, "echo \"Start:\" ${start}"
     print >> fcscr, "echo \"Hostname:\" ${HOSTNAME}"
     print >> fcscr, ""
-
-    if opt.force_rot and os.path.exists(p_rot_file):
-        os.remove(p_rot_file)
 
     if not os.path.exists(p_rot_file):
         for ifile in ifiles:
