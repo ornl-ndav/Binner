@@ -108,6 +108,7 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
 
     fcscr = open(cscr, 'w')
 
+    p_rot_file = os.path.join(odir, rot_file)
     if opt.force_rot and os.path.exists(p_rot_file):
         os.remove(p_rot_file)
 
@@ -125,7 +126,6 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
             print >> fcscr, "#PBS -l walltime=%s" % opt.walltime
         print >> fcscr, "#PBS -l nodes=1:ppn=%d" % opt.threads
 
-    p_rot_file = os.path.join(odir, rot_file)
     if opt.pbs is not None and opt.pbs == "oic":
         if os.path.exists(p_rot_file):
             print >> fcscr, "cp", p_rot_file, "$PBS_SCRATCH"
