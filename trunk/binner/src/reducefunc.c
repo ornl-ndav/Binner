@@ -134,8 +134,11 @@ int reduce_func(void * v, int k)
 	return 0;
 }
 
-int reduce_done()
+int reduce_done(int nd)
 {
+    /* nd == 1 -- TRUE, no factorial division */
+    /* nd == 0 -- FALSE, do fatorial division */
+
 	JRB bn;
 	void * v;
 	char * c;
@@ -156,8 +159,12 @@ int reduce_done()
             dp[0] /= 1.0;
             dp[1] /= 1.0;
 #else
-            dp[0] /= dp[4];
-            dp[1] /= dp[4];
+            if (nd == 0)
+            {
+                dp[0] /= dp[4];
+                dp[1] /= dp[4];
+            }
+
             dp[0] /= volumescale;
 #endif
 			totalvolume += dp[0];
