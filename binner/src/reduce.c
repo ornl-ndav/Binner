@@ -111,7 +111,10 @@ int main(int argc, char ** argv)
 			}
 	}
 
-	reduce_done();
+	if (strcmp(argv[3],"-nd") == 0)
+        reduce_done(1); /* no factorial division */
+    else
+        reduce_done(0); /* do factorial division */
 
 #if REBINDEBUG
 	fprintf(stderr,"reduce ninputs = %d \n", ninputs);
