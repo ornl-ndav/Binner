@@ -34,3 +34,5 @@ add_subdirectory(vcb)
 
 project(binner)
 add_subdirectory(src)
+
+install(FILES ${CMAKE_HOME_DIRECTORY}/script/rebinit DESTINATION ${BINNER_INSTALL_DIR}/bin)
