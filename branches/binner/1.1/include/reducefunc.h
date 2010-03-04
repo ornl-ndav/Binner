@@ -16,7 +16,7 @@ int reduce_init(int argc, char ** argv);
  */
 int reduce_func(void * v, int k);
 
-int reduce_done();
+int reduce_done(int nd);
 
 #ifdef __cplusplus
 }  /* extern C */

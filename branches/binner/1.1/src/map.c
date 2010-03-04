@@ -149,6 +149,12 @@ int main(int argc, char ** argv, char ** envp)
 		exit(1);
 	}
 
+	if (strcmp(argv[c],"-nd") == 0) /* new arg added for RM to test the option of "no factorial division" */
+	{
+		argc -= 1;
+		c += 1;
+	}
+
 	signal(SIGPIPE, sigpipe_handler);
 
 	/* spawn off "nforks" rebinner and one sink processes */
