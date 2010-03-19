@@ -4,7 +4,7 @@ import os
 
 VERSION = "1.2"
 REBINNER_CMD = "gmeshrebin3 -f"
-MULTI_THREAD_REBINNER_CMD = "map -n %d " + REBINNER_CMD
+MAP_CMD = "map -n %d"
 ROTATE_CMD = "gmeshrot3 0 1 0"
 MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
 MAKE_NXS_CMD = "python /SNS/software/bin/convert_nxs_8.py"
@@ -159,12 +159,11 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
                       ">>", rot_file
                 
     # Call rebinner command
-    if opt.multi_thread:
-        rebin_cmd = MULTI_THREAD_REBINNER_CMD % opt.threads
-    else:
-        rebin_cmd = REBINNER_CMD
+    rebin_cmd = []
+    rebin_cmd.append(MAP_CMD % opt.threads)
+    rebin_cmd.append(REBINNER_CMD)
     
-    print >> fcscr, "time cat", rot_file, "| " + rebin_cmd, \
+    print >> fcscr, "time cat", rot_file, "| " + " ".join(rebin_cmd), \
           "-b", str(opt.batch_size), "-t", str(opt.threshold), \
           " ".join(apar), ">", ofile
 
@@ -353,7 +352,7 @@ def run(opts, tempfile, atempfile):
             if opts.pbs is None:
                 # Send out SLURM jobs
                 kwargs = {}
-                if opts.multi_thread and opts.threads > 1:
+                if opts.threads > 1:
                     kwargs["nodes"] = 1
                     kwargs["cpus"] = opts.threads
 
@@ -431,11 +430,6 @@ if __name__ == "__main__":
                       help="Flag to set the threshold for writing rebinned "\
                       +"voxels to file.")
     parser.set_defaults(threshold=1.0e-16)
-
-    parser.add_option("-m", "--multi-thread", dest="multi_thread",
-                      action="store_true", help="Trigger the use of "\
-                      +"multi-threading")
-    parser.set_defaults(multi_thread=False)
 
     parser.add_option("-p", "--threads", dest="threads", type=int,
                       help="Flag to set the number of threads. Default is 1.")
