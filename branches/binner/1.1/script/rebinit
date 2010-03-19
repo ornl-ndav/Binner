@@ -148,6 +148,8 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
     # Call rebinner command
     rebin_cmd = []
     rebin_cmd.append(MAP_CMD % opt.threads)
+    if opt.no_frac:
+        rebin_cmd.append("-nd")
     rebin_cmd.append(REBINNER_CMD)
     
     print >> fcscr, "time cat", rot_file, "| " + " ".join(rebin_cmd), \
@@ -433,6 +435,10 @@ if __name__ == "__main__":
 
     parser.add_option("-s", "--slurm", dest="slurm", help="Specify the SLURM "\
                       +"queue to use.")
+
+    parser.add_option("", "--no-frac", dest="no_frac", action="store_true",
+                      help="Turn off division by fractional area.")
+    parser.set_defaults(no_frac=False)
     
     (options, args) = parser.parse_args()
     
