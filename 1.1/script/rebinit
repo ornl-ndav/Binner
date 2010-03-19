@@ -112,9 +112,9 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
     if opt.force_rot and os.path.exists(p_rot_file):
         os.remove(p_rot_file)
 
+    print >> fcscr, "#!/bin/bash"
     if opt.pbs is not None:
         # Setup PBS stuff
-        print >> fcscr, "#!/bin/bash"
         if opt.pbs == "lens":
             print >> fcscr, "#PBS -A csc030"
         if opt.pbs == "oic":
