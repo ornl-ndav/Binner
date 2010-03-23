@@ -67,6 +67,19 @@ def get_angle_map(afilename):
     afile.close()
     return amap
 
+def get_ub_map(opt):
+    umap = {}
+    try:
+        ufile = open(opt.use_matrix, 'r')
+        for line in ufile:
+            parts = line.split()
+            umap[parts[0].strip()] = " ".join(parts[1:])
+        ufile.close()
+        return umap
+    except IOError:
+        # We have one set of values
+        return {'default', " ".join(opt.use_matrix.split(','))}
+
 def get_value(tag, lines):
     for line in lines:
         sline = line.strip()
@@ -416,7 +429,10 @@ if __name__ == "__main__":
                       +"walltime for the PBS jobs.")
 
     parser.add_option("", "--use-matrix", dest="use_matrix", help="Use a "\
-                      +"matrix to perform the rotation.")
+                      +"matrix to perform the rotation. This can be a "\
+                      +"single set of nine values in row-major order or a "\
+                      +"file containing a run number and nine values in "\
+                      +"row-major order.")
 
     parser.add_option("-s", "--slurm", dest="slurm", help="Specify the SLURM "\
                       +"queue to use.")
