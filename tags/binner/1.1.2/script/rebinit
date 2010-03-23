@@ -1,0 +1,463 @@
+#!/usr/bin/env python
+
+import os
+
+VERSION = "1.2"
+REBINNER_CMD = "gmeshrebin3 -f"
+MAP_CMD = "map -n %d"
+ROTATE_CMD = "gmeshrot3 0 1 0"
+MAKE_VTK_CMD = "python /SNS/software/bin/convert_vtk_8.py"
+MAKE_NXS_CMD = "python /SNS/software/bin/convert_nxs_8.py"
+MATRIX_ROT_CMD = "gmeshmat"
+
+def myExtend(a,b):
+    """Append the items in b into a. This does do error checking."""
+    if a is None:
+        a = None
+    if b is None or len(b) <= 0:
+        return a
+    for i in b:
+        remove = False
+        if i < 0:
+            remove = True
+            i = -1*i
+        try:
+            a.index(i)
+            if remove:
+                a.remove(i)
+        except ValueError:
+            if not remove:
+                a.append(i)
+    return a
+
+def generateList(args, options=None):
+    """Convert a string list into a list of integers"""
+    if len(args) <= 0:
+        return []
+    if type(args) == type(""):
+        args = [args]
+    runs = []
+    for run in args:
+        if run.find(",") >= 0:
+            myExtend(runs,generateList(run.split(",")))
+        else:
+            try:
+                iRun = int(run)
+                runs.append(iRun)
+            except:
+                ends = run.split("-")
+                if len(ends) == 2:
+                    ends = map(lambda x: int(x),ends)
+                    ends.sort()
+                    myExtend(runs,range(ends[0],ends[1]+1))
+                else:
+                    if options is not None and options.verbose:
+                        print "WARN: Skipping run \"%s\"" %run
+    runs.sort()
+    return runs
+
+def get_angle_map(afilename):
+    amap = {}
+    afile = open(afilename, 'r')
+    for line in afile:
+        parts = line.split()
+        # Flip sign for convention
+        amap[parts[0].strip()] = -1.0 * float(parts[1])
+    afile.close()
+    return amap
+
+def get_value(tag, lines):
+    for line in lines:
+        sline = line.strip()
+        if tag in sline:
+            if sline.startswith('#'):
+                return None
+            else:
+                return sline.split(':')[-1]
+    return None
+
+def make_axis(avals):
+    avals = avals.split(',')
+    return avals
+
+def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
+    cscr = os.path.join(odir, "_".join(cname) + ".sh")
+
+    if opt.verbose > 0:
+        print "Command Script:", cscr
+
+    ofile = "_".join(cname) + ".in"
+
+    del cname[-1]
+    cname.append("rbmesh"+str(mnum))
+
+    rot_file = "_".join(cname) + ".inb"
+
+    fcscr = open(cscr, 'w')
+
+    p_rot_file = os.path.join(odir, rot_file)
+    if opt.force_rot and os.path.exists(p_rot_file):
+        os.remove(p_rot_file)
+
+    print >> fcscr, "#!/bin/bash"
+    if opt.pbs is not None:
+        # Setup PBS stuff
+        if opt.pbs == "lens":
+            print >> fcscr, "#PBS -A csc030"
+        if opt.pbs == "oic":
+            print >> fcscr, "#PBS -q nssd08q"
+        print >> fcscr, "#PBS -j oe"
+        if opt.walltime is None:
+            print >> fcscr, "#PBS -l walltime=00:15:00"
+        else:
+            print >> fcscr, "#PBS -l walltime=%s" % opt.walltime
+        print >> fcscr, "#PBS -l nodes=1:ppn=%d" % opt.threads
+
+    if opt.pbs is not None and opt.pbs == "oic":
+        if os.path.exists(p_rot_file):
+            print >> fcscr, "cp", p_rot_file, "$PBS_SCRATCH"
+        else:
+            for ifile in ifiles:
+                print >> fcscr, "cp", ifile, "$PBS_SCRATCH"
+            
+    if opt.pbs is None or opt.pbs == "lens":
+        print >> fcscr, "cd", odir
+    else:
+        print >> fcscr, "cd $PBS_SCRATCH"
+        
+    print >> fcscr, "start=$(date +%s)"
+    print >> fcscr, "echo \"Start:\" ${start}"
+    print >> fcscr, "echo \"Hostname:\" ${HOSTNAME}"
+    print >> fcscr, ""
+
+    if not os.path.exists(p_rot_file):
+        for ifile in ifiles:
+            if opt.pbs is not None and opt.pbs == "oic":
+                ifileb = os.path.basename(ifile)
+            else:
+                ifileb = ifile
+            ifilerun = os.path.basename(ifile).split('_')[1]
+            if opt.use_matrix is None:
+                print >> fcscr, "cat", ifileb, "|", ROTATE_CMD, \
+                      amap[ifilerun], ">>", rot_file
+            else:
+                mat_vals = " ".join(opt.use_matrix.split(','))
+                print >> fcscr, "cat", ifileb, "|", MATRIX_ROT_CMD, mat_vals, \
+                      ">>", rot_file
+                
+    # Call rebinner command
+    rebin_cmd = []
+    rebin_cmd.append(MAP_CMD % opt.threads)
+    if opt.no_frac:
+        rebin_cmd.append("-nd")
+    rebin_cmd.append(REBINNER_CMD)
+    
+    print >> fcscr, "time cat", rot_file, "| " + " ".join(rebin_cmd), \
+          "-b", str(opt.batch_size), "-t", str(opt.threshold), \
+          " ".join(apar), ">", ofile
+
+    print >> fcscr, "rend=$(date +%s)"
+    print >> fcscr, "let diff=${rend}-${start}"
+    print >> fcscr, "echo \"Rebin Time: ${diff}\""
+    
+    if opt.make_vtk:
+        vtkcmd = []
+        if opt.pbs is not None:
+            if opt.pbs == "oic":
+                vtkcmd.append(MAKE_VTK_CMD.replace("SNS", "home/jnu"))
+        else:
+            vtkcmd.append(MAKE_VTK_CMD)
+        vtkcmd.append(ofile)
+        print >> fcscr, " ".join(vtkcmd)
+
+    if opt.make_nxs:
+        nxscmd = []
+        if opt.pbs is not None:
+            if opt.pbs == "oic":
+                nxscmd.append(MAKE_NXS_CMD.replace("SNS", "home/jnu"))
+        else:
+            nxscmd.append(MAKE_NXS_CMD)
+        nxscmd.append("--bins="+",".join(apar))
+        nxscmd.append("--mode="+rmode)
+        nxscmd.append(ofile)
+        print >> fcscr, " ".join(nxscmd)
+
+    if opt.make_vtk or opt.make_nxs:
+        print >> fcscr, "cend=$(date +%s)"
+        print >> fcscr, "let diff=${cend}-${rend}"
+        print >> fcscr, "echo \"Convert Time: ${diff}\""
+
+    if opt.pbs is not None:
+        if opt.pbs == "oic":
+            print >> fcscr, "cp", ofile, odir
+            if not os.path.exists(p_rot_file):
+                print >> fcscr, "cp", rot_file, odir
+            if opt.make_vtk:
+                print >> fcscr, "cp", ofile.replace('.in', '.vtk'), odir
+            if opt.make_nxs:
+                print >> fcscr, "cp", ofile.replace('.in', '.nxs'), odir
+
+    print >> fcscr, "end=$(date +%s)"
+    print >> fcscr, "let diff=${end}-${start}"
+    print >> fcscr, "echo \"Job Time: ${diff}\""
+
+    fcscr.close()
+    os.chmod(cscr, 0755)
+    
+    return (cscr, ofile)
+
+def make_vtkscript(outputdir, out_file, instrument, runlist, mesh_num, opt):
+    vtkcmd = [MAKE_VTK_CMD]
+    vtkcmd.append(os.path.join(outputdir, out_file))
+    
+    vtk_name = []
+    vtk_name.append(instrument)
+    vtk_name.append(str(runlist[0]))
+    vtk_name.append("rvtk"+mesh_num)
+    
+    if opt.verbose:
+        print "VTK Job name:", "_".join(vtk_name)
+        print "VTK Input File:", vtkcmd[-1]
+        
+        vscr = os.path.join(outputdir, "_".join(vtk_name) + ".sh")
+        vcscr = open(vscr, 'w')
+        print >> vcscr, "#!/bin/bash"
+        print >> vcscr, " ".join(vtkcmd)
+        
+        vcscr.close()
+        os.chmod(vscr, 0755)
+        
+        voutlog_name = "_".join(vtk_name) + ".out"
+
+    return (vtk_name, voutlog_name)
+
+def run(opts, tempfile, atempfile):
+    if opts.verbose:
+        print "Opening", tempfile
+
+    tfile = open(tempfile, "r")
+    flines = tfile.readlines()
+    tfile.close()
+
+    # Parse and retrieve all template information
+
+    instrument = get_value("INST", flines)
+    runs = get_value("RUN", flines)
+
+    #import sns_inst_util
+    #runlist = sns_inst_util.generateList(runs)
+    runlist = generateList(runs)
+    num_runs = len(runlist)
+
+    if opts.verbose:
+        print "Instrument:", instrument
+        print "Runs:", runlist
+
+    xaxis = make_axis(get_value("XAXIS", flines))
+    yaxis = make_axis(get_value("YAXIS", flines))
+    zaxis = make_axis(get_value("ZAXIS", flines))
+
+    axis_pars = []
+    axis_pars.extend(xaxis)
+    axis_pars.extend(yaxis)
+    axis_pars.extend(zaxis)
+
+    threshold = get_value("THRESH", flines)
+
+    mode = get_value("MODE", flines)
+    if mode is None:
+        mode = "qvec"
+    else:
+        mode = mode.lower()
+
+    # Get angle map
+    if opts.use_matrix is None:
+        angle_map = get_angle_map(atempfile)
+    else:
+        angle_map = None
+
+    # Make a home for the output
+
+    if opts.outputdir is None:
+        basedir = os.path.join(os.path.expanduser("~/results"), instrument)
+        outputdir = os.path.join(basedir, str(runlist[0])+"-rebin")
+    else:
+        outputdir = os.path.expanduser(opts.outputdir)
+
+    if not os.path.exists(outputdir):
+        os.makedirs(outputdir)
+
+    if opts.verbose:
+        print "Output File directory:", outputdir
+    
+    # Gather the base set of files
+
+    if opts.inputdir is not None:
+        filedir = opts.inputdir
+    else:
+        filedir = os.path.join(basedir, str(runlist[0]),
+                               str(runlist[0])+"-mesh")
+    if opts.verbose:
+        print "Input File directory:", filedir
+
+    import dircache
+    filelist = [dfile for dfile in dircache.listdir(filedir) \
+                if "bmesh" in dfile and dfile.endswith(".inb")]
+    
+    if opts.verbose > 1:
+        print "Files:", filelist
+
+    # Construct the jobs
+    
+    for ifile in filelist:
+        rebin_input = []
+        pifile = os.path.join(filedir, ifile)
+        rebin_input.append(pifile)
+        if num_runs > 1:
+            for run in runlist[1:]:
+                rebin_input.append(pifile.replace(str(runlist[0]), str(run)))
+            if opts.verbose > 1:
+                print "Input files:", rebin_input
+                                   
+        mesh_num = ifile.split('bmesh')[-1].split('.')[0]
+
+        if opts.min_slice != -1:
+            if int(mesh_num) < opts.min_slice:
+                continue
+
+        if opts.max_slice != -1:
+            if int(mesh_num) > opts.max_slice:
+                continue            
+
+        base_name = []
+        base_name.append(instrument)
+        base_name.append(str(runlist[0]))
+        base_name.append("rebin"+mesh_num)
+
+        job_name = "_".join(base_name)
+        outlog_name = "_".join(base_name) + ".out"
+        errlog_name = "_".join(base_name) + ".err"
+        
+        if opts.verbose > 0:
+            print "Job name:", job_name
+            print "Output Log name:", outlog_name
+
+        (job_script, out_file) = make_cmdscript(base_name, mesh_num, angle_map,
+                                                outputdir, rebin_input,
+                                                axis_pars, mode, opts)
+
+        if not opts.debug:
+            if opts.pbs is None:
+                # Send out SLURM jobs
+                kwargs = {}
+                if opts.threads > 1:
+                    kwargs["nodes"] = 1
+                    kwargs["cpus"] = opts.threads
+
+                import slurm
+                jid = slurm.run(job_script, opts.slurm, outlog_name,
+                                None, verbose=opts.verbose,
+                                jobname=job_name, **kwargs)
+            else:
+                import sns_os
+                cmd = []
+                cmd.append("qsub")
+                cmd.append("-N %s" % job_name)
+                cmd.append("-o %s" % outlog_name)
+                cmd.append(job_script)
+
+                jid = sns_os.run2(" ".join(cmd))
+
+if __name__ == "__main__":
+    import optparse
+
+    description = []
+    description.append("This script launches rebinning jobs using a template")
+    description.append("file that contains the rebinning grid information.")
+    description.append("This script assumes your files are stored in the")
+    description.append("results directory in your home area where the run_dgs")
+    description.append("command places its output.")
+
+    parser = optparse.OptionParser("usage: %prog [options] <template file> "\
+                                   +"<angle map>",
+                                   None, optparse.Option, VERSION, 'error',
+                                   " ".join(description))
+    
+    parser.add_option("-v", "--verbose", dest="verbose", action="count",
+                      help="Flag for turning on script verbosity")
+
+    parser.add_option("-d", "--debug", dest="debug", action="store_true",
+                      help="Flag for turning off SLURM submission.")
+    parser.set_defaults(debug=False)
+
+    parser.add_option("-o", "--outputdir", dest="outputdir",
+                      help="Specify a directory to receive the rebinning "\
+                      +"output.")
+
+    parser.add_option("-n", "--inputdir", dest="inputdir",
+                      help="Specify a directory to get the rebinning input.")
+
+    parser.add_option("-k", "--make-vtk", dest="make_vtk", action="store_true",
+                      help="Flag to turn on creation of vtk files from "\
+                      +"rebining output.")
+    parser.set_defaults(make_vtk=False)
+    
+    parser.add_option("", "--make-nxs", dest="make_nxs", action="store_true",
+                      help="Flag to turn on creation of InElSxtal NeXus "\
+                      +"files from rebining output.")
+    parser.set_defaults(make_nxs=False)
+
+    parser.add_option("-r", "--force-rot", dest="force_rot",
+                      action="store_true", help="Flag to force the creation "\
+                      +"of the file containing rotated data information.")
+    parser.set_defaults(force_rot=False)
+
+    parser.add_option("-i", "--min-slice", dest="min_slice", type=int,
+                      help="Flag to set the minimum slice to use.")
+    parser.set_defaults(min_slice=-1)
+    
+    parser.add_option("-x", "--max-slice", dest="max_slice", type=int,
+                      help="Flag to set the maximum slice to use.")
+    parser.set_defaults(max_slice=-1)
+
+    parser.add_option("-b", "--batch-size", dest="batch_size", type=int,
+                      help="Flag to set the batch size for the rebinning job.")
+    parser.set_defaults(batch_size=10000)
+
+    parser.add_option("-t", "--threshold", dest="threshold", type=float,
+                      help="Flag to set the threshold for writing rebinned "\
+                      +"voxels to file.")
+    parser.set_defaults(threshold=1.0e-16)
+
+    parser.add_option("-p", "--threads", dest="threads", type=int,
+                      help="Flag to set the number of threads. Default is 1.")
+    parser.set_defaults(threads=1)
+
+    parser.add_option("", "--pbs", dest="pbs", help="Specify the PBS machine "\
+                      +"to use.")
+
+    parser.add_option("-w", "--walltime", dest="walltime", help="Set the "\
+                      +"walltime for the PBS jobs.")
+
+    parser.add_option("", "--use-matrix", dest="use_matrix", help="Use a "\
+                      +"matrix to perform the rotation.")
+
+    parser.add_option("-s", "--slurm", dest="slurm", help="Specify the SLURM "\
+                      +"queue to use.")
+
+    parser.add_option("", "--no-frac", dest="no_frac", action="store_true",
+                      help="Turn off division by fractional area.")
+    parser.set_defaults(no_frac=False)
+    
+    (options, args) = parser.parse_args()
+    
+    if len(args) < 2 and options.use_matrix is None:
+        parser.error("Must specify the template file and the angle map on "\
+                     +"the command-line")
+    else:
+        args.append(None)
+
+    if options.pbs is None and options.slurm is None:
+        parser.error("Must specify an OIC machine or a SLURM queue!")
+        
+    run(options, args[0], args[1])
