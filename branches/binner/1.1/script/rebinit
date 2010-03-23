@@ -3,6 +3,7 @@
 import os
 
 VERSION = "1.2"
+DEFAULT_DIR = os.path.expanduser("~/results")
 REBINNER_CMD = "gmeshrebin3 -f"
 MAP_CMD = "map -n %d"
 ROTATE_CMD = "gmeshrot3 0 1 0"
@@ -250,12 +251,12 @@ def run(opts, tempfile, atempfile):
         angle_map = None
 
     # Make a home for the output
-
     if opts.outputdir is None:
-        basedir = os.path.join(os.path.expanduser("~/results"), instrument)
-        outputdir = os.path.join(basedir, str(runlist[0])+"-rebin")
+        basedir = DEFAULT_DIR
     else:
-        outputdir = os.path.expanduser(opts.outputdir)
+        basedir = os.path.expanduser(opts.outputdir)
+
+    outputdir = os.path.join(basedir, instrument, str(runlist[0])+"-rebin")
 
     if not os.path.exists(outputdir):
         os.makedirs(outputdir)
@@ -264,12 +265,14 @@ def run(opts, tempfile, atempfile):
         print "Output File directory:", outputdir
     
     # Gather the base set of files
-
-    if opts.inputdir is not None:
-        filedir = opts.inputdir
+    if opts.inputdir is None:
+        basedir = DEFAULT_DIR
     else:
-        filedir = os.path.join(basedir, str(runlist[0]),
-                               str(runlist[0])+"-mesh")
+        basedir = os.path.expanduser(opts.inputdir)        
+
+    filedir = os.path.join(basedir, instrument, str(runlist[0]),
+                           str(runlist[0])+"-mesh")
+    
     if opts.verbose:
         print "Input File directory:", filedir
 
