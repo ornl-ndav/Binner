@@ -5,7 +5,7 @@ import drplot
 import numpy
 import pylab
 
-HOSTS = {"gemini": 0, "molly": 1, "orion": 2, "dev": 3}
+HOSTS = {"gemini": 0, "molly": 1, "orion": 2, "dev": 3, "ferb": 4}
 
 starttime = []
 hostname = []
