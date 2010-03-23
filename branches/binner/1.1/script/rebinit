@@ -156,9 +156,9 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
           "-b", str(opt.batch_size), "-t", str(opt.threshold), \
           " ".join(apar), ">", ofile
 
-    print >> fcscr, "end=$(date +%s)"
-    print >> fcscr, "let diff=${end}-${start}"
-    print >> fcscr, "echo \"Job Time: ${diff}\""
+    print >> fcscr, "rend=$(date +%s)"
+    print >> fcscr, "let diff=${rend}-${start}"
+    print >> fcscr, "echo \"Rebin Time: ${diff}\""
     
     if opt.make_vtk:
         vtkcmd = []
@@ -182,6 +182,11 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
         nxscmd.append(ofile)
         print >> fcscr, " ".join(nxscmd)
 
+    if opt.make_vtk or opt.make_nxs:
+        print >> fcscr, "cend=$(date +%s)"
+        print >> fcscr, "let diff=${cend}-${rend}"
+        print >> fcscr, "echo \"Convert Time: ${diff}\""
+
     if opt.pbs is not None:
         if opt.pbs == "oic":
             print >> fcscr, "cp", ofile, odir
@@ -191,6 +196,10 @@ def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
                 print >> fcscr, "cp", ofile.replace('.in', '.vtk'), odir
             if opt.make_nxs:
                 print >> fcscr, "cp", ofile.replace('.in', '.nxs'), odir
+
+    print >> fcscr, "end=$(date +%s)"
+    print >> fcscr, "let diff=${end}-${start}"
+    print >> fcscr, "echo \"Job Time: ${diff}\""
 
     fcscr.close()
     os.chmod(cscr, 0755)
