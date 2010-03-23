@@ -370,7 +370,7 @@ if __name__ == "__main__":
                       help="Specify a directory to receive the rebinning "\
                       +"output.")
 
-    parser.add_option("-n", "--inputdir", dest="inputdir",
+    parser.add_option("-i", "--inputdir", dest="inputdir",
                       help="Specify a directory to get the rebinning input.")
 
     parser.add_option("-k", "--make-vtk", dest="make_vtk", action="store_true",
@@ -378,7 +378,7 @@ if __name__ == "__main__":
                       +"rebining output.")
     parser.set_defaults(make_vtk=False)
     
-    parser.add_option("", "--make-nxs", dest="make_nxs", action="store_true",
+    parser.add_option("-n", "--make-nxs", dest="make_nxs", action="store_true",
                       help="Flag to turn on creation of InElSxtal NeXus "\
                       +"files from rebining output.")
     parser.set_defaults(make_nxs=False)
@@ -388,7 +388,7 @@ if __name__ == "__main__":
                       +"of the file containing rotated data information.")
     parser.set_defaults(force_rot=False)
 
-    parser.add_option("-i", "--min-slice", dest="min_slice", type=int,
+    parser.add_option("-m", "--min-slice", dest="min_slice", type=int,
                       help="Flag to set the minimum slice to use.")
     parser.set_defaults(min_slice=-1)
     
