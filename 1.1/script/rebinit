@@ -96,7 +96,7 @@ def make_axis(avals):
     avals = avals.split(',')
     return avals
 
-def make_cmdscript(cname, mnum, amap, odir, ifiles, apar, rmode, opt):
+def make_cmdscript(cname, mnum, amap, umap, odir, ifiles, apar, rmode, opt):
     cscr = os.path.join(odir, "_".join(cname) + ".sh")
 
     if opt.verbose > 0:
@@ -262,6 +262,9 @@ def run(opts, tempfile, atempfile):
     # Get angle map
     angle_map = get_angle_map(atempfile)
 
+    # Get UB map
+    ub_map = get_ub_map(opts)
+
     # Make a home for the output
     if opts.outputdir is None:
         basedir = DEFAULT_DIR
@@ -331,7 +334,7 @@ def run(opts, tempfile, atempfile):
             print "Output Log name:", outlog_name
 
         (job_script, out_file) = make_cmdscript(base_name, mesh_num, angle_map,
-                                                outputdir, rebin_input,
+                                                ub_map, outputdir, rebin_input,
                                                 axis_pars, mode, opts)
 
         if not opts.debug:
