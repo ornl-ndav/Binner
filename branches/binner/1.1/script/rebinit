@@ -155,9 +155,15 @@ def make_cmdscript(cname, mnum, amap, umap, odir, ifiles, apar, rmode, opt):
             else:
                 ifileb = ifile
             ifilerun = os.path.basename(ifile).split('_')[1]
-            print >> fcscr, "cat", ifileb, "|",
+
+            cmd = []
+            cmd.append("cat")
+            cmd.append(ifileb)
+            cmd.append("|")
+            
             if amap is not None:
-                print fcscr, ROTATE_CMD, amap[ifilerun],
+                cmd.append(ROTATE_CMD)
+                cmd.append(str(amap[ifilerun]))
 
             if umap is not None:
                 if len(umap) > 1:
@@ -166,10 +172,15 @@ def make_cmdscript(cname, mnum, amap, umap, odir, ifiles, apar, rmode, opt):
                     mat_vals = umap[0]
 
                 if amap is not None:
-                    print >> fcscr, "|", 
-                print >> fcscr, MATRIX_ROT_CMD, mat_vals,
+                    cmd.append("|")
+                    
+                cmd.append(MATRIX_ROT_CMD)
+                cmd.append(mat_vals)
 
-            print >> fcscr, ">>", rot_file
+            cmd.append(">>")
+            cmd.append(rot_file)
+
+            print >> fcscr, " ".join(cmd)
                 
     # Call rebinner command
     rebin_cmd = []
