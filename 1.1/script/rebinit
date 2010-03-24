@@ -58,6 +58,8 @@ def generateList(args, options=None):
     return runs
 
 def get_angle_map(afilename):
+    if afilename is None:
+        return None
     amap = {}
     afile = open(afilename, 'r')
     for line in afile:
@@ -258,10 +260,7 @@ def run(opts, tempfile, atempfile):
         mode = mode.lower()
 
     # Get angle map
-    if opts.use_matrix is None:
-        angle_map = get_angle_map(atempfile)
-    else:
-        angle_map = None
+    angle_map = get_angle_map(atempfile)
 
     # Make a home for the output
     if opts.outputdir is None:
@@ -442,9 +441,12 @@ if __name__ == "__main__":
     parser.set_defaults(no_frac=False)
     
     (options, args) = parser.parse_args()
+
+    if len(args) < 2 and options.use_matrix is None:
+        parser.error("Must provide rotation angles and/or UB matrix")
     
     if len(args) < 2:
-        args.append(None)        
+        args.append(None)     
 
     if options.pbs is None and options.slurm is None:
         parser.error("Must specify an OIC machine or a SLURM queue!")
