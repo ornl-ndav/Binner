@@ -169,7 +169,7 @@ def make_cmdscript(cname, mnum, amap, umap, odir, ifiles, apar, rmode, opt):
                 if len(umap) > 1:
                     mat_vals = umap[ifilerun]
                 else:
-                    mat_vals = umap[0]
+                    mat_vals = umap['default']
 
                 if amap is not None:
                     cmd.append("|")
