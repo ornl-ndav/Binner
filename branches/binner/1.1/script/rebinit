@@ -70,6 +70,8 @@ def get_angle_map(afilename):
     return amap
 
 def get_ub_map(opt):
+    if opt.use_matrix is None:
+        return None
     umap = {}
     try:
         ufile = open(opt.use_matrix, 'r')
@@ -80,7 +82,7 @@ def get_ub_map(opt):
         return umap
     except IOError:
         # We have one set of values
-        return {'default', " ".join(opt.use_matrix.split(','))}
+        return {'default': " ".join(opt.use_matrix.split(','))}
 
 def get_value(tag, lines):
     for line in lines:
