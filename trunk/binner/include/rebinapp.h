@@ -58,6 +58,9 @@ void	output_gmesh_formaterr();
 void	gmesh_singlebin_output(double * dp, 
 							int sliceid, int x, int y, int z, 
 							int * orig, double * spacing);
+void	gmesh_singlebin_output_nd(double * dp, 
+							int sliceid, int x, int y, int z, 
+							int * orig, double * spacing);
 
 #ifdef __cplusplus
 }  /* extern C */
