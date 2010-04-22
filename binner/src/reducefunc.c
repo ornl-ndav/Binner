@@ -155,20 +155,24 @@ int reduce_done(int nd)
 		
 		/*if (dp[0] > 1e-16)*/
 		{
-#if 0
-            dp[0] /= 1.0;
-            dp[1] /= 1.0;
-#else
+
+            dp[4] *= volumescale;
+
             if (nd == 0)
             {
                 dp[0] /= dp[4];
                 dp[1] /= dp[4];
             }
 
-            dp[0] /= volumescale;
-#endif
+            /* dp[0] /= volumescale; */
+
 			totalvolume += dp[0];
-			gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
+
+            if (nd == 0)
+                gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
+            else
+                gmesh_singlebin_output_nd(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
+            
 			nvox ++;
 		}
 		/*write(1, v, ITEMSIZE);*/
