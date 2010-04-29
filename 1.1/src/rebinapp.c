@@ -235,6 +235,22 @@ void gmesh_singlebin_output(double * dp,
 	printf("\n");
 }
 
+void gmesh_singlebin_output_nd( double * dp, 
+                                int sid, int x, int y, int z, 
+                                int * orig, double * spacing)
+{
+	printf("%d %le %le %le %le %le ", sid, dp[2], dp[3], dp[0], dp[1], dp[4]);
+	printcorners(x, y, z, orig, spacing);
+	printcorners(x+1, y, z, orig, spacing);
+	printcorners(x+1, y+1, z, orig, spacing);
+	printcorners(x, y+1, z, orig, spacing);
+	printcorners(x, y, z+1, orig, spacing);
+	printcorners(x+1, y, z+1, orig, spacing);
+	printcorners(x+1, y+1, z+1, orig, spacing);
+	printcorners(x, y+1, z+1, orig, spacing);
+	printf("\n");
+}
+
 
 double rebin_gmesh_output(
 			int sliceid,
