@@ -16,8 +16,6 @@
  *
  */
 
-#define REBINDEBUG 0
-
 void bounding_box(int n, double * bound, double * v)
 {
 	double  fimin,fjmin,fkmin,fimax,fjmax,fkmax;

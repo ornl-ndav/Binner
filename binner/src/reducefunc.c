@@ -6,13 +6,13 @@
 #include "dmem.h"
 #include "rebinapp.h"
 #include "reducefunc.h"
+#include "macros.H"
 
 /**
  * $Id$
  *
  */
 
-#define REBINDEBUG 0
 #define ITEMSIZE (sizeof(int)*4 + sizeof(double)*5)
 
 static JRB b;

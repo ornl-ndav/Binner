@@ -6,15 +6,15 @@
 #include <pthread.h>
 #include <sys/time.h>
 
+#include "macros.h"
+
 /**
  * $Id$
  *
  * \file src/map.c
  */
 
-#define REBINDEBUG 0
-
-char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
+static char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
 
 #define BATCH_SZ 2000
 #define ITEM_SZ (sizeof(int) + sizeof(double)*(4 + 8*3))
