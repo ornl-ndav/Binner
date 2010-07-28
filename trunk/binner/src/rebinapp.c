@@ -11,8 +11,6 @@
  *
  */
 
-#define REBINDEBUG 0
-
 static char * versionstring = "1.1.0";
 
 char * rebinner_versionstring()

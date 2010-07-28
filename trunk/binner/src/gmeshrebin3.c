@@ -1,7 +1,29 @@
 /**
- *  $Id$
- *
- *  \file src/gmeshrebin3.c
+
+   \file src/gmeshrebin3.c
+
+   \brief This file is the main entry of gmesh rebinner version 1.1
+  
+   gmeshrebin3 [-f] [-b batchsize] [-t threshold] 
+               xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing
+  
+   \li [-f]: toggle of filter mode. 
+   If set, gemeshrebin3 acts as a filter. The output is not a full
+   fledged volume. 
+   The missing piece is implemented by reduce functions, which 
+   collects and generates a globally consistent rebinned volume.
+   
+   \li [-b batchsize] number of pixels to rebin as a batch. Default to 10000.
+
+   \li [-t threshold] rebinner truncates values below the threshold to zero.
+   Default to \link macros#BINNER_EPSILON BINNER_EPSILON\endlink.
+
+   \note This is the only rebinner executable capable of acting as a filter,
+         intended to be used as one of many rebinner threads,
+         designed primarily for handling large amounts of data.
+   
+   $Id$
+
  */
 
 #include <stdlib.h>
@@ -18,30 +40,10 @@
 #include "volume.h"
 #include <unistd.h>
 
-#define REBINDEBUG 0
-
-char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] \
+static char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] \
 xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
 
-/**
-   \brief This function is the main entry of gmesh rebinner version 1.1
-  
-   usage: 
-   gmeshrebin3 [-f] [-b batchsize] [-t threshold] 
-               xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing
-  
-   \li [-f]: toggle of filter mode. 
-   If set, gemeshrebin3 acts as a filter. The output is not a full
-   fledged volume. 
-   The missing piece is implemented by reduce functions, which 
-   collects and generates a globally consistent rebinned volume.
-   
-   \li [-b batchsize] number of pixels to rebin as a batch. Default to 10000.
 
-   \li [-t threshold] rebinner truncates values below the threshold to zero.
-   Default to \link binner.h#BINNER_EPSILON \endlink.
-
- */
  
 int main(int argc, char ** argv)
 {

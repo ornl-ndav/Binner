@@ -19,4 +19,6 @@
 /*! A convenience macro to compute the norm of a vector \a n.*/
 #define BINNER_NORM(n)	sqrt((n)[0]*(n)[0]+(n)[1]*(n)[1]+(n)[2]*(n)[2])
 
+#define REBINDEBUG 0
+
 #endif

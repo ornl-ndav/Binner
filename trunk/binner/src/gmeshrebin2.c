@@ -16,7 +16,6 @@
  *
  */
 
-#define REBINDEBUG 0
 
 char   rbuf[8192];
 float  vbuf[1024];
