@@ -89,7 +89,7 @@ int main(int argc, char ** argv)
 		voxels = malloc(nvoxel * sizeof(double));
 		for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-		totalvolume = bin_para3d_150(nfacets, 
+		totalvolume = bin_para_3dvoxelize(nfacets, 
 							nverts,
 							vdata, /* the vertices */
 							orig, 

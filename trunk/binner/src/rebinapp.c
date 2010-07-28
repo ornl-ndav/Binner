@@ -125,7 +125,7 @@ double rebin_byslice(int npara,
 
 		for (i = 0; i < nvoxel*2; voxels[i] = 0.0, i ++);
 
-		totalvolume += bin_smallpara3d_150(
+		totalvolume += bin_para_3dclip(
 								sliceid[n],
 								j * 6, /* npara*6 */ 
 								nverts + n*6,
@@ -205,9 +205,9 @@ double rebin_gmesh(int npara,
 		if (j > 0)
 		{
 #if REBINDEBUG
-			fprintf(stderr, "calling bin_smallpara3d on %d pixels, voxels = 0x%lx\n", j, voxels);
+			fprintf(stderr, "calling bin_para_3dclip on %d pixels, voxels = 0x%lx\n", j, voxels);
 #endif
-			totalvolume += bin_smallpara3d_150(
+			totalvolume += bin_para_3dclip(
 									sliceid[n],
 									j * 6, /* npara*6 */ 
 									nverts + n*6,

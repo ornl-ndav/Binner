@@ -18,7 +18,7 @@ double inside_prism(double * pnt, int n, double * normals, double * verts)
 	int i;
 	
 	for (i = 0; i < n; i ++)
-		if (dist_plane(&normals[i*3], pnt, &verts[i*3]) > 1e-6)
+		if (dist_plane(&normals[i*3], pnt, &verts[i*3]) > BINNER_EPSILON)
 			return 0;
 
 	return 1;
@@ -42,13 +42,6 @@ void cal_normal(double * n, double * v)
 double vec_normalize(double * n)
 {
 	double norm;
-	/*
-	norm = BINNER_NORM(v);
-	
-	v[0] /= norm;
-	v[1] /= norm;
-	v[2] /= norm;
-	*/
 
 	norm = BINNER_NORM(n);
 	if (norm < BINNER_EPSILON) {

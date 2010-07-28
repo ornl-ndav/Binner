@@ -15,7 +15,7 @@
  */
 
 
-typedef struct tk {
+typedef struct collector_thread {
     pthread_t tid;
 
 	int socket;
