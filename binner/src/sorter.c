@@ -15,7 +15,7 @@
  *
  */
 
-typedef struct thread_tasks {
+typedef struct sorter_thread {
     pthread_t tid;
 
 	int socket;

@@ -1,3 +1,9 @@
+/**
+ *  $Id$
+ *
+ *  \file src/gmeshrebin3.c
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -14,14 +20,13 @@
 
 #define REBINDEBUG 0
 
-/**
- *  $Id$
- *
- *  This is the main entry of gmesh rebinner version 1.1
- */
-
 char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
 
+/**
+ *
+ *  This function is the main entry of gmesh rebinner version 1.1
+ */
+ 
 int main(int argc, char ** argv)
 {
 	clock_t time1, time2, time3, time4;

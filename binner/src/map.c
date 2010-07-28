@@ -9,6 +9,7 @@
 /**
  * $Id$
  *
+ * \file src/map.c
  */
 
 #define REBINDEBUG 0
@@ -19,7 +20,7 @@ char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
 #define ITEM_SZ (sizeof(int) + sizeof(double)*(4 + 8*3))
 #define TASK_SZ (ITEM_SZ * BATCH_SZ)
 
-typedef struct tk {
+typedef struct map_thread {
 	pid_t pid; /* child pid */
 	int fd;
 	int offset;
@@ -46,7 +47,9 @@ void * pusher(void * ip)
 	char * bp;
 
 #if REBINDEBUG
-	fprintf(stderr, "pusher %d is here, fd= %d, pid = %d\n", i, t[i].fd, (int)(t[i].pid));
+	fprintf(stderr, 
+            "pusher %d is here, fd= %d, pid = %d\n", 
+            i, t[i].fd, (int)(t[i].pid));
 #endif
 
 	while(1)
@@ -54,7 +57,7 @@ void * pusher(void * ip)
 
 		if (t[i].nbytes == 0)
 		{
-pthread_mutex_lock(&lock1);
+            pthread_mutex_lock(&lock1);
 
 			n = fread(t[i].buffer, ITEM_SZ, BATCH_SZ, stdin);
 			totalpixcnt += n;
@@ -62,7 +65,8 @@ pthread_mutex_lock(&lock1);
 #if REBINDEBUG
 			fprintf(stderr, "pusher %d read %d items\n", i, n);
 #endif
-pthread_mutex_unlock(&lock1);
+
+            pthread_mutex_unlock(&lock1);
 
 			if (n <= 0) break; /* exit point. leaving while loop */
 
@@ -75,7 +79,9 @@ pthread_mutex_unlock(&lock1);
 		{
 
 #if REBINDEBUG
-			fprintf(stderr, "pusher %d to write %d bytes\n", i, t[i].nbytes - t[i].offset);
+			fprintf(stderr, 
+                    "pusher %d to write %d bytes\n", 
+                    i, t[i].nbytes - t[i].offset);
 #endif
 
 			bp = t[i].buffer+t[i].offset;
@@ -84,16 +90,17 @@ pthread_mutex_unlock(&lock1);
 			{
 				n += write(t[i].fd, bp+n, towrite);
 				
+                /* make sure write occurs on boundaries of ITEM_SZ bytes */
 				if (n % ITEM_SZ != 0) 
 					towrite =  ITEM_SZ - (n % ITEM_SZ);
 				else
 					towrite = 0;
-			} /* make sure write occurs on boundaries of ITEM_SZ bytes */
+			} 
 
 			if (n <= 0) 
 			{
 				sprintf(errormsg,
-				        "thread %d failed to write to fd: %d, %d bytes left, quitting.\n", 
+                        "thread %d failed writing to fd: %d, %d bytes left.\n", 
 						i, t[i].fd, t[i].nbytes);
 				perror(errormsg);
 				break; /*exit point. leaving while loop */
@@ -109,7 +116,7 @@ pthread_mutex_unlock(&lock1);
 		}
 	}
 
-	fprintf(stderr, "thread %d processed  : %d input pixels, %d leftover bytes\n", 
+	fprintf(stderr, "thread %d processed  : %d input pixels, %d bytes left\n", 
 			i, total/ITEM_SZ, total%ITEM_SZ);
 
 	close(t[i].fd);
@@ -154,7 +161,8 @@ int main(int argc, char ** argv, char ** envp)
 		exit(1);
 	}
 
-	if (strcmp(argv[c],"-nd") == 0) /* new arg added for RM to test the option of "no factorial division" */
+    /* new arg added for RM to test the option of "no factorial division" */
+	if (strcmp(argv[c],"-nd") == 0) 
 	{
 		argc -= 1;
 		c += 1;
@@ -163,16 +171,22 @@ int main(int argc, char ** argv, char ** envp)
 	signal(SIGPIPE, sigpipe_handler);
 
 	/* spawn off "nforks" rebinner and one sink processes */
-	/* accordingly, there are "nforks" threads as writers to push data through */
+	/* accordingly, there are "nforks" threads to push data through */
+
 #if REBINDEBUG
-	fprintf(stderr, "sizeof(struct tk) = %ld, nforks = %d\n", sizeof(struct tk), nforks);
+	fprintf(stderr, 
+            "sizeof(struct tk) = %ld, nforks = %d\n", 
+            sizeof(struct tk), nforks);
 #endif
+
 	t = (task_t *) malloc(sizeof(struct tk) * nforks);
 	sinkstreams = (int *) malloc(sizeof(int) * nforks);
 	vals = (int *) malloc(sizeof(int) * nforks);
 
 #if REBINDEBUG
-	fprintf(stderr, "sizes: item = %ld, batchsz = %d, tasksz = %ld\n", ITEM_SZ,BATCH_SZ,TASK_SZ);
+	fprintf(stderr, 
+            "sizes: item = %ld, batchsz = %d, tasksz = %ld\n", 
+            ITEM_SZ,BATCH_SZ,TASK_SZ);
 #endif
 
 	for (i = 0; i < nforks; i++)
@@ -306,7 +320,8 @@ int main(int argc, char ** argv, char ** envp)
                   (time2 . tv_usec - time1 . tv_usec) / 1e6f;
 				  
 	fprintf(stderr, "rebinner runtime    : %f sec\n", seconds);
-	fprintf(stderr, "rebin throughput    : %.2f pixels/sec\n", totalpixcnt/seconds);
+	fprintf(stderr, "rebin throughput    : %.2f pixels/sec\n", 
+            totalpixcnt/seconds);
 
 	return 0;
 }

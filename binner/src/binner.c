@@ -157,13 +157,7 @@ double count_volume(double * vol, int len, int step)
 	return volume;
 }
 
-/*
- * voxels == NULL: bin_quad3d is only to return the computed volume
- * otherwise:      bin_quad3d should write out the discrete volume
- *                 to voxels. the memory has to be enough for holding
- *                 xyzsize[0]*xyzsize[1]*xyzsize[2] double values
- */
-double bin_para3d_150(	int		nfacets, 
+double bin_para_3dvoxelize(	int		nfacets, 
 						int   * nverts,
 						double *v, /* the vertices */
 						int *	orig, 
@@ -391,7 +385,7 @@ int pipedump(int mode,
 	return 0;
 }
 
-double bin_smallpara3d_150(
+double bin_para_3dclip(
 						int     sliceid,
 						int		nfacets, 
 						int   * nverts,
