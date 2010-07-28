@@ -4,6 +4,8 @@
  * \file include/macros.h
  */
 
+#ifndef _BINNERMACROS_
+#define _BINNERMACROS_
 
 
 /*! 
@@ -16,3 +18,5 @@
 
 /*! A convenience macro to compute the norm of a vector \a n.*/
 #define BINNER_NORM(n)	sqrt((n)[0]*(n)[0]+(n)[1]*(n)[1]+(n)[2]*(n)[2])
+
+#endif
