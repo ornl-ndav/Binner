@@ -15,7 +15,7 @@
 #define REBINDEBUG 0
 
 /**
- *  $Id
+ *  $Id$
  *
  *  This is the main entry of gmesh rebinner version 1.1
  */
