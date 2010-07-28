@@ -21,6 +21,11 @@
 #include "atypes.h"
 #include "vcbcolor.h"
 
+/**
+ * $Id$
+ *
+ */
+
 char projmode = 'O'; /* P for perspective, O for orthogonal */
 projStruct proj;
 viewStruct view;

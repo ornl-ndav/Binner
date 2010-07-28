@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
+# 
+# $Id$
 #
 # cmake allows out of place building
 # you can do a "mkdir build; cd build" under any directory

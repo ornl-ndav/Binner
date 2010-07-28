@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/**
+ * $Id$
+ *
+ */
+
 void  matMult3x3(double * v0, double * mat, double * v1)
 {
 	double v[4];

@@ -1,6 +1,10 @@
 #ifndef _BINNERVOXELIZE_
 #define _BINNERVOXELIZE_
 
+/**
+ * $Id$
+ *
+ */
 
 #ifdef __cplusplus
 extern "C" {

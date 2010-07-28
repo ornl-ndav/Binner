@@ -10,6 +10,11 @@
 #include "binner.h"
 #include "volume.h"
 
+/**
+ * $Id$
+ *
+ */
+
 
 int main(int argc, char ** argv)
 {

@@ -1,6 +1,11 @@
 #include "geometry.h"
 #include "vcblinalg.h"
 
+/**
+ * $Id$
+ *
+ */
+
 double dist_plane(double * normal, double * pnt, double * vert0)
 {
 	double d;

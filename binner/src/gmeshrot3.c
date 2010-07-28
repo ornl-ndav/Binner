@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "vcblinalg.h"
 
+/**
+ * $Id$
+ *
+ */
+
 void  matMult3x3(double * v0, double * mat, double * v1)
 {
 	double v[4];

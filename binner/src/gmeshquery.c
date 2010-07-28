@@ -3,6 +3,11 @@
 #include <string.h>
 #include "binner.h"
 
+/**
+ * $Id$
+ *
+ */
+
 static char buf[4096];
 static char fn[2048];
 

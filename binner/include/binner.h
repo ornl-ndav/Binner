@@ -3,6 +3,11 @@
 
 #include <math.h>
 
+/**
+ * $Id$
+ *
+ */
+ 
 #ifndef BINNER_EPSILON
 #define BINNER_EPSILON 1E-8
 #endif

@@ -7,6 +7,11 @@
 #include <unistd.h>
 #include "socketfun.h"
 
+/**
+ * $Id$
+ *
+ */
+
 #define fullsz 4*1024*1024 
 char s[fullsz];
 

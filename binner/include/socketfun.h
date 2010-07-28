@@ -1,6 +1,11 @@
 #ifndef _SOCKETFUN_
 #define _SOCKETFUN_
 
+/**
+ * $Id$
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

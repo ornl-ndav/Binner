@@ -7,6 +7,11 @@
 #include "rebinapp.h"
 #include "reducefunc.h"
 
+/**
+ * $Id$
+ *
+ */
+
 #define REBINDEBUG 0
 #define ITEMSIZE (sizeof(int)*4 + sizeof(double)*5)
 

@@ -1,8 +1,12 @@
 #ifndef _BINNERCLIP_
 #define _BINNERCLIP_
 
-#define INTERP( t, x1, x2 )   ( (x1) + (t) * ((x2) - (x1)) )
+/**
+ * $Id$
+ *
+ */
 
+#define INTERP( t, x1, x2 )   ( (x1) + (t) * ((x2) - (x1)) )
 
 #ifdef __cplusplus
 extern "C" {

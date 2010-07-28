@@ -4,6 +4,11 @@
 #include "vcbimage.h"
 #include "vcbutils.h"
 
+/**
+ * $Id$
+ *
+ */
+
 #define MAXDIMS 4
 
 int main(int argc, char ** argv)

@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include "vcblinalg.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	int i;

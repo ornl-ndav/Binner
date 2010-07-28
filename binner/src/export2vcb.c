@@ -5,6 +5,11 @@
 #include "binnerio.h"
 #include "binner.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	FILE * hdr;

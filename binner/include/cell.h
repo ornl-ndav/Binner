@@ -1,6 +1,11 @@
 #ifndef _BINNERCELL_
 #define _BINNERCELL_
 
+/**
+ * $Id$
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

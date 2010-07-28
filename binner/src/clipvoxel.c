@@ -6,6 +6,11 @@
 #include "binnerio.h"
 #include "volume.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	double * vdata, * v, * voxels, ccs, voxel_volume;

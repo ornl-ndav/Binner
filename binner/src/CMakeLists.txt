@@ -1,3 +1,7 @@
+#
+# $Id$
+#
+
 set(TOP ${PROJECT_SOURCE_DIR})
 
 include_directories(

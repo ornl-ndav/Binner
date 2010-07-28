@@ -4,6 +4,11 @@
 #include "binnerio.h"
 #include "volume.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	int nfacets, n;

@@ -3,6 +3,11 @@
 #include <unistd.h>
 #include "binner.h"
 
+/**
+ * $Id$
+ *
+ */
+
 void update_bounds(int n, double * bound, double * v)
 {
 	double  fimin,fjmin,fkmin,fimax,fjmax,fkmax;
