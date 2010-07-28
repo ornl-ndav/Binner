@@ -14,6 +14,12 @@
 
 #define REBINDEBUG 0
 
+/**
+ *  $Id
+ *
+ *  This is the main entry of gmesh rebinner version 1.1
+ */
+
 char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
 
 int main(int argc, char ** argv)
