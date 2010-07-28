@@ -8,14 +8,7 @@
 #define _BINNER_
 
 #include <math.h>
- 
-/*! Rebinner truncates all numbers smaller than threshold to zero.*/
-#ifndef BINNER_EPSILON
-#define BINNER_EPSILON 1e-6
-#endif
-
-/*! A convenience macro to compute the norm of a vector \a n.*/
-#define BINNER_NORM(n)	sqrt((n)[0]*(n)[0]+(n)[1]*(n)[1]+(n)[2]*(n)[2])
+#include "macros.h" 
 
 #ifdef __cplusplus
 extern "C" {

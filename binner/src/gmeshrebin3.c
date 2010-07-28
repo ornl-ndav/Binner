@@ -20,11 +20,27 @@
 
 #define REBINDEBUG 0
 
-char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
+char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] \
+xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
 
 /**
- *
- *  This function is the main entry of gmesh rebinner version 1.1
+   \brief This function is the main entry of gmesh rebinner version 1.1
+  
+   usage: 
+   gmeshrebin3 [-f] [-b batchsize] [-t threshold] 
+               xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing
+  
+   \li [-f]: toggle of filter mode. 
+   If set, gemeshrebin3 acts as a filter. The output is not a full
+   fledged volume. 
+   The missing piece is implemented by reduce functions, which 
+   collects and generates a globally consistent rebinned volume.
+   
+   \li [-b batchsize] number of pixels to rebin as a batch. Default to 10000.
+
+   \li [-t threshold] rebinner truncates values below the threshold to zero.
+   Default to \link binner.h#BINNER_EPSILON \endlink.
+
  */
  
 int main(int argc, char ** argv)
@@ -45,18 +61,12 @@ int main(int argc, char ** argv)
 	
 	if ((argc < 10) || (argc > 15))
 	{
-		/* 
-		 * [-f]: toggle of filter mode. if set, gemeshrebin3 acts as a pure filter, not a 
-		 * full-fledged rebinner. the missing piece is implemented by gmeshsink, which serves
-		 * to collect and generate a globally consistent rebinned volume.
-		 */
 		fprintf(stderr, usage, argv[0]);
 		exit(1);
 	}
 
 	fprintf(stderr, "rebinner version    : %s\n", rebinner_versionstring());
 
-	/* f: number of pixels to rebin together, default to 10000 */
 	f = 10000;
 	threshold = 1e-16;
 
