@@ -5,6 +5,11 @@
 #include <unistd.h>
 #include "socketfun.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	int sock;

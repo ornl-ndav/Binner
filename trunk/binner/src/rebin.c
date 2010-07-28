@@ -7,6 +7,11 @@
 #include "binner.h"
 #include "volume.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	clock_t time1, time2;

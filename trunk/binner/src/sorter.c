@@ -10,7 +10,12 @@
 #include "socketfun.h"
 #include "binnerio.h"
 
-typedef struct tk {
+/**
+ * $Id$
+ *
+ */
+
+typedef struct thread_tasks {
     pthread_t tid;
 
 	int socket;

@@ -1,6 +1,11 @@
 #ifndef _BINNERIO_
 #define _BINNERIO_
 
+/**
+ * $Id$
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

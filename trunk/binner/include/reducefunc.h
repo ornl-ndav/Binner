@@ -1,6 +1,11 @@
 #ifndef _REDUCEFUNC_
 #define _REDUCEFUNC_
 
+/**
+ * $Id$
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

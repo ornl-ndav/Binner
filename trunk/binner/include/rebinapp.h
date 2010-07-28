@@ -1,6 +1,11 @@
 #ifndef _REBINAPP_
 #define _REBINAPP_
 
+/**
+ * $Id$
+ *
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif

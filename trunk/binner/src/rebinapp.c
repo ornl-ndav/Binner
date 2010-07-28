@@ -6,6 +6,11 @@
 #include "binner.h"
 #include "binnerio.h"
 
+/**
+ * $Id$
+ *
+ */
+
 #define REBINDEBUG 0
 
 static char * versionstring = "1.1.0";

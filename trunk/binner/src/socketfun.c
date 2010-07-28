@@ -10,6 +10,11 @@
 
 #include "socketfun.h"
 
+/**
+ * $Id$
+ *
+ */
+
 
 /*static */ 
 char * inadport_decimal(struct sockaddr_in *sad)

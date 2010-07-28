@@ -5,6 +5,10 @@
 #include "geometry.h"
 #include "voxelize.h"
 
+/**
+ * $Id$
+ *
+ */
 
 void voxelize_poly(	int n, double * v, /* the polygon */
 					unsigned int * wvol, /* working volume, contain tags when done */

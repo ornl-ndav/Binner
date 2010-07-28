@@ -6,6 +6,11 @@
 #include <signal.h>
 #include "socketfun.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int sock, n = 0;
 char netbuf[5000];
 

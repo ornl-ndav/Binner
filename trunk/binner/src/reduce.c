@@ -6,6 +6,11 @@
 #include <sys/select.h>
 #include "reducefunc.h"
 
+/**
+ * $Id$
+ *
+ */
+
 #define REBINDEBUG 0
 #define BUFSIZE 2*1024*1024
 

@@ -5,6 +5,11 @@
 #include "binner.h"
 #include "clip.h"
 
+/**
+ * $Id$
+ *
+ */
+
 #define INTERP( t, x1, x2 )   ( (x1) + (t) * ((x2) - (x1)) )
 
 void vertex_interp(double t, double * result, double * v1, double * v2)

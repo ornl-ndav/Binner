@@ -3,6 +3,11 @@
 #include <string.h>
 #include "cell.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	int i, n, buf[1];

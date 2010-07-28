@@ -1,10 +1,14 @@
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "vcblinalg.h"
 #include "cell.h"
 #include "geometry.h"
+
+/**
+ * $Id$
+ *
+ */
 
 static float verticesf[16][4] = {{0, 0, 0, 0},  /* vertex 0, 4 dims */
                          {1, 0, 0, 0},  /* vertex 1 */

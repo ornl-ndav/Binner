@@ -1,6 +1,11 @@
 #ifndef _BINNERVOLUME_
 #define _BINNERVOLUME_
 
+/**
+ * $Id$
+ *
+ */
+
 
 #ifdef __cplusplus
 extern "C" {

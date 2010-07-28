@@ -3,6 +3,11 @@
 #include <string.h>
 #include <ctype.h>
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	int nfacets, i, n, sliceid;

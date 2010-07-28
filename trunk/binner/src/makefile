@@ -1,3 +1,7 @@
+#
+# $Id$
+#
+
 SHELL = /bin/sh
                                                                                           
 RM = /bin/rm
