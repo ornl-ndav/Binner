@@ -175,11 +175,11 @@ int main(int argc, char ** argv, char ** envp)
 
 #if REBINDEBUG
 	fprintf(stderr, 
-            "sizeof(struct tk) = %ld, nforks = %d\n", 
-            sizeof(struct tk), nforks);
+            "sizeof(struct map_thread) = %ld, nforks = %d\n", 
+            sizeof(struct map_thread), nforks);
 #endif
 
-	t = (task_t *) malloc(sizeof(struct tk) * nforks);
+	t = (task_t *) malloc(sizeof(struct map_thread) * nforks);
 	sinkstreams = (int *) malloc(sizeof(int) * nforks);
 	vals = (int *) malloc(sizeof(int) * nforks);
 

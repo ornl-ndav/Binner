@@ -2,17 +2,12 @@
 #define _BINNER_GEOMETRY_
 
 #include <math.h>
+#include "macros.h"
 
 /**
  * $Id$
  *
  */
-
-#ifndef BINNER_EPSILON
-#define BINNER_EPSILON 1E-8
-#endif
-
-#define BINNER_NORM(n)	sqrt((n)[0]*(n)[0]+(n)[1]*(n)[1]+(n)[2]*(n)[2])
 
 #ifdef __cplusplus
 extern "C" {
