@@ -103,15 +103,9 @@ EXCLUDE                = ../include/socketfun.h \
                          ../src/netrebin.c \
                          ../src/pix2mesh.c \
                          ../src/rebin.c \
-                         ../src/rot3d.c \
-                         ../src/scale3d.c \
                          ../src/seeall.cpp \
                          ../src/seebmeshvol.cpp \
                          ../src/seebmeshvolc.cpp \
-                         ../src/serve.c
-                         ../src/socketfun.c \
-                         ../src/sorter.c \
-                         ../src/trans3d.c
 
 EXCLUDE_SYMLINKS       = YES
 EXCLUDE_PATTERNS       = *.txt
