@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_tests
+   \file src/bounds.c
+   
+   $Id$
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -10,10 +18,6 @@
 #include "binnerio.h"
 #include "vcbutils.h"
 
-/**
- * $Id$
- *
- */
 
 /* application specific data starts here */
 int     nverts, npara;

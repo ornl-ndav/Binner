@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/sorter.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,10 +16,6 @@
 #include "socketfun.h"
 #include "binnerio.h"
 
-/**
- * $Id$
- *
- */
 
 typedef struct sorter_thread {
     pthread_t tid;

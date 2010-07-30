@@ -1,3 +1,20 @@
+/**
+
+   \ingroup rebinner_core
+   
+   \file src/volume.c
+
+   \brief The main rebinner core API.
+
+   \note This API works with internal geometry formats of rebinner.
+   The rebinner core assumes the wrapper functions to convert any
+   application mesh formats into the internal format. Currently the
+   main (actively used) mesh geometry format is gmesh.
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -8,10 +25,6 @@
 #include "cell.h"
 #include "clip.h"
 
-/**
- * $Id$
- *
- */
 
 double tri_area(double *v)
 {

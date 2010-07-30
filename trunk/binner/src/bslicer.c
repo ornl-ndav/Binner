@@ -1,13 +1,17 @@
+/**
+   \ingroup rebinner_tests
+   \file src/bslicer.c
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "vcbimage.h"
 #include "vcbutils.h"
 
-/**
- * $Id$
- *
- */
 
 #define MAXDIMS 4
 

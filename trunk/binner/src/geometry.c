@@ -1,10 +1,13 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/geometry.c
+
+   $Id$
+*/
+
 #include "geometry.h"
 #include "vcblinalg.h"
-
-/**
- * $Id$
- *
- */
 
 double dist_plane(double * normal, double * pnt, double * vert0)
 {

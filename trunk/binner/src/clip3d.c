@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_tests
+   \file src/clip3d.c
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
@@ -5,10 +13,6 @@
 #include "clip.h"
 #include "binnerio.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/reduce.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,10 +13,6 @@
 #include "reducefunc.h"
 #include "macros.h"
 
-/**
- * $Id$
- *
- */
 
 #define BUFSIZE 2*1024*1024
 

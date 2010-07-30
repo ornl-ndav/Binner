@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_tests
+   \file src/counts.c
+   
+   $Id$
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -8,10 +16,6 @@
 #include "atypes.h"
 #include "binnerio.h"
 
-/**
- * $Id$
- *
- */
 
 /* application specific data starts here */
 int     nverts, npara;
