@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/getfrom.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -5,10 +11,6 @@
 #include <unistd.h>
 #include "socketfun.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

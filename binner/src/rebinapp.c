@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/rebinapp.c
+   $Id$
+*/
+   
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -6,10 +12,6 @@
 #include "binner.h"
 #include "binnerio.h"
 
-/**
- * $Id$
- *
- */
 
 static char * versionstring = "1.1.0";
 

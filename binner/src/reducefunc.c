@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/reducefunc.c
+   $Id$
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -8,10 +14,6 @@
 #include "reducefunc.h"
 #include "macros.H"
 
-/**
- * $Id$
- *
- */
 
 #define ITEMSIZE (sizeof(int)*4 + sizeof(double)*5)
 

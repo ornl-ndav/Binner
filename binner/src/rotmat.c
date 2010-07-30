@@ -1,11 +1,13 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/rotmat.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

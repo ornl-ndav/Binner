@@ -1,3 +1,10 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/clip.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
@@ -5,10 +12,6 @@
 #include "binner.h"
 #include "clip.h"
 
-/**
- * $Id$
- *
- */
 
 #define INTERP( t, x1, x2 )   ( (x1) + (t) * ((x2) - (x1)) )
 

@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/binner.c
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,11 +18,6 @@
 #include "vcblinalg.h"
 #include "voxelize.h"
 #include "volume.h"
-
-/**
- * $Id$
- *
- */
 
 void bounding_box(int n, double * bound, double * v)
 {

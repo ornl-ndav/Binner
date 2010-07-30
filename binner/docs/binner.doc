@@ -1,0 +1,81 @@
+/**
+\mainpage Rebinner ver. 1.1
+\notitle
+
+
+Rebinner was designed and implemented by sns.
+
+This section is divided into the following description pages:
+<ul>
+<li>Section \ref intro covers the design philosophies and ideas of the rebinner package.
+<li>Section \ref install outlines the steps to compile, build and install the package.
+<li>Section \ref gmesh shows examples of using rebinner package.
+The examples used are based on an SNS internal geometry format - gmesh. 
+G for Gary, our G-user!
+</ul>
+
+*/
+
+/**
+\page pages
+
+<h1>General Description Pages</h1>
+
+<hr>
+
+Here is a list of pages of various descriptions about the package.
+
+<ul>
+<li> \ref intro
+<li> \ref install
+<li> \ref gmesh
+</ul>
+
+*/
+
+/** 
+    \defgroup rebinner_execs Rebinner Gmesh Executables
+    \brief On a user level, these above executables are the main entry points
+    of the rebinner package.
+    
+    These executables can be used individually, but by design, they are
+    intended to be used together in scripts to transform, separate, merge or
+    combine, and then rebin gmesh geometry files.
+    
+    Please consult scripts/gmesh_correctness_test.sh for examples of running
+    rebinner at different resolution and confirming correctness. The output
+    should consistently be a total rebinned volume of 1.5e2 (i.e. 150). 
+    
+    Please consult scripts/gmesh_mthread_test.sh for examples of running
+    rebinner using varying number of rebinning threads for better higher
+    performance. On systems with less than 32 cores, our results show an
+    almost linear speed-up.
+
+*/
+
+/** 
+    \defgroup rebinner_tests Rebinner Tests
+    \brief On a tester level, these above files contain executables
+    for testing \link rebinner_core Rebinner Core Functions \endlink.
+
+*/
+
+/** 
+    \defgroup rebinner_core Rebinner Core
+    \brief On a developer level, these above files contain function APIs
+    of the rebinne core.
+
+*/
+
+/** 
+    \defgroup rebinner_sdk Rebinner SDK
+    \brief For app developers, these above files provide "SDK" support.
+    
+    Application developers can use 
+    \link rebinner_execs Rebinner Gmesh Executables \endlink to
+    construct scripts for multi-thread/process rebinner applications, 
+    as well as to develop new rebinner executables directly based on 
+    \link rebinner_core Rebinner Core Functions \endlink.
+
+*/
+

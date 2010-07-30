@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/map.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,12 +13,6 @@
 #include <sys/time.h>
 
 #include "macros.h"
-
-/**
- * $Id$
- *
- * \file src/map.c
- */
 
 static char * usage = "usage: %s -n num_forks runner arguments_for_runner_to_use\n";
 

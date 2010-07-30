@@ -1,12 +1,21 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshorderv.c
+
+   \brief The executable to fix vertex ordering to abide by gmesh assumptions.
+
+   $Id$
+
+*/
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "cell.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

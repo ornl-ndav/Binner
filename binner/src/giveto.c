@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/giveto.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -6,10 +12,6 @@
 #include <signal.h>
 #include "socketfun.h"
 
-/**
- * $Id$
- *
- */
 
 int sock, n = 0;
 char netbuf[5000];

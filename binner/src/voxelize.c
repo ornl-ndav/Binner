@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/voxelize.c
+
+   $Id$
+*/
+
 #include <stdio.h>
 #include <math.h>
 #include "vcblinalg.h"
@@ -5,10 +13,6 @@
 #include "geometry.h"
 #include "voxelize.h"
 
-/**
- * $Id$
- *
- */
 
 void voxelize_poly(	int n, double * v, /* the polygon */
 					unsigned int * wvol, /* working volume, contain tags when done */

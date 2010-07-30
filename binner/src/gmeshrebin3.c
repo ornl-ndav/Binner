@@ -1,8 +1,10 @@
 /**
 
+   \ingroup rebinner_execs
+   
    \file src/gmeshrebin3.c
 
-   \brief This file is the main entry of gmesh rebinner version 1.1
+   \brief The main executable of rebinner that handles gmesh formats.
   
    gmeshrebin3 [-f] [-b batchsize] [-t threshold] 
                xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing
@@ -42,8 +44,6 @@
 
 static char * usage = "usage: %s [-f] [-b batchsize] [-t threshold] \
 xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing\n";
-
-
  
 int main(int argc, char ** argv)
 {

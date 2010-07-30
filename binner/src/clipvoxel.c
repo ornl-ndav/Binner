@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_tests
+   \file src/clipvoxel.c
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
@@ -6,10 +14,6 @@
 #include "binnerio.h"
 #include "volume.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

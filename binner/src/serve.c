@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/serve.c
+   $Id$
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,10 +13,6 @@
 #include <unistd.h>
 #include "socketfun.h"
 
-/**
- * $Id$
- *
- */
 
 #define fullsz 4*1024*1024 
 char s[fullsz];

@@ -1,13 +1,16 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/binnerio.c
+
+   $Id$
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include "binnerio.h"
 #include "vcbutils.h"
-
-/**
- * $Id$
- *
- */
 
 void printvertexf(float *v, int ndim)
 {

@@ -1,3 +1,9 @@
+/**
+   \ingroup rebinner_sdk
+   \file src/export2vtk.c
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -5,10 +11,6 @@
 #include "binnerio.h"
 #include "binner.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

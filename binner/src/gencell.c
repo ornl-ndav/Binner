@@ -1,3 +1,11 @@
+/**
+   \ingroup rebinner_tests
+   \file src/gencell.c
+   
+   $Id$
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -5,10 +13,6 @@
 #include "cell.h"
 #include "binnerio.h"
 
-/**
- * $Id$
- *
- */
 
 /* this program generates a single paralleliped */
 
