@@ -77,8 +77,7 @@ double bin_para_3dvoxelize(	int		nfacets,
                   to store xyzsize[0]*xyzsize[1]*xyzsize[2] double values.
 */
 
-double bin_para_3dclip(
-						int     sliceid,
+double bin_para_3dclip( int     sliceid,
 						int		nfacets, 
 						int   * nverts,
 						double *v, /* the vertices */

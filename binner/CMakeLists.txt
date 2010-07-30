@@ -36,3 +36,8 @@ add_subdirectory(vcb)
 
 project(binner)
 add_subdirectory(src)
+
+add_custom_target(manual ALL
+                  DEPENDS ${PROJECT_SOURCE_DIR}/docs/Doxyfile
+                  COMMAND doxygen
+                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)
