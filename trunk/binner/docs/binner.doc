@@ -2,17 +2,53 @@
 \mainpage Rebinner ver. 1.1
 \notitle
 
+Rebinner is a package designed by 
+<a href="http://web.eecs.utk.edu/~huangj">Dr. Jian Huang</a>, 
+integrated by Dr. Michael Reuter, and currently used for scientific data analysis at 
+<a href="http://www.sns.gov">Spallation Neutron Source</a> (SNS). 
+The Rebinner package is open source, its development was entirely funded by scientific data analysis group at SNS. 
+The code repo is available via the following URLs.
 
-Rebinner was designed and implemented by sns.
+\code
+SVN:  https://flathead.ornl.gov/repos/Binner
+Trac: https://flathead.ornl.gov/trac/Binner
+\endcode
 
-This section is divided into the following description pages:
+Rebinner uses, and is release together with, 
+two outside libraries under LGPL license. 
+The Rebinner codebase keeps these libraries 
+outside the main trunk of Rebinner, however.
+These two libraries are:
+
+
+
 <ul>
-<li>Section \ref intro covers the design philosophies and ideas of the rebinner package.
-<li>Section \ref install outlines the steps to compile, build and install the package.
-<li>Section \ref gmesh shows examples of using rebinner package.
-The examples used are based on an SNS internal geometry format - gmesh. 
-G for Gary, our G-user!
+<li><a href="http://seelab.eecs.utk.edu/vcb.php">VCB</a> 
+--- a visualization cookbook library written at 
+<a href="http://seelab.eecs.utk.edu/">Seelab</a> led by
+<a href="http://web.eecs.utk.edu/~huangj">Jian Huang</a>.
+<li> <a href="http://www.cs.utk.edu/~plank/plank/classes/cs360/360/notes/Libfdr/">libFDR</a>
+--- a basic C programming library written by 
+<a href="http://web.eecs.utk.edu/~plank">Dr. James Plank</a>. 
 </ul>
+
+
+
+
+
+This chapter is divided into the following description pages:
+<table align=center cellspacing="5" width="85%" border="0">
+<tr>
+<td width=100>\ref needs <td> The status-quo and the needs of having a package like Rebinner. This section also very briefly describes some physics background in layman terms. 
+<tr>
+<td>\ref intro <td> The design philosophies and ideas of the rebinner package.
+<tr>
+<td>\ref install <td>How to compile, build and install the package.
+<tr>
+<td>\ref gmesh <td> Gmesh based applications using rebinner package.
+Gmesh is an SNS internal geometry/mesh format. 
+G for Gary, the G-user!
+</table>
 
 */
 
@@ -26,6 +62,7 @@ G for Gary, our G-user!
 Here is a list of pages of various descriptions about the package.
 
 <ul>
+<li> \ref needs
 <li> \ref intro
 <li> \ref install
 <li> \ref gmesh
