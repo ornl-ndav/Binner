@@ -41,13 +41,13 @@ This chapter is divided into the following description pages:
 <tr>
 <td width=100>\ref needs <td> The status-quo and the needs of having a package like Rebinner. This section also very briefly describes some physics background in layman terms. 
 <tr>
-<td>\ref intro <td> The design philosophies and ideas of the rebinner package.
-<tr>
 <td>\ref install <td>How to compile, build and install the package.
 <tr>
 <td>\ref gmesh <td> Gmesh based applications using rebinner package.
 Gmesh is an SNS internal geometry/mesh format. 
 G for Gary, the G-user!
+<tr>
+<td>\ref intro <td> The design philosophies and usage examples of the rebinner package.
 </table>
 
 */
@@ -63,9 +63,9 @@ Here is a list of pages of various descriptions about the package.
 
 <ul>
 <li> \ref needs
-<li> \ref intro
 <li> \ref install
 <li> \ref gmesh
+<li> \ref intro
 </ul>
 
 */
