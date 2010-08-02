@@ -1,6 +1,153 @@
 /**
 \page install Installation
 
-here is how to install.
+The most portable way to build the Rebinner package is to use <a href="http://www.cmake.org/">CMake</a>. CMake is arguably more
+efficient than 
+<a href="http://en.wikipedia.org/wiki/GNU_build_system">Autotools</a>,
+however, we chose CMake not for efficiency. Instead,
+we chose CMake because it had worked out to be better 
+at finding graphics related libraries, such as OpenGL and GLUT, 
+across multiple platforms including many Linux flavors and Mac OS (Tiger,
+Leopard and Snow Leopard).
 
+\par Rebinner: building the rebinner
+The basic part of rebinner takes a mesh as input and generates
+a rebinned volume of hit counts and error estimation. 
+This part is purely number crunching and relies on very few 
+external libraries. 
+Actually, with vcb and libFDR already included in the source tree,
+the whole package is entirely C based; any Unix-style
+system should be able to build it straight from the makefile stored 
+under the directory \c binner/src. Of course, that is not to say
+that one should not use CMake to build the package. 
+Mentioning this is solely to convince you that the Rebinner
+package is highly portable.
+
+\par Rebinner: enabling OpenGL functions
+Compiling rebinner with OpenGL and GLUT enables a
+feature &mdash; to examine rebinning results, 
+both final as well as intermediate ones, 
+using openGL programs included in the package. 
+Those programs/executables
+are all named using \c see as a prefix. For instance,
+\c seegmesh is a very efficient openGL program to view
+any \ref gmesh data file.
+
+<hr> 
+
+Assuming that you have gotten the whole source tree and put
+that under a directory: \c /home/huangj/binner. 
+The source tree would look like the following.
+Comments are annotated along the listing.
+
+\code
+UNIX> pwd
+/home/huangj/binner
+UNIX> ll
+total 32
+-rw-r-----    1 huangj  huangj  1210 Jul 29 23:58 CMakeLists.txt  -> cmake config file
+drwxr-xr-x   52 huangj  huangj  1768 Jul 29 23:46 bin/            -> all rebinner executables
+drwxr-xr-x   19 huangj  huangj   646 Aug  1 23:13 docs/           -> all documentation
+drwxr-xr-x   15 huangj  huangj   510 Jul 29 23:58 include/        -> rebinner header
+drwxr-x---   14 huangj  huangj   476 Feb 24 02:11 issue/          -> known issues
+drwxr-xr-x   10 huangj  huangj   340 Jan 24  2009 log/            -> runlogs of dev milestones
+drwxr-xr-x   26 huangj  huangj   884 Feb 27 02:00 script/         -> many scripts
+drwxr-xr-x  108 huangj  huangj  3672 Jul 29 22:01 src/            -> rebinner source
+drwxr-xr-x   26 huangj  huangj   884 Aug 30  2009 tests/          -> major test data and scripts
+drwxr-xr-x   11 huangj  huangj   374 Oct  2  2009 vcb/            -> vcb/libfdr release
+\endcode
+
+Like all standard CMake builds, out of place building is preferred. We suggest the following steps.
+
+\code
+UNIX> mkdir build
+UNIX> cd build
+UNIX> cmake .. -DNOGL=yes                                         -> point to root CMakeLists.txt
+....
+UNIX> make install
+....
+\endcode
+
+In the above, we tell the Rebinner building system to ignore any components that
+require OpenGL and its related libraries. 
+After these commands, vcb and libFDR are built automatically.
+The \a "NO OpenGL" specification applies to \c vcb as well.
+\c libFDR is purely based on C standard library.
+For Rebinner itself all executables are placed under \c bin, 
+and the full documentation is available at: 
+<a href="file:///home/huangj/binner/docs/html_manual/index.html">
+file:///home/huangj/binner/docs/html_manual/index.html</a>.
+Just point your browser to this location. 
+This page, which you should be reading, is the ``installation" page link on the
+front documentation page.
+
+Now, suppose you want the installation to go under a common directory
+like \c /usr/local, the Rebinner building system allows you to do that
+like the following.
+\code
+UNIX> pwd
+/home/huangj/binner/build
+UNIX> make clean
+UNIX> cmake .. -DNOGL=yes -DBINNER_INSTALL_DIR=/usr/local
+UNIX> sudo make install                                            -> root users, pls omit sudo
+\endcode
+
+In this case, only the executables that would have been under \c bin are now
+under /usr/local/bin. The \c script directories are not moved over. 
+Neither is the \c docs directory.
+
+To enable openGL related functions, please first make sure your system 
+has at least one correct version of openGL and GLUT libraries. 
+If your system has both 32-bit and 64-bit versions of those libraries, 
+the Rebinner package will automatically pick up the 64-bit version. 
+On Mac OS, the Rebinner build system works correctly with OpenGL and GLUT Frameworks.
+The commands look like the following.
+
+\code
+UNIX> pwd
+/home/huangj/binner/build
+UNIX> make clean
+UNIX> cmake .. -DBINNER_INSTALL_DIR=/usr/local
+UNIX> sudo make install                                            -> root users, pls omit sudo
+\endcode
+
+The defaults are to build with OpenGL 
+and to install directly under the Rebinner source tree as the following.
+
+\code
+UNIX> pwd
+/home/huangj/binner/build
+UNIX> make clean
+UNIX> cmake ..
+UNIX> make install
+\endcode
+
+At last, \c script/buildall.sh is a Shell script 
+that iterates through all \c makefiles under the source tree and build
+everything completely. The build process is the same as that using cmake.
+If you get curious, or want to hack the system to do something else,
+please take a look at that script and also the individual \c makefiles.
+Those \c makefiles used in \c script/buildall.sh is not machine generated
+and hence is still light-weight enough to humanly read.
+
+<hr>
+
+\par Note 1: run from \c script directory
+While rebinner's executables are all under \c bin, rebinner is designed
+to be part of complex neutron science workflow. Conceptually every experiment
+could likely require customization in how rebinner is used.
+For maximum flexibility, the real \a "executables" are always scripts, written either
+in Shell or Python. Sample ones are stored
+under \c script, which include scripts already in actual use, . 
+
+\par Note 2: disclaimer about \c vcb and \c libFDR
+Compared to \c vcb, \c libFDR is very small. To reduce the number
+of directories one has to deal with, the two packages are put together under the
+directory \c vcb; also, both are built through a common cmake script. 
+Both packages are of LGPL license.
+They are included in the source tree with \a NO change.
+Neither \c vcb nor \c libFDR provide cmake build scripts in their official releases.
+
+
+ 
 */

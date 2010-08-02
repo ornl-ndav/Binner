@@ -3,15 +3,15 @@
 \notitle
 
 Rebinner is a package designed by 
-<a href="http://web.eecs.utk.edu/~huangj">Dr. Jian Huang</a>, 
-integrated by Dr. Michael Reuter, and currently used for scientific data analysis at 
+<a href="http://web.eecs.utk.edu/~huangj">Jian Huang</a>, 
+integrated by Michael Reuter, and currently used for scientific data analysis at 
 <a href="http://www.sns.gov">Spallation Neutron Source</a> (SNS). 
 The Rebinner package is open source, its development was entirely funded by scientific data analysis group at SNS. 
 The code repo is available via the following URLs.
 
 \code
-SVN:  https://flathead.ornl.gov/repos/Binner
-Trac: https://flathead.ornl.gov/trac/Binner
+SVN  - https://flathead.ornl.gov/repos/Binner
+Trac - https://flathead.ornl.gov/trac/Binner
 \endcode
 
 Rebinner uses, and is release together with, 
@@ -24,12 +24,12 @@ These two libraries are:
 
 <ul>
 <li><a href="http://seelab.eecs.utk.edu/vcb.php">VCB</a> 
---- a visualization cookbook library written at 
+&mdash; a visualization cookbook library written at 
 <a href="http://seelab.eecs.utk.edu/">Seelab</a> led by
 <a href="http://web.eecs.utk.edu/~huangj">Jian Huang</a>.
 <li> <a href="http://www.cs.utk.edu/~plank/plank/classes/cs360/360/notes/Libfdr/">libFDR</a>
---- a basic C programming library written by 
-<a href="http://web.eecs.utk.edu/~plank">Dr. James Plank</a>. 
+&mdash; a basic C programming library written by 
+<a href="http://web.eecs.utk.edu/~plank">James Plank</a>. 
 </ul>
 
 
