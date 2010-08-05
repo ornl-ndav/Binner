@@ -1,6 +1,10 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/map.c
+
+   \brief CURRENT sdk executable to launch an app in parallel multi-process.
+   
    $Id$
 */
 

@@ -3,6 +3,8 @@
    
    \file src/binnerio.c
 
+   \brief CURRENT core API -- implementation for binnerio.h
+
    $Id$
 */
 

@@ -1,7 +1,10 @@
 /**
- * $Id$
- *
- * \file include/macros.h
+   \file include/macros.h
+
+   \brief CURRENT basic global settings in the rebinner package.
+
+   $Id$
+
  */
 
 #ifndef _BINNERMACROS_

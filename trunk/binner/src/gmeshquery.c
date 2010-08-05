@@ -1,12 +1,22 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshquery.c
+
+   \brief CURRENT executable of rebinner for querying many gmehs files by bounds.
+
+   usage: gmeshquery [-x xmin xmax] [-y ymin ymax] [-z zmin zmax]
+
+   $Id$
+
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "binner.h"
 
-/**
- * $Id$
- *
- */
 
 static char buf[4096];
 static char fn[2048];

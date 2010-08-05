@@ -1,10 +1,17 @@
+/**
+   \ingroup rebinner_core
+   
+   \file include/volume.h
+
+   \brief CURRENT core API -- volume calculation function: partialvoxel_volume
+
+   $Id$
+
+ */
+
+
 #ifndef _BINNERVOLUME_
 #define _BINNERVOLUME_
-
-/**
- * $Id$
- *
- */
 
 
 #ifdef __cplusplus

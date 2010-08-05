@@ -1,10 +1,18 @@
+/**
+   \ingroup rebinner_core
+   
+   \file include/cell.h
+
+   \brief CURRENT core API -- functions to generate cells and fix topology
+
+   $Id$
+
+ */
+
+
 #ifndef _BINNERCELL_
 #define _BINNERCELL_
 
-/**
- * $Id$
- *
- */
 
 #ifdef __cplusplus
 extern "C" {

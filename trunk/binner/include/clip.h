@@ -1,10 +1,17 @@
+/**
+   \ingroup rebinner_core
+   
+   \file include/clip.h
+
+   \brief CURRENT core API -- base module to support bin_para3dclip in binner.h
+
+   $Id$
+
+ */
+
 #ifndef _BINNERCLIP_
 #define _BINNERCLIP_
 
-/**
- * $Id$
- *
- */
 
 #define INTERP( t, x1, x2 )   ( (x1) + (t) * ((x2) - (x1)) )
 

@@ -1,6 +1,8 @@
 /**
    \ingroup rebinner_tests
    \file src/compvol.c
+
+   \brief CURRENT test of core API -- binnerio.h, volume.h.
    
    $Id$
 

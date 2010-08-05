@@ -1,6 +1,8 @@
 /**
    \ingroup rebinner_tests
    \file src/rot3d.c
+
+   \brief CURRENT test of core API -- binnerio.h and using vcb
    
    $Id$
 

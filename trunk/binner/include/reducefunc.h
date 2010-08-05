@@ -1,10 +1,17 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file include/reducefunc.h
+
+   \brief CURRENT sdk API for controlling map/reduce functions.
+
+   $Id$
+*/
+
+
 #ifndef _REDUCEFUNC_
 #define _REDUCEFUNC_
 
-/**
- * $Id$
- *
- */
 
 #ifdef __cplusplus
 extern "C" {

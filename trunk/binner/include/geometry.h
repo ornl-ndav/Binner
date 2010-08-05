@@ -1,13 +1,19 @@
+/**
+   \ingroup rebinner_core
+   
+   \file include/geometry.h
+
+   \brief CURRENT core API -- functions for geometric operations.
+
+   $Id$
+*/
+
 #ifndef _BINNER_GEOMETRY_
 #define _BINNER_GEOMETRY_
 
 #include <math.h>
 #include "macros.h"
 
-/**
- * $Id$
- *
- */
 
 #ifdef __cplusplus
 extern "C" {

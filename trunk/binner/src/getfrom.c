@@ -1,6 +1,10 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/getfrom.c
+
+   \brief CURRENT sdk executable to stream input data from a network port.
+
    $Id$
 */
 

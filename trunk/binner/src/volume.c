@@ -4,8 +4,8 @@
    
    \file src/volume.c
 
-   \brief The main rebinner core API.
-
+   \brief CURRENT core API -- implementation for volume.h
+   
    \note This API works with internal geometry formats of rebinner.
    The rebinner core assumes the wrapper functions to convert any
    application mesh formats into the internal format. Currently the

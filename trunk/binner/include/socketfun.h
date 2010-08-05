@@ -1,10 +1,17 @@
+/**
+   \file include/socketfun.h
+
+   \brief Jim Plank's socket functions. Released as "do whatever you want with it".
+   
+   Slight customization by Jian Huang.
+   
+   $Id$
+ */
+
+
 #ifndef _SOCKETFUN_
 #define _SOCKETFUN_
 
-/**
- * $Id$
- *
- */
 
 #ifdef __cplusplus
 extern "C" {

@@ -3,6 +3,8 @@
    
    \file src/binner.c
 
+   \brief CURRENT core API -- implementation for binner.h
+
    $Id$
 */
 

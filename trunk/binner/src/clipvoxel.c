@@ -1,6 +1,8 @@
 /**
    \ingroup rebinner_tests
    \file src/clipvoxel.c
+
+   \brief CURRENT test of core API -- binnerio.h, clip.h, volume.h, voxelize.h
    
    $Id$
 

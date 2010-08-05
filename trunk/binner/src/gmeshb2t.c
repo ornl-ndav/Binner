@@ -1,10 +1,22 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshb2t.c
+
+   \brief CURRENT executable to convert from binary to ASCII gmesh formats.
+  
+   gmesht2b < BINARY_gmesh > ASCII_gmesh
+  
+   \note This executable is designed to act as a filter.
+   
+   $Id$
+
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

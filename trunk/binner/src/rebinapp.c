@@ -1,6 +1,10 @@
 /**
-   \ingroup rebinner_sdk
+   \ingroup rebinner_core
+
    \file src/rebinapp.c
+
+   \brief CURRENT core API -- implementation for rebinapp.h
+
    $Id$
 */
    
