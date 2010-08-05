@@ -1,6 +1,12 @@
 /**
-   \ingroup rebinner_sdk
+   \ingroup rebinner_execs
+
    \file src/rotmat.c
+
+   \brief CURRENT executable that outputs an axis-centered rotation matrix 
+
+   usage: rotmat axis_x axis_y axis_z rotation_angle_in_degree
+
    $Id$
 */
 

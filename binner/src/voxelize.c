@@ -3,6 +3,8 @@
    
    \file src/voxelize.c
 
+   \brief CURRENT core API -- implementation for voxelize.h
+
    $Id$
 */
 

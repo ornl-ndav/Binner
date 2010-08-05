@@ -2,6 +2,9 @@
    \ingroup rebinner_core
    
    \file src/clip.c
+
+   \brief CURRENT core API -- implementation for clip.h
+
    $Id$
 */
 

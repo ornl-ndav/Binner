@@ -2,6 +2,9 @@
    \ingroup rebinner_core
    
    \file src/cell.c
+
+   \brief CURRENT core API -- implementation for cell.h
+
    $Id$
 */
 

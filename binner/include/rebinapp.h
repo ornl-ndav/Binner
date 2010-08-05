@@ -1,10 +1,16 @@
+/**
+   \ingroup rebinner_core
+
+   \file include/rebinapp.h
+
+   \brief CURRENT core API -- utility functions in rebinner
+
+   $Id$
+ */
+
 #ifndef _REBINAPP_
 #define _REBINAPP_
 
-/**
- * $Id$
- *
- */
 
 #ifdef __cplusplus
 extern "C" {

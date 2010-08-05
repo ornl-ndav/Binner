@@ -4,7 +4,7 @@
    
    \file src/gmeshrebin3.c
 
-   \brief The main executable of rebinner that handles gmesh formats.
+   \brief CURRENT executable of rebinner that rebins gmesh data.
   
    gmeshrebin3 [-f] [-b batchsize] [-t threshold] 
                xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing

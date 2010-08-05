@@ -36,10 +36,10 @@ These two libraries are:
 
 
 
-This chapter is divided into the following description pages:
+For an overview of the design, we divide the description into the following pages:
 <table align=center cellspacing="5" width="85%" border="0">
 <tr>
-<td width=100>\ref needs <td> The status-quo and the needs of having a package like Rebinner. This section also very briefly describes some physics background in layman terms. 
+<td width=150>\ref needs <td> The status-quo and the needs of having a package like Rebinner. This section also very briefly describes some physics background in layman terms. 
 <tr>
 <td>\ref install <td>How to compile, build and install the package.
 <tr>
@@ -49,6 +49,28 @@ G for Gary, the G-user!
 <tr>
 <td>\ref intro <td> The design philosophies and usage examples of the rebinner package.
 </table>
+
+Functionally speaking, the rebinner has four conceptual modules. 
+They all reside under the same source tree, which is not very large. 
+Please note, for scientist users, the main software development is intended to
+occur on script-level, i.e to use the \ref rebinner_execs in custom
+Shell or Python scripts for individually tailored analysis needs.
+Those scripts are likely rather complex, depending both on the computing infrastructure
+employed by the scientific analysis groups, 
+as well as the setup of beam line data collection and storage.
+Please contact Michael Reuter (reuterma@ornl.gov) for some real world examples. 
+
+<table align=center cellspacing="5" width="85%" border="0">
+<tr>
+<td width=150>\ref rebinner_core <td> Core API. 
+<tr>
+<td>\ref rebinner_tests <td>Component tests of the core API.
+<tr>
+<td>\ref rebinner_sdk <td> Wrappers around the core API to facilitate higher level development. 
+<tr>
+<td>\ref rebinner_execs <td> The actual executables built for supporting gmesh analysis.
+</table>
+
 
 */
 
@@ -71,7 +93,7 @@ Here is a list of pages of various descriptions about the package.
 */
 
 /** 
-    \defgroup rebinner_execs Rebinner Gmesh Executables
+    \defgroup rebinner_execs Rebinner Executables
     \brief On a user level, these above executables are the main entry points
     of the rebinner package.
     

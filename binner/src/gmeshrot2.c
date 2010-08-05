@@ -1,12 +1,22 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshrot2.c
+
+   \brief DEPRECATED executable for rotating gmesh geometry.
+   
+   \deprecated due to input format change.
+
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include "vcblinalg.h"
 
-/**
- * $Id$
- *
- */
 
 int main(int argc, char ** argv)
 {

@@ -1,10 +1,19 @@
+/**
+   \ingroup rebinner_core
+   
+   \file include/voxelize.h
+
+   \brief CURRENT core API -- base module to support bin_para3dvoxelize in binner.h
+
+   $Id$
+
+ */
+
+
+
 #ifndef _BINNERVOXELIZE_
 #define _BINNERVOXELIZE_
 
-/**
- * $Id$
- *
- */
 
 #ifdef __cplusplus
 extern "C" {

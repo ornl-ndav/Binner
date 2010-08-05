@@ -1,7 +1,12 @@
 /**
- * $Id$
- *
- * \file include/binner.h
+   \ingroup rebinner_core
+   
+   \file include/binner.h
+
+   \brief CURRENT core API -- main rebinner functions bin_para3d[clip/voxelize]
+
+   $Id$
+
  */
 
 #ifndef _BINNER_

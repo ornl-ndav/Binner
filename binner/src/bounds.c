@@ -1,7 +1,9 @@
 /**
    \ingroup rebinner_tests
    \file src/bounds.c
-   
+
+   \brief CURRENT test of core API -- binnerio.h. Outputs bounds of a gmesh.
+
    $Id$
 
 */

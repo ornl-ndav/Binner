@@ -1,6 +1,10 @@
 /**
    \ingroup rebinner_tests
    \file src/gencell.c
+
+   \brief CURRENT test of core API -- cell.h
+
+   this program generates a single paralleliped
    
    $Id$
 
@@ -13,8 +17,6 @@
 #include "cell.h"
 #include "binnerio.h"
 
-
-/* this program generates a single paralleliped */
 
 int main(int argc, char ** argv)
 {

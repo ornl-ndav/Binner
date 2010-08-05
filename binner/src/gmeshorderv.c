@@ -4,7 +4,7 @@
    
    \file src/gmeshorderv.c
 
-   \brief The executable to fix vertex ordering to abide by gmesh assumptions.
+   \brief CURRENT executable for fixing vertex ordering.
 
    $Id$
 

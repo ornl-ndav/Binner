@@ -1,6 +1,13 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/reduce.c
+
+   \brief CURRENT sdk executable to reduce results from multi-process.
+
+   \note This process is never invoked directly, always implicitly created by 
+         map via fork().
+
    $Id$
 */
 

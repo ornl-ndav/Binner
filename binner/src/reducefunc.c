@@ -1,6 +1,12 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/reducefunc.c
+
+   \brief CURRENT sdk API -- implements reducefunc.h
+
+   Sample implementation designed for handling gmesh rebinnering.
+
    $Id$
 */
 

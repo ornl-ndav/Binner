@@ -91,14 +91,9 @@ INPUT                  = ../include ../src ../docs
 INPUT_ENCODING         = UTF-8
 FILE_PATTERNS          = *.h *.c *.cpp *.doc
 RECURSIVE              = NO
-EXCLUDE                = ../include/socketfun.h \
-                         ../src/bmeshrebin.c \
+EXCLUDE                = ../src/bmeshrebin.c \
                          ../src/bslicer.c \
                          ../src/formain.cpp \
-                         ../src/gmeshrebin.c \
-                         ../src/gmeshrebin2.c \
-                         ../src/gmeshrot.c \
-                         ../src/gmeshrot2.c \
                          ../src/largebmeshrebin.c \
                          ../src/netrebin.c \
                          ../src/pix2mesh.c \

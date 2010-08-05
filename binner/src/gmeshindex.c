@@ -1,12 +1,26 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshindex.c
+
+   \brief CURRENT executable of rebinner for indexing bounds of many gmehs files.
+  
+   usage: gmeshindex all_files_to_index, for example:
+   \code
+   UNIX> gmeshindex 81[3-9]-mesh/*
+   \endcode
+   This command will index the bounds of all files under 813-mesh to 819-mesh.
+
+   $Id$
+
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include "binner.h"
 
-/**
- * $Id$
- *
- */
 
 void update_bounds(int n, double * bound, double * v)
 {

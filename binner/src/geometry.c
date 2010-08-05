@@ -3,6 +3,8 @@
    
    \file src/geometry.c
 
+   \brief CURRENT core API -- implementation for geometry.h
+
    $Id$
 */
 

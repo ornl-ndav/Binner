@@ -1,6 +1,12 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/serve.c
+
+   \brief CURRENT sdk executable to serve sockets in distributed rebinner runs.
+
+   Slight customization by Jian Huang.
+
    $Id$
 */
 

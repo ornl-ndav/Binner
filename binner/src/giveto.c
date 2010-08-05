@@ -1,6 +1,10 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/giveto.c
+
+   \brief CURRENT sdk executable to send out data to a network port.
+
    $Id$
 */
 

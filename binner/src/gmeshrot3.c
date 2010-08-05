@@ -4,7 +4,7 @@
    
    \file src/gmeshrot3.c
 
-   \brief The executable to rotate gmesh geometry.
+   \brief CURRENT executable for rotating gmesh geometry.
 
    $Id$
 

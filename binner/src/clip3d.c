@@ -1,6 +1,8 @@
 /**
    \ingroup rebinner_tests
    \file src/clip3d.c
+
+   \brief CURRENT test of core API -- binnerio.h, clip.h
    
    $Id$
 

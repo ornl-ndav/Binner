@@ -1,6 +1,10 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/export2vcb.c
+
+   \brief CURRENT sdk executable to convert gmesh to vcb geometry format.
+
    $Id$
 */
 

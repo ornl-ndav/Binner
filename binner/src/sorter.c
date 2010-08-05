@@ -1,6 +1,10 @@
 /**
    \ingroup rebinner_sdk
+
    \file src/sorter.c
+
+   \brief CURRENT sdk executable to dispatch jobs in distributed rebinner runs.
+
    $Id$
 */
 

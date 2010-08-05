@@ -1,6 +1,8 @@
 /**
    \ingroup rebinner_tests
    \file src/counts.c
+
+   \brief CURRENT test of core API -- binnerio.h. Sums total counts in a gmesh
    
    $Id$
 

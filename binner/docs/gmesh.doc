@@ -102,15 +102,15 @@ pipeline.
 UNIX> cat binaryGmesh.in | gmeshrot3 0 0 1 45 | gmeshrebin3 ....
 \endcode
 
-The following is a listing of all the Gmesh executables (omitting group and size in file listing to save some horizontal spaces).
+The following is a listing of current Gmesh executables (omitting group and size in file listing to save some horizontal spaces).
 \code
 UNIX> cd bin
 UNIX> ll gmesh*
 -rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshb2t*     -> binary to ASCII conversion
--rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshindex*   -> index gmesh files in a directory
+-rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshindex*   -> index (many) gmesh files by bounds
 -rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshmat*     -> generate a transform matrix
 -rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshorderv*  -> reorder vertices (correctly)
--rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshquery*   -> query by xyz bounds in a directory
+-rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshquery*   -> query by xyz bounds
 -rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshrebin3*  -> THE main rebinner executable
 -rwxr-x---  1 huangj  ... Aug  2 00:23 gmeshrot3*    -> rotating a mesh
 -rwxr-x---  1 huangj  ... Aug  2 00:23 gmesht2b*     -> ASCII to binary conversion
