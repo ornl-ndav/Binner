@@ -18,7 +18,7 @@
 #include "dmem.h"
 #include "rebinapp.h"
 #include "reducefunc.h"
-#include "macros.H"
+#include "macros.h"
 
 
 #define ITEMSIZE (sizeof(int)*4 + sizeof(double)*5)
