@@ -138,7 +138,7 @@ to be part of complex neutron science workflow. Conceptually every experiment
 could likely require customization in how rebinner is used.
 For maximum flexibility, the real \a "executables" are always scripts, written either
 in Shell or Python. Sample ones are stored
-under \c script, which include scripts already in actual use, . 
+under \c script, which include scripts already in actual use. 
 
 \par Note 2: disclaimer about \c vcb and \c libFDR
 Compared to \c vcb, \c libFDR is very small. To reduce the number

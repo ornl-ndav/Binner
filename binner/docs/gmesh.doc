@@ -119,4 +119,55 @@ UNIX> ll gmesh*
 For more comprehensive discussion of how the rebinner package is used 
 as a whole, please consult \ref intro, where detailed examples are included.
 
+<hr>
+
+<h2> I/O Considerations</h2>
+
+The rebinner package 
+uses basic POSIX I/O, and does not have other forms of I/O component.
+In the above example, re-pasted here:
+\code
+UNIX> cat binaryGmesh.in | gmeshrot3 0 0 1 45 | gmeshrebin3 ....
+\endcode
+
+\c cat is the program that explicitly opens the input file and reads
+in large chunks.
+Hypothetically, the input data could be compressed, e.g.
+\code
+UNIX> cat gmesh.in | gzip -c > gmesh.in.Z
+\endcode
+
+This allows the following:
+\code
+UNIX> zcat gmesh.in.Z | gmeshrot3 0 0 1 45 | gmeshrebin3 ....
+\endcode
+
+This command invokes three processes running in parallel (and in concert). 
+\c zcat handles I/O and simultaneous decompresses the data.
+On occassion when I/O stalls, the OS kernel will automatically manage
+process swaps. 
+Although this parallelism is implicit, the acceleration method is powerful
+and effective. Using this pipeline parallelism, scalability becomes
+a bit hard to quantify, as this is not the same strong/weak scaling
+scenario that is commonly measured by parallel speedup.
+
+The connection between processes are implemented via \c pipe, which is
+commonly supported through kernel level sockets. Performance is not an
+issue, as I/O is so far always the slower part of the link. 
+
+For developing parallel I/O capabilities, it is logical to implement,
+for instance, a \c pcat &mdash; a \c cat utility based on parallel I/O.
+Similarly, a \c nexus_read could be designed for
+reading parallel I/O enabled Nexus files; \c nexus_write could be
+designed for writing Nexus files via parallel I/O, i.e.:
+\code
+UNIX> nexus_read gmesh.nx | gmeshrot3 ... | gmeshrebin3 ... | nexus_write gmeshout.nx
+\endcode
+
+This command spawns off four concurrent processes,  one for rotation,
+one for rebinning and one for reading (in parallel) 
+and one for writing (in parallel).
+
+
+
 */
