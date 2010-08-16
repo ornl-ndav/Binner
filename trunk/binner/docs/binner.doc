@@ -29,11 +29,11 @@ These two libraries are:
 <a href="http://web.eecs.utk.edu/~huangj">Jian Huang</a>.
 <li> <a href="http://www.cs.utk.edu/~plank/plank/classes/cs360/360/notes/Libfdr/">libFDR</a>
 &mdash; a basic C programming library written by 
-<a href="http://web.eecs.utk.edu/~plank">James Plank</a>. 
+<a href="http://web.eecs.utk.edu/~plank">Jim Plank</a>. 
 </ul>
 
 
-
+<hr>
 
 
 For an overview of the design, we divide the description into the following pages:
@@ -49,6 +49,8 @@ G for Gary, the G-user!
 <tr>
 <td>\ref intro <td> The design philosophies and usage examples of the rebinner package.
 </table>
+
+<hr>
 
 Functionally speaking, the rebinner has four conceptual modules. 
 They all reside under the same source tree, which is not very large. 
