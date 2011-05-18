@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_tests
+   \file src/bounds.c
+
+   \brief CURRENT test of core API -- binnerio.h. Outputs bounds of a gmesh.
+
+   $Id$
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -9,6 +19,7 @@
 #include "cell.h"
 #include "binnerio.h"
 #include "vcbutils.h"
+
 
 /* application specific data starts here */
 int     nverts, npara;

@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/collector.c
+
+   \brief CURRENT sdk executable to collect results in distributed rebinner runs.
+
+   $Id$
+*/
+
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,7 +20,8 @@
 #include "vcbutils.h"
 
 
-typedef struct tk {
+
+typedef struct collector_thread {
     pthread_t tid;
 
 	int socket;

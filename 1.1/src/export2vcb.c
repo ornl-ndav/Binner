@@ -1,9 +1,20 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/export2vcb.c
+
+   \brief CURRENT sdk executable to convert gmesh to vcb geometry format.
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include "vcbutils.h"
 #include "binnerio.h"
 #include "binner.h"
+
 
 int main(int argc, char ** argv)
 {

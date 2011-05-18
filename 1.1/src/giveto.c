@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/giveto.c
+
+   \brief CURRENT sdk executable to send out data to a network port.
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -5,6 +15,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include "socketfun.h"
+
 
 int sock, n = 0;
 char netbuf[5000];

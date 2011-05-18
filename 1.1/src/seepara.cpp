@@ -1,3 +1,26 @@
+/**
+
+   \ingroup rebinner_tests
+   
+   \file src/seepara.cpp
+
+   \brief CURRENT test of core API -- binnerio.h, cell.h, using vcb with opengl
+   
+   Tests core APIs of binnerio, cell, geometry.
+   
+   usage:
+   \code 
+   UNIX> cat parallelipeds | seepara
+   \endcode
+
+   \note This is executable does not behave as a filter.
+         It starts rendering only after detecting end of file on input (STDIN).
+
+   $Id$
+
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -20,6 +43,7 @@
 
 #include "atypes.h"
 #include "vcbcolor.h"
+
 
 char projmode = 'O'; /* P for perspective, O for orthogonal */
 projStruct proj;

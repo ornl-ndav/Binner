@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/binnerio.c
+
+   \brief CURRENT core API -- implementation for binnerio.h
+
+   $Id$
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>

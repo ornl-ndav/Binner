@@ -1,3 +1,15 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/reducefunc.c
+
+   \brief CURRENT sdk API -- implements reducefunc.h
+
+   Sample implementation designed for handling gmesh rebinnering.
+
+   $Id$
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -6,8 +18,9 @@
 #include "dmem.h"
 #include "rebinapp.h"
 #include "reducefunc.h"
+#include "macros.h"
 
-#define REBINDEBUG 0
+
 #define ITEMSIZE (sizeof(int)*4 + sizeof(double)*5)
 
 static JRB b;
@@ -166,13 +179,16 @@ int reduce_done(int nd)
 
             /* dp[0] /= volumescale; */
 
-			totalvolume += dp[0];
+	    totalvolume += dp[0];
 
-            if (nd == 0)
+	    if (nd == 0) {
+	      fprintf(stderr, "Not here\n");
                 gmesh_singlebin_output(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
-            else
+	    }
+            else {
+	      fprintf(stderr, "Got here\n");
                 gmesh_singlebin_output_nd(dp, ip[0], ip[1], ip[2], ip[3], orig, spacing);
-            
+            }
 			nvox ++;
 		}
 		/*write(1, v, ITEMSIZE);*/

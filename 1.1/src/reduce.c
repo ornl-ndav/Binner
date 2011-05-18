@@ -1,3 +1,16 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/reduce.c
+
+   \brief CURRENT sdk executable to reduce results from multi-process.
+
+   \note This process is never invoked directly, always implicitly created by 
+         map via fork().
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,8 +18,9 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include "reducefunc.h"
+#include "macros.h"
 
-#define REBINDEBUG 0
+
 #define BUFSIZE 2*1024*1024
 
 /* reduce receives the whole list or argv received by "map", verbatim */

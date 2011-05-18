@@ -1,3 +1,15 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/serve.c
+
+   \brief CURRENT sdk executable to serve sockets in distributed rebinner runs.
+
+   Slight customization by Jian Huang.
+
+   $Id$
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +18,7 @@
 #include <sys/uio.h>
 #include <unistd.h>
 #include "socketfun.h"
+
 
 #define fullsz 4*1024*1024 
 char s[fullsz];

@@ -1,3 +1,24 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/seegmesh.cpp
+
+   \brief CURRENT executable of rebinner that renders a gmesh.
+  
+   usage:
+   \code 
+   UNIX> cat ASCII_gmesh | seegmesh
+   UNIX> cat BINARY_gmesh | gmeshb2t | seegmesh
+   \endcode
+
+   \note This is executable does not behave as a filter.
+         It starts rendering only after detecting end of file on input (STDIN).
+
+   $Id$
+
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -20,6 +41,7 @@
 
 #include "atypes.h"
 #include "vcbcolor.h"
+
 
 char projmode = 'O'; /* P for perspective, O for orthogonal */
 projStruct proj;

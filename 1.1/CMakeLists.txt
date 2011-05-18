@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 
+# 
+# $Id$
 #
 # cmake allows out of place building
 # you can do a "mkdir build; cd build" under any directory
@@ -37,3 +39,7 @@ add_subdirectory(src)
 
 install(FILES ${CMAKE_HOME_DIRECTORY}/script/rebinit DESTINATION ${BINNER_INSTALL_DIR}/bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
+add_custom_target(manual ALL
+                  DEPENDS ${PROJECT_SOURCE_DIR}/docs/Doxyfile
+                  COMMAND doxygen
+                  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/docs)

@@ -1,5 +1,21 @@
+/**
+   \ingroup rebinner_execs
+
+   \file src/gmeshmat.c
+
+   \brief CURRENT executable transforms a gmesh using a transformation matrix 
+
+   usage: gmeshmat mat0 mat1 mat2 mat3 mat4 mat5 mat6 mat7 mat8 < BINARY_gmesh
+   
+   \note
+   gmeshmat expects a 3x3 matrix in row-major order as command line input.
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
+
 
 void  matMult3x3(double * v0, double * mat, double * v1)
 {

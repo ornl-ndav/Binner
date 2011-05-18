@@ -6,6 +6,11 @@
 #include "cell.h"
 #include "binnerio.h"
 
+/**
+ * $Id$
+ *
+ */
+
 /* this program generates a single paralleliped */
 
 int main(int argc, char ** argv)

@@ -11,7 +11,10 @@
 #include "cell.h"
 #include "volume.h"
 
-#define REBINDEBUG 0
+/**
+ * $Id$
+ *
+ */
 
 char   md5string[100], fname[200], rbuf[8192];
 float  vbuf[1024];

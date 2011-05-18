@@ -1,7 +1,18 @@
+/**
+   \ingroup rebinner_tests
+   \file src/scale3d.c
+
+   \brief CURRENT test of core API -- binnerio.h and using vcb
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
 #include "binnerio.h"
+
 
 int main(int argc, char ** argv)
 {

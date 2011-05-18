@@ -1,6 +1,20 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshrot3.c
+
+   \brief CURRENT executable for rotating gmesh geometry.
+
+   $Id$
+
+*/
+ 
+ 
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
+
 
 void  matMult3x3(double * v0, double * mat, double * v1)
 {
