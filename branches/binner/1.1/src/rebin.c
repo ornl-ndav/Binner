@@ -7,6 +7,11 @@
 #include "binner.h"
 #include "volume.h"
 
+/**
+ * $Id$
+ *
+ */
+
 int main(int argc, char ** argv)
 {
 	clock_t time1, time2;
@@ -57,7 +62,7 @@ time1 = clock();
 	voxels = malloc(nvoxel * sizeof(double));
 	for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-	totalvolume = bin_smallpara3d_150(0, nfacets, 
+	totalvolume = bin_para_3dclip(0, nfacets, 
 							nverts,
 							vdata, /* the vertices */
 							NULL,  /* no hit counter */

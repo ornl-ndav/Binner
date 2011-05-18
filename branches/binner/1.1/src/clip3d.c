@@ -1,9 +1,20 @@
+/**
+   \ingroup rebinner_tests
+   \file src/clip3d.c
+
+   \brief CURRENT test of core API -- binnerio.h, clip.h
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
 #include "binner.h"
 #include "clip.h"
 #include "binnerio.h"
+
 
 int main(int argc, char ** argv)
 {

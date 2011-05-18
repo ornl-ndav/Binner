@@ -1,13 +1,19 @@
+/**
+   \ingroup rebinner_core
+   
+   \file include/binner.h
+
+   \brief CURRENT core API -- main rebinner functions bin_para3d[clip/voxelize]
+
+   $Id$
+
+ */
+
 #ifndef _BINNER_
 #define _BINNER_
 
 #include <math.h>
-
-#ifndef BINNER_EPSILON
-#define BINNER_EPSILON 1E-8
-#endif
-
-#define BINNER_NORM(n)	sqrt((n)[0]*(n)[0]+(n)[1]*(n)[1]+(n)[2]*(n)[2])
+#include "macros.h" 
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,7 +25,7 @@ void bounding_box(int n, double * bound, double * v);
 					
 double para_volume(double * v);  /* volume of a paralleliped */
 
-/*
+/**
  * edge + corner voxels 
  * return value: subdivision factor in the final discrete volume 
  *               for achieving the etorl.
@@ -38,7 +44,7 @@ int esti_res3d(	int		nfacets,
 				double *xyzunit, 
 				double *tol_relativeE);
 
-/*
+/**
  * upon voxelization, since we need a multi-level resolutioned representation
  * the volume is not held in a single array
  *
@@ -55,7 +61,7 @@ int bin_quad3d(	int		nfacets,
 				int		maxres, 
 				double *voxel);
 
-double bin_para3d_150(	int		nfacets, 
+double bin_para_3dvoxelize(	int		nfacets, 
 						int   * nverts,
 						double *v, /* the vertices */
 						int *	orig, 
@@ -63,8 +69,20 @@ double bin_para3d_150(	int		nfacets,
 						double  ccs, /* cubic cell size */ 
 						double *voxels);
 
-double bin_smallpara3d_150(
-						int     sliceid,
+/**
+    This function return the total volume of the rebinned parallelipeds.
+    There is no limit on how many parallelipeds can be processed together.
+    
+    \param[in]  v Pointer to vertices array describing the parallelipeds.
+    \param[in]  hitcnt Pointer to hit counts array for the parallelipeds.
+    \param[in]  hiterr Pointer to hit error metrics array for the parallelipeds.
+    \param[out] voxels If this is a NULL pointer, the function dumps the
+                      rebinned voxels directly through pipedump;
+                  otherwise voxels is assumed to have enough memory space
+                  to store xyzsize[0]*xyzsize[1]*xyzsize[2] double values.
+*/
+
+double bin_para_3dclip( int     sliceid,
 						int		nfacets, 
 						int   * nverts,
 						double *v, /* the vertices */

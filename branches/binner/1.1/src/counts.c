@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_tests
+   \file src/counts.c
+
+   \brief CURRENT test of core API -- binnerio.h. Sums total counts in a gmesh
+   
+   $Id$
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -7,6 +17,7 @@
 
 #include "atypes.h"
 #include "binnerio.h"
+
 
 /* application specific data starts here */
 int     nverts, npara;

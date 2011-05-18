@@ -18,6 +18,11 @@
 #include "vcblinalg.h"
 #include "vcbcolor.h"
 
+/**
+ * $Id$
+ *
+ */
+
 char projmode = 'O'; /* P for perspective, O for orthogonal: a toggle field*/
 projStruct proj;
 viewStruct view;

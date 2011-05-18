@@ -1,3 +1,11 @@
+/**
+   \file src/socketfun.c
+
+   \brief Jim Plank's socket functions. Released as "do whatever you want with it".
+   
+   $Id$
+ */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>

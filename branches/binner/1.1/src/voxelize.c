@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/voxelize.c
+
+   \brief CURRENT core API -- implementation for voxelize.h
+
+   $Id$
+*/
+
 #include <stdio.h>
 #include <math.h>
 #include "vcblinalg.h"

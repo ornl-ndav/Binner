@@ -1,9 +1,20 @@
+/**
+   \ingroup rebinner_core
+   
+   \file src/clip.c
+
+   \brief CURRENT core API -- implementation for clip.h
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "vcblinalg.h"
 #include "binner.h"
 #include "clip.h"
+
 
 #define INTERP( t, x1, x2 )   ( (x1) + (t) * ((x2) - (x1)) )
 

@@ -1,3 +1,28 @@
+/**
+
+   \ingroup rebinner_execs
+   
+   \file src/gmeshrebin.c
+
+   \brief DEPRECATED executable of rebinner that handles gmesh formats.
+
+   \deprecated
+   gmeshrebin2 [-b batchsize] 
+               xmin xmax xspacing ymin ymax yspacing zmin zmax zspacing
+     
+   \li [-b batchsize] number of pixels to rebin as a batch. Default to 10000.
+
+   \note This executable has been deprecated because it was not designed
+         to filter out close to zero binner counts.
+
+   \note This executable has been deprecated due to the lack of ability
+         to act as a streaming filter. Its memory footprint is directly
+         related to the volume size.
+   
+   $Id$
+
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -11,7 +36,6 @@
 #include "cell.h"
 #include "volume.h"
 
-#define REBINDEBUG 0
 
 char   rbuf[8192];
 float  vbuf[1024];

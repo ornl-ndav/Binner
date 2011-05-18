@@ -18,4 +18,7 @@ make install
 make -f makefile_withgl install
 make clean
 
+cd ../docs
+doxygen
+
 exit 0

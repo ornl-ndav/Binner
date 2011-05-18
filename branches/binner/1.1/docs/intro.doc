@@ -1,0 +1,61 @@
+/**
+\page intro Design
+
+SNS data analysis is challenging, if not for any other reasons,
+purely the need to significantly adapt complex analysis 
+pipelines from one type of experiments to another. 
+The following diagram shows a specific example of processing
+Gmesh data. 
+The directory structures reflected here are generalizable 
+across experiments.
+In typical SNS experiments, a beam of neutron hits a sample and
+produces a scattering pattern on the detector banks.
+Then a series of scans are repeated by orienting the sample 
+incrementally at a different angle. 
+Data collected through all the scan are reorganized and
+stored under a different directory structure, however.
+
+In the following diagram, directories such as \c 800, \c 801, \c 802, etc.
+correspond to energy transfer slices &mdash; a concept that roughly
+relates to the relative times at which neutrons hit the sample during
+each scan. \c 800 is the "first" energy slice, \c 801 is the next, 
+and so on.
+The \c 800 energy slice data in every scan (corresponding to each 
+sample orientation) are all collected
+together and put under the \c 800 directory.
+The same goes for \c 801, ...
+Under the 800 directory, there are a set of meta data files of 
+physics significance and also a sub-directory \c 800-mesh,
+which contains Gmesh mesh and neutron hit data. 
+
+In the analysis process, a user typically will pick and choose
+a range of energy slices to analyze together, while to also
+probably choose a range of orientations. 
+From a software development perspective, we should not assume 
+any specific patterns in how a user makes choices, however.
+
+To manage the variability, the rebinner is designed using
+the filter design pattern with the following features:
+<ul>
+<li> "Filters" are assembled into pipelines using Unix pipe 
+(both in Shell or between forked processes)
+<li> All rebinner executables take Gmesh data as input
+and produce Gmesh data as output
+<li> All rebinner executables use \c stderr for outputting
+log and meta data   
+</ul>
+
+The most common first operation on a Gmesh file is to transform
+the mesh into a new space. The main root directory in the following
+diagram is called "Non Rot(ated) Data" for this reason.
+The rebinner provides \c gmeshrot3
+to rotate mesh and \c gmeshmat to transform the mesh using
+a regular 3 by 3 transformation matrix.
+After transformation, the actual rebinning is performed by
+\c gmeshrebin3.  The main inspection program to 
+visualize the Gmesh files at any particular stage is \c seegmesh.
+
+<img src="../SNS_NonRotData.png">
+
+
+*/

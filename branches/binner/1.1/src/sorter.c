@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_sdk
+
+   \file src/sorter.c
+
+   \brief CURRENT sdk executable to dispatch jobs in distributed rebinner runs.
+
+   $Id$
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +20,8 @@
 #include "socketfun.h"
 #include "binnerio.h"
 
-typedef struct tk {
+
+typedef struct sorter_thread {
     pthread_t tid;
 
 	int socket;

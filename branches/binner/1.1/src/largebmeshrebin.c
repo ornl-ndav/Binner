@@ -9,8 +9,13 @@
 #include "cell.h"
 #include "volume.h"
 
-char   md5string[100], fname[200], fullname[200], rbuf[8192];
-float  vbuf[1024];
+/**
+ * $Id$
+ *
+ */
+
+static char   md5string[100], fname[200], fullname[200], rbuf[8192];
+static float  vbuf[1024];
 
 void scale_vertices(int n, double * vdata,double xscale, double yscale, double zscale)
 {
@@ -208,7 +213,7 @@ int main(int argc, char ** argv)
 
 		for (i = 0; i < nvoxel; voxels[i] = 0.0, i ++);
 
-		totalvolume += bin_smallpara3d_150(sid[0], npara*6, 
+		totalvolume += bin_para_3dclip(sid[0], npara*6, 
 								nverts,
 								vdata, /* the vertices */
 								hcnt,        /* hit counter */

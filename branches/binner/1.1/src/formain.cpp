@@ -1,4 +1,9 @@
 
+/**
+ * $Id$
+ *
+ */
+
 /* for use with application main to reduce manual work */
 
 #include <stdio.h>

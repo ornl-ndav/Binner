@@ -20,6 +20,11 @@
 
 #include "atypes.h"
 
+/**
+ * $Id$
+ *
+ */
+
 char projmode = 'O'; /* P for perspective, O for orthogonal */
 projStruct proj;
 viewStruct view;

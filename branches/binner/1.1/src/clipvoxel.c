@@ -1,3 +1,13 @@
+/**
+   \ingroup rebinner_tests
+   \file src/clipvoxel.c
+
+   \brief CURRENT test of core API -- binnerio.h, clip.h, volume.h, voxelize.h
+   
+   $Id$
+
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "vcblinalg.h"
@@ -5,6 +15,7 @@
 #include "clip.h"
 #include "binnerio.h"
 #include "volume.h"
+
 
 int main(int argc, char ** argv)
 {
